@@ -1,0 +1,11 @@
+{
+  "name": "auction-hub",
+  "version": "1.0.0",
+  "description": "Auction system for the All Things Possible org",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Winthrop University",
+  "license": "ISC"
+}
