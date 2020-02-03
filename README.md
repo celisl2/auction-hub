@@ -6,6 +6,11 @@
 + NextJs
 + React
 + ReactDOM
+### To get all dependencies try:
+```
+npm install
+```
+To test if that worked run the app (refer to 'run this app' below). If that didn't work do the following:
 ```
 npm install next react react-dom
 ```
