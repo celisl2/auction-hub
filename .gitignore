@@ -1,6 +1,7 @@
 ### Untracked files: ###
 # Dependency directories
 node_modules/
+.next/
 
 # mac trash that follows me everywhere
 .DS_Store
