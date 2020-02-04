@@ -1,11 +1,11 @@
 /*
-    TODO: create admin navigation + add block comments to all pages
-        - fix time/date validation and initialValues and other validations
+    TODO: add block comments to all pages
 */
 
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import {getCode} from '../utils/helperFunctions';
+import AdminNav from '../components/AdminNav';
 
 const CreateAuctionForm = () => {
     return(
@@ -62,12 +62,12 @@ const CreateAuctionForm = () => {
                 <input name="title" {...formik.getFieldProps('title')} />
                     {formik.touched.title && formik.errors.title ? (
                         <div>{formik.errors.title}</div>) : null}
-
+        
                 <label htmlFor="date">Date</label>
                 <input name="date" {...formik.getFieldProps('date')} />
                     {formik.touched.date && formik.errors.date ? (
                         <div>{formik.errors.date}</div>) : null}
-
+                
                 <label htmlFor="time">Time</label>
                 <input name="time" {...formik.getFieldProps('time')} />
                     {formik.touched.time && formik.errors.time ? (
@@ -130,6 +130,7 @@ const CreateAuctionForm = () => {
 
 let CreateAuction = () =>
     <div className="auction-creation-body">
+        <AdminNav />
         <h2>Create Auction Event</h2>
         <CreateAuctionForm />
     </div>;

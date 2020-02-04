@@ -15,20 +15,14 @@ const CustomerRegistration = () => {
             }}
             validationSchema={
                 Yup.object({
-                    firstName: Yup.string()
-                .required('Required'),
-                lastName: Yup.string()
-                    .required('Required'),
-                email: Yup.string()
-                    .email('Invalid email address')
-                    .required('Required'),
-                phone: Yup.string()
-                    .required('Required'),
-                password: Yup.string()
-                    .required('Required'),
-                passwordConfirm: Yup.string()
-                    .required('Required')
-                    .oneOf([Yup.ref('password')], 'Passwords do not match')
+                    firstName: Yup.string().required('Required'),
+                    lastName: Yup.string().required('Required'),
+                    email: Yup.string().email('Invalid email address')
+                        .required('Required'),
+                    phone: Yup.string().required('Required'),
+                    password: Yup.string().required('Required'),
+                    passwordConfirm: Yup.string().required('Required')
+                        .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
             onSubmit={(values, { setSubmitting }) => {
                 setTimeout(() => {
