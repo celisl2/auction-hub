@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "name": "cookie-auth-nextjs", //
+  "builds": [
+    { "src": "www/package.json", "use": "@now/next" },
+    { "src": "api/*.js", "use": "@now/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/www/$1" }
+  ]
+}
+
+ "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "next start"
+},
+..
