@@ -17,6 +17,10 @@ export default () =>
                 <Link href="/products">
                     <a>Products</a>
                 </Link>
+            <li>
+                <Link href="/products">
+                    <a>Products</a>
+                </Link>
             </li>
         </ul>
     </nav>;
