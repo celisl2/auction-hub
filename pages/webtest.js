@@ -26,3 +26,4 @@ ui.start('#firebaseui-auth-container', {
 </p>
 
 </html>
+export default Login
