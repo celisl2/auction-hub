@@ -1,13 +1,19 @@
-
 import Navigation from '../components/Navigation';
 import {getCode} from '../utils/helperFunctions';
-
 let Login = () =>
-<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+
+function LoginPage( {
+  return (
+    <div>
+      <Head>
+        <Script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
 <Link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 <script src="bower_components/firebaseui/dist/firebaseui.js"></script>
 <Link type="text/css" rel="stylesheet" href="bower_components/firebaseui/dist/firebaseui.css" />
-
+</head>
+</div>
+  )
+}
 
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 var firebase = require('firebase');
@@ -24,6 +30,4 @@ ui.start('#firebaseui-auth-container', {
   <button id="sign-out">Sign Out</button>
   <button id="delete-account">Delete account</button>
 </p>
-
 </html>
-export default Login;
