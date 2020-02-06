@@ -18,6 +18,11 @@ export default () =>
                     <a>Products</a>
                 </Link>
             </li>
+            <li>
+                <Link href="/login">
+                    <a>Login</a>
+                </Link>
+            </li>
         </ul>
     </nav>;
 1
