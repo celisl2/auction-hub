@@ -1,5 +1,6 @@
 
 import Navigation from '../components/Navigation';
+import {getCode} from '../utils/helperFunctions';
 
 let Login = () =>
 <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
