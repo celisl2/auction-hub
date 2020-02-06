@@ -19,7 +19,7 @@ export default () =>
                 </Link>
             </li>
             <li>
-                <Link href="/products">
+                <Link href="/login">
                     <a>Login</a>
                 </Link>
             </li>
