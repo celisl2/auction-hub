@@ -6,8 +6,6 @@ let Home = () =>
         <Navigation />
         <CurrentAuction />
         <HomeProducts />
-        <Login />
-
     </div>;
 
 export default Home;
