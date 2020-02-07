@@ -6,13 +6,6 @@ import * as Yup from 'yup';
 const LogInForm = () => {
     return (
         <html>
-<head>
-
-<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-<script src="bower_components/firebaseui/dist/firebaseui.js"></script>
-<link type="text/css" rel="stylesheet" href="bower_components/firebaseui/dist/firebaseui.css" />
-</head>
         <Formik
             initialValues={{
                 email: '',
