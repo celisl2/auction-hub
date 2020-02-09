@@ -1,5 +1,6 @@
 import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
+import src from 'https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js';
 import React from 'react'
 import Link from 'next/link'
 
@@ -13,7 +14,6 @@ const Example = props => {
   );
 };
 
-<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
 <Link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 
 var firebase = require('firebase');
