@@ -5,7 +5,13 @@ import Link from 'next/link'
 
 const Example = props => {
   return (
-    var provider = new firebase.auth.GoogleAuthProvider();
+    
+firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // ...
+});
 
     <div>
       <Link href={'/'}>
