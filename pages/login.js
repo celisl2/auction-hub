@@ -1,6 +1,5 @@
 import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
-import src from 'https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js';
 import React from 'react'
 
 const Example = props => {
@@ -12,13 +11,6 @@ const Example = props => {
     </div>
   );
 };
-  
-ui.start('#firebaseui-auth-container', {
-  signInOptions: [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
-  ],
-  // Other config options...
-});
 
 Example.displayName = 'Example'
 
