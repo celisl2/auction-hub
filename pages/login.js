@@ -13,6 +13,13 @@ const Example = props => {
   );
 };
 
+<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+var firebase = require('firebase');
+var firebaseui = require('firebaseui');
+
+  
 ui.start('#firebaseui-auth-container', {
   signInOptions: [
     firebase.auth.EmailAuthProvider.PROVIDER_ID
