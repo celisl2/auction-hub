@@ -5,11 +5,6 @@ import Link from 'next/link'
 
 const Example = props => {
   return (
-    
-firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
   // ...
 });
 
@@ -20,6 +15,13 @@ firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error
     </div>
   )
 }
+
+ui.start('#firebaseui-auth-container', {
+  signInOptions: [
+    firebase.auth.EmailAuthProvider.PROVIDER_ID
+  ],
+  // Other config options...
+});
 
 Example.displayName = 'Example'
 
