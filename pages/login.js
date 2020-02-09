@@ -2,7 +2,7 @@ import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
 import src from 'https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js';
 import React from 'react'
-import Link from 'next/link'
+import Link from 'https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css'
 
 const Example = props => {
   return (
@@ -13,12 +13,6 @@ const Example = props => {
     </div>
   );
 };
-
-<Link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-
-var firebase = require('firebase');
-var firebaseui = require('firebaseui');
-
   
 ui.start('#firebaseui-auth-container', {
   signInOptions: [
