@@ -5,16 +5,13 @@ import Link from 'next/link'
 
 const Example = props => {
   return (
-  // ...
-});
-
     <div>
       <Link href={'/'}>
         <a>Home</a>
       </Link>
     </div>
-  )
-}
+  );
+};
 
 ui.start('#firebaseui-auth-container', {
   signInOptions: [
