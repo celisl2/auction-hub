@@ -1,74 +1,26 @@
 import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import React from 'react'
+import Link from 'next/link'
 
-const LogInForm = () => {
-    return (
-        <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-        <Link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-        <script src="bower_components/firebaseui/dist/firebaseui.js"></script>
-        <Link type="text/css" rel="stylesheet" href="bower_components/firebaseui/dist/firebaseui.css" />
+const Example = props => {
+  return (
+    <div>
+      <p>
+        This page is static because it does not fetch any data or include the
+        authed user info.
+      </p>
+      <Link href={'/'}>
+        <a>Home</a>
+      </Link>
+    </div>
+  )
+}
 
-        var ui = new firebaseui.auth.AuthUI(firebase.auth());
-        var firebase = require('firebase');
-        var firebaseui = require('firebaseui');
-    
-        ui.start('#firebaseui-auth-container', {
-            signInOptions: [
-            firebase.auth.EmailAuthProvider.PROVIDER_ID
-            ],
-            // Other config options...
-            });
-        <Formik
-            initialValues={{
-                email: '',
-                password: ''
-            }}
-            validationSchema={
-                Yup.object({
-                    email: Yup.string()
-                        .required('Please enter your email')
-                        .email('Invalid Email'),
-                    password: Yup.string()
-                        .required('Please enter password')
-                })}
-            onSubmit={(values, {setSubmitting}) => {
-                setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                setSubmitting(false);
-                }, 400);
-            }}
-        >
-        {formik => (
-            <form onSubmit={formik.handleSubmit}>
-                <label htmlFor="email">Email</label>
-                <input name="email" {...formik.getFieldProps('email')} />
-                    {formik.touched.email && formik.errors.email ? (
-                        <div>{formik.errors.email}</div>) : null}
-                <label htmlFor="password">Password</label>
-                <input name="password" type="password" {...formik.getFieldProps('password')} />
-                    {formik.touched.password && formik.errors.password ? (
-                        <div>{formik.errors.password}</div>) : null}
-                <button type="submit">Log In</button>
-            </form>
-        )}
+Example.displayName = 'Example'
 
-        </Formik>
-    );
-};
+Example.propTypes = {}
 
-let Login = () =>
-    <div className="login-body">
-        <ImageHeader />
-        <div className="login-form">
-        <LogInForm />
-        </div>
-        <div className="login-register">
-            <p>Not registered yet{getCode(63)}</p>
-            {/** need on click for the buttons below */}
-            <button type="button" name="customerBtn">Register</button>
-            <button type="button" name="adminBtn">Administrator Registration</button>
-        </div>
-    </div>;
-export default Login;
+Example.defaultProps = {}
+
+export default Example
