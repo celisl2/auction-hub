@@ -1,4 +1,3 @@
-module.exports = {
 const firebaseConfig = {
   apiKey: "AIzaSyCxOo7KE7_SctNyRIRpvcDyVua-kIRH77Y",
   authDomain: "fir-testing-bd63e.firebaseapp.com",
@@ -8,4 +7,4 @@ const firebaseConfig = {
   messagingSenderId: "1087747058962",
   appId: "1:1087747058962:web:de31723c90bbef1f3d17cb"
 };
-}
+
