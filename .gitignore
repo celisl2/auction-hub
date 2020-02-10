@@ -3,5 +3,8 @@
 node_modules/
 .next/
 
+#laura's local testing
+ignore/
+
 # mac trash that follows me everywhere
 .DS_Store

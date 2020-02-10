@@ -18,12 +18,36 @@ const LogInForm = () => {
                     password: Yup.string()
                         .required('Please enter password')
                 })}
-            onSubmit={(values, {setSubmitting}) => {
-                setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                setSubmitting(false);
-                }, 400);
-            }}
+
+                onSubmit={ async (values, {setSubmitting}) => {
+                setSubmitting(true)
+                
+                    //event.preventDefault()
+                    const email = values.email
+                    const pssw = values.password
+
+                    try {
+                        const response = await fetch('api/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: email, password: pssw })
+                        });
+
+                        if(response.ok) {
+                            const {token} = await response.json();
+                            console.log('token from front end being called. Here is info from back end -- ' + token);
+                        }
+                        else {
+                            console.log( response + "response not ok");
+                        }
+                    } catch(error) {
+                        console.error('yout code sucks');
+                        throw new Error(error);
+                    }
+
+
+            }} 
+
         >
         {formik => (
             <form onSubmit={formik.handleSubmit}>
@@ -32,7 +56,7 @@ const LogInForm = () => {
                     {formik.touched.email && formik.errors.email ? (
                         <div>{formik.errors.email}</div>) : null}
                 <label htmlFor="password">Password</label>
-                <input name="password" type="password" {...formik.getFieldProps('password')} />
+                <input name="password" type="password" autoComplete="off" {...formik.getFieldProps('password')} />
                     {formik.touched.password && formik.errors.password ? (
                         <div>{formik.errors.password}</div>) : null}
                 <button type="submit">Log In</button>
