@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 
 const LogInForm = () => {
     return (
+        <html>
         <Formik
             initialValues={{
                 email: '',
