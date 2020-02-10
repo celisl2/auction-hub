@@ -12,6 +12,6 @@ auction_product fields:
     string      product_name
 
 bid_history fields:
-    number      bid_amount
-    timestamp   bid_timestamp
+    number      amount
+    timestamp   timestamp
     string      user_account_id
