@@ -2,6 +2,8 @@ import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Head from 'next/head';
+import Typography from '@material-ui/core/Typography';
 
 const LogInForm = () => {
     return (
@@ -69,9 +71,15 @@ const LogInForm = () => {
 
 let Login = () =>
     <div className="login-body">
+        <Head>
+            <title>Auction Hub</title>
+            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+            <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700|Open+Sans:300,400|Oswald:300,400&display=swap" rel="stylesheet"></link>
+
+        </Head>
         <ImageHeader />
         <div className="login-form">
-        <LogInForm />
+            <LogInForm />
         </div>
         <div className="login-register">
             <p>Not registered yet{getCode(63)}</p>
