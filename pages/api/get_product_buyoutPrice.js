@@ -17,7 +17,7 @@ function get_product_buyoutPrice (productId) {
     var admin = require("firebase-admin");
 
     // Authenticate with firebase via service account.
-    var serviceAccount = require("path/to/serviceAccountKey.json");
+    var serviceAccount = require("./auction-hub-firebase-firebase-adminsdk-omcxq-d2702ebfcf.json");
 
     // Initialize the authentication.
     admin.initializeApp({
