@@ -3,7 +3,6 @@ import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Head from 'next/head';
-import Typography from '@material-ui/core/Typography';
 
 const LogInForm = () => {
     return (

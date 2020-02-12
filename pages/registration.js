@@ -24,12 +24,32 @@ const CustomerRegistration = () => {
                     passwordConfirm: Yup.string().required('Required')
                         .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
-            onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                setSubmitting(false);
-                }, 400);
-            }}
+                onSubmit={ async (values, {setSubmitting}) => {
+                    setSubmitting(true)
+                    const email = values.email;
+                    const pssw = values.password;
+
+                    try {
+                        const response = await fetch('api/registration', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: email, password: pssw })
+                        });
+
+                        if(response.ok) {
+                            const {token} = await response.json();
+                            console.log('token from front end being called. Here is info from back end -- ' + token);
+                        }
+                        else {
+                            console.log( response + "response not ok");
+                        }
+                    } catch(error) {
+                        console.error('yout code sucks');
+                        throw new Error(error);
+                    }
+
+
+            }} 
         >
         {formik => (
             <form onSubmit={formik.handleSubmit}>
@@ -99,12 +119,32 @@ const AdminRegistration = () => {
                     .required('Required')
                     .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
-            onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                setSubmitting(false);
-                }, 400);
-            }}
+                onSubmit={ async (values, {setSubmitting}) => {
+                    setSubmitting(true)
+                    const email = values.email
+                    const pssw = values.password
+
+                    try {
+                        const response = await fetch('api/registration', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: email, password: pssw })
+                        });
+
+                        if(response.ok) {
+                            const {token} = await response.json();
+                            console.log('token from front end being called. Here is info from back end -- ' + token);
+                        }
+                        else {
+                            console.log( response + "response not ok");
+                        }
+                    } catch(error) {
+                        console.error('yout code sucks');
+                        throw new Error(error);
+                    }
+
+
+            }} 
         >
         {formik => (
             <form onSubmit={formik.handleSubmit}>

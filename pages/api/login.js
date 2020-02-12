@@ -1,6 +1,8 @@
 /**
  * This is a function that takes in a request and a response as a parameter
  */
+
+
 export default (req, res) => {
 
     //when user submits credentials through form - uses post

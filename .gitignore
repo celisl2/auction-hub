@@ -2,9 +2,8 @@
 # Dependency directories
 node_modules/
 .next/
+.env
 
-#laura's local testing
+#laura's local testing and other of my stuff that needs to go away lol
 ignore/
-
-# mac trash that follows me everywhere
 .DS_Store
