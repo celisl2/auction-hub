@@ -8,7 +8,7 @@ export default () =>
                     <a>Auction Hub</a>
                 </Link>
             </li>
-            <li>
+           <li>
                 <Link href="/index#currentAction">
                     <a>Current Auction</a>
                 </Link>

@@ -1,6 +1,8 @@
 import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { auth, firebase } from '../src/firebase'
+
 
 const CustomerRegistration = () => {
     return (
@@ -24,13 +26,21 @@ const CustomerRegistration = () => {
                     passwordConfirm: Yup.string().required('Required')
                         .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
+
             onSubmit={(values, { setSubmitting }) => {
+                const {email, password } = values;
                 setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                setSubmitting(false);
-                }, 400);
+               alert(JSON.stringify(values, null, 2));
+               setSubmitting(false);
+              }, 400);
+                // Simulate a mouse click:
+
+                firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+	                   console.log(error);
+                });
             }}
         >
+
         {formik => (
             <form onSubmit={formik.handleSubmit}>
                 <label htmlFor="firstName">First Name</label>
@@ -47,7 +57,7 @@ const CustomerRegistration = () => {
                 <input name="email" {...formik.getFieldProps('email')} />
                 {formik.touched.email && formik.errors.email ? (
                     <div>{formik.errors.email}</div>) : null}
-                
+
                 <label htmlFor="phone">Phone</label>
                 <input name="phone" {...formik.getFieldProps('phone')} />
                 {formik.touched.phone && formik.errors.phone ? (
@@ -100,10 +110,12 @@ const AdminRegistration = () => {
                     .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
             onSubmit={(values, { setSubmitting }) => {
+
                 setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
                 setSubmitting(false);
                 }, 400);
+
             }}
         >
         {formik => (
@@ -147,7 +159,7 @@ const Registration = () =>
         <div className="registration-content">
             <h2>Register</h2>
             <CustomerRegistration />
-            {/* will need to either separate admin registration to other file or 
+            {/* will need to either separate admin registration to other file or
                 use logic to to only display admin when clicking on the admin link
              */}
             <hr />

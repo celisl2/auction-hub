@@ -25,10 +25,6 @@ let Products = () =>
             <h3>Products</h3>
              {/* logic here to display all products */}
         </div>
-        <div className="Login">
-            <h3>Products</h3>
-             {/* logic here to display all products */}
-        </div>
     </div>;
 
 export default Products;

@@ -1,144 +1,151 @@
-import React, { Component } from 'react'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
-import 'isomorphic-unfetch'
-import clientCredentials from '../credentials/client'
+/*
+Name: Andy Estes
+Group: Team 1
+File: Login.js
+Function: Handles the login Portion of the application using Google Firebase API.
+*/
 
-export default class Index extends Component {
-  static async getInitialProps({ req, query }) {
-    const user = req && req.session ? req.session.decodedToken : null
-    // don't fetch anything from firebase if the user is not found
-    // const snap = user && await req.firebaseServer.database().ref('messages').once('value')
-    // const messages = snap && snap.val()
-    const messages = null
-    return { user, messages }
-  }
+//Import Resources From Local Storage
+import React from 'react'
+import Link from 'next/link'
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      user: this.props.user,
-      value: '',
-      messages: this.props.messages,
-    }
+import {getCode} from '../utils/helperFunctions';
+import ImageHeader from '../components/ImageHeader';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import Head from 'next/head';
 
-    this.addDbListener = this.addDbListener.bind(this)
-    this.removeDbListener = this.removeDbListener.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
+//Firebase Imports
+import { auth, firebase } from '../src/firebase'
 
-  componentDidMount() {
-    firebase.initializeApp(clientCredentials)
-
-    if (this.state.user) this.addDbListener()
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.setState({ user: user })
-        return user
-          .getIdToken()
-          .then(token => {
-            // eslint-disable-next-line no-undef
-            return fetch('/api/login', {
-              method: 'POST',
-              // eslint-disable-next-line no-undef
-              headers: new Headers({ 'Content-Type': 'application/json' }),
-              credentials: 'same-origin',
-              body: JSON.stringify({ token }),
-            })
-          })
-          .then(res => this.addDbListener())
-      } else {
-        this.setState({ user: null })
-        // eslint-disable-next-line no-undef
-        fetch('/api/logout', {
-          method: 'POST',
-          credentials: 'same-origin',
-        }).then(() => this.removeDbListener())
-      }
-    })
-  }
-
-  addDbListener() {
-    var db = firebase.firestore()
-    let unsubscribe = db.collection('messages').onSnapshot(
-      querySnapshot => {
-        var messages = {}
-        querySnapshot.forEach(function(doc) {
-          messages[doc.id] = doc.data()
-        })
-        if (messages) this.setState({ messages })
-      },
-      error => {
-        console.error(error)
-      }
-    )
-    this.setState({ unsubscribe })
-  }
-
-  removeDbListener() {
-    // firebase.database().ref('messages').off()
-    if (this.state.unsubscribe) {
-      this.state.unsubscribe()
-    }
-  }
-
-  handleChange(event) {
-    this.setState({ value: event.target.value })
-  }
-
-  handleSubmit(event) {
-    event.preventDefault()
-    var db = firebase.firestore()
-    const date = new Date().getTime()
-    db.collection('messages')
-      .doc(`${date}`)
-      .set({
-        id: date,
-        text: this.state.value,
-      })
-    this.setState({ value: '' })
-  }
-
-  handleLogin() {
-    firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-  }
-
-  handleLogout() {
-    firebase.auth().signOut()
-  }
-
-  render() {
-    const { user, value, messages } = this.state
-
+/*Function: Login Formik
+Purpose: Builds the manual login form*/
+const LogInForm = () => {
     return (
-      <div>
-        {user ? (
-          <button onClick={this.handleLogout}>Logout</button>
-        ) : (
-          <button onClick={this.handleLogin}>Login</button>
-        )}
-        {user && (
-          <div>
-            <form onSubmit={this.handleSubmit}>
-              <input
-                type={'text'}
-                onChange={this.handleChange}
-                placeholder={'add message...'}
-                value={value}
-              />
+        <Formik
+        initialValues={{
+            email: '',
+            password: ''
+        }}
+
+        validationSchema={
+            Yup.object({
+                email: Yup.string()
+                .required('Please enter your email')
+                .email('Invalid Email'),
+                password: Yup.string()
+                .required('Please enter password')
+            })}
+
+        onSubmit={ async (values, {setSubmitting}) => {
+            setSubmitting(true)
+            //event.preventDefault()
+            const email = values.email
+            const pssw = values.password
+
+            try {
+                const response = await fetch('api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: pssw })
+                });
+
+                if(response.ok) {
+                    firebase.auth().signInWithEmailAndPassword(email, pssw).catch(function(error) {
+                        console.log(error)
+                    });
+                    const {token} = await response.json();
+                        console.log('token from front end being called. Here is info from back end -- ' + token);
+                    }
+
+                else {
+                    console.log( response + "response not ok");
+                }
+            } catch(error) {
+                console.error('yout code sucks');
+                throw new Error(error);
+            }
+        }}
+        >
+
+        {formik => (
+            <form onSubmit={formik.handleSubmit}>
+            <label htmlFor="email">Email</label>
+            <input name="email" {...formik.getFieldProps('email')} />
+            {formik.touched.email && formik.errors.email ? (
+                <div>{formik.errors.email}</div>) : null}
+                <label htmlFor="password">Password</label>
+                <input name="password" type="password" autoComplete="off" {...formik.getFieldProps('password')} />
+
+            {formik.touched.password && formik.errors.password ? (
+                <div>{formik.errors.password}</div>) : null}
+
+            <button type="submit">Log In</button>
             </form>
-            <ul>
-              {messages &&
-                Object.keys(messages).map(key => (
-                  <li key={key}>{messages[key].text}</li>
-                ))}
-            </ul>
-          </div>
         )}
-      </div>
-    )
-  }
+        </Formik>
+    );
+};
+
+/*Class:: Login
+Function: Builds the Google Sign-in and Overall Sign-out*/
+class Login extends React.Component {
+
+    //Handles the sign-in portion.
+    handleSignIn = () => {
+
+    var provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/plus.login');
+    firebase.auth().signInWithRedirect(provider);
+    firebase.auth().getRedirectResult().then(function(authData) {
+        console.log(authData);
+        alert(signedin);
+
+    }).catch(function(error) {
+        console.log(error);
+    });
 }
+
+//Handles the Sign-out Function.
+handleLogout = () => {
+
+    firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+    }, function(error) {
+        console.log(error);
+    });
+    window.location.href = "http://localhost:3000";
+}
+
+render() {
+    return (
+        <div>
+        <div className="login-form">
+        <div className="hero">
+        <h1 className="title">Test Login Screen!</h1>
+        <ImageHeader />
+        <div className="login-form">
+        <LogInForm />
+        <div className="row">
+        <Link href="/Home">
+        <a className="card">
+        </a>
+        </Link>
+        <Link href="/registration">
+        <a className="card">
+        <h3>Register</h3>
+        </a>
+        </Link>
+        <button onClick={this.handleSignIn}>Sign In using google</button>
+        <button onClick={this.handleLogout}>Logout</button>
+        </div>
+        </div>
+        </div>
+        </div>
+        </div>
+    )
+}
+
+}
+
+export default Login
