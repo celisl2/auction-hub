@@ -1,4 +1,7 @@
-require('dotenv').config()
+require('dotenv').config();
+const withCSS = require('@zeit/next-css')
+//const withSass = require('@zeit/next-sass');
+
 module.exports = {
     env: {
         FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
@@ -11,3 +14,17 @@ module.exports = {
         FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID
     },
 };
+
+module.exports = withCSS({
+    cssLoaderOptions: {
+        url: false
+    },
+})
+
+/*
+module.exports = withSass({
+    cssLoaderOptions: {
+        url: false
+    },
+})
+*/
