@@ -47,27 +47,9 @@ function get_bid_amount (bidHistoryId) {
     //  save amount value to a variable
     //  return value
 
-    let promise = new Promise((resolve, reject) => {
-
-    })
-
-    // // db.collection(bidHistoryId).get()
-    // db.doc(bidPath).get()
-    //     .then((snapshot) => {
-    //         // snapshot.forEach(doc => {
-    //             // console.log(doc.id, '=>', doc.data().amount); // print statement // remove once done
-    //             // let amount = await doc.data().amount;
-    //             // return doc.data().amount;
-    //             return snapshot.data().amount;
-    //         // });
-    //     })
-    //     .catch((err) => {
-    //         console.log('Error getting documents', err); // print statement // remove once done
-    //     });
-
     db.doc(bidPath).get()
     .then((snapshot) => {
-        return snapshot.data().amount;
+        return snapshot.data().amount; // THE FUNCTION ISN'T WAITING FOR THIS TO FINISH BEFORE RUNNING THE CONSOLE.LOG TEST CASE
     })
     .catch((err) => {
         console.log('Error getting document', err);
