@@ -51,34 +51,28 @@ function get_bid_amount (bidHistoryId) {
 
     })
 
-    db.collection(bidHistoryId).get()
-        .then((snapshot) => {
-            snapshot.forEach(doc => {
-                // console.log(doc.id, '=>', doc.data().amount); // print statement // remove once done
-                let amount = await doc.data().amount;
-            });
-        })
-        .catch((err) => {
-            console.log('Error getting documents', err); // print statement // remove once done
-        });
+    // // db.collection(bidHistoryId).get()
+    // db.doc(bidPath).get()
+    //     .then((snapshot) => {
+    //         // snapshot.forEach(doc => {
+    //             // console.log(doc.id, '=>', doc.data().amount); // print statement // remove once done
+    //             // let amount = await doc.data().amount;
+    //             // return doc.data().amount;
+    //             return snapshot.data().amount;
+    //         // });
+    //     })
+    //     .catch((err) => {
+    //         console.log('Error getting documents', err); // print statement // remove once done
+    //     });
 
+    db.doc(bidPath).get()
+    .then((snapshot) => {
+        return snapshot.data().amount;
+    })
+    .catch((err) => {
+        console.log('Error getting document', err);
+    })
 
-    return amount;
-
-    // const promise = admin.firestore().doc(bidPath).get();
-    // promise.then(snapshot => {
-    //     const data = snapshot.data();
-    //     response.send(data);
-    // })
-    // .catch(error => {
-    //     //handle error
-    //     console.log(error);
-    //     response.status(500).send(error);
-    // });
-
-
-    // amount =
-    // return amount;
 }
 
 //testing function output
