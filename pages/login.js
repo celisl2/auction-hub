@@ -5,29 +5,40 @@ File: Login.js
 Function: Handles the login Portion of the application using Google Firebase API.
 */
 
-//Import Resources From Local Storage
+//Next and React Components.
 import React from 'react'
 import Link from 'next/link'
-
-import {getCode} from '../utils/helperFunctions';
-import ImageHeader from '../components/ImageHeader';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 import Head from 'next/head';
 
-//Firebase Imports
-import { auth, firebase } from '../src/firebase'
+//Form Building Components
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+//Local File components.
+import LoginNav from '../components/LoginNav'
+import CurrentAuction from '../components/CurrentAuction';
+import HomeProducts from '../components/HomeProducts';
+import {getCode} from '../utils/helperFunctions';
+import ImageHeader from '../components/ImageHeader';
+
+//Firebase components.
+import {loadDB} from '../lib/firebaseConfig';
+let firebase = loadDB();
+import * as auth from 'firebase/auth';
+//Imports an authentication listeneer to check if a user is logged in.
 
 /*Function: Login Formik
 Purpose: Builds the manual login form*/
 const LogInForm = () => {
     return (
         <Formik
+        //Set initial values to empty
         initialValues={{
             email: '',
             password: ''
         }}
 
+        //Validates email and passwords.
         validationSchema={
             Yup.object({
                 email: Yup.string()
@@ -37,12 +48,14 @@ const LogInForm = () => {
                 .required('Please enter password')
             })}
 
+        //Submits data
         onSubmit={ async (values, {setSubmitting}) => {
             setSubmitting(true)
             //event.preventDefault()
             const email = values.email
             const pssw = values.password
 
+            //Pulls Input data from post
             try {
                 const response = await fetch('api/login', {
                     method: 'POST',
@@ -50,22 +63,39 @@ const LogInForm = () => {
                     body: JSON.stringify({ email: email, password: pssw })
                 });
 
+                // If return response ok, then login with firebase backend.
                 if(response.ok) {
                     firebase.auth().signInWithEmailAndPassword(email, pssw).catch(function(error) {
                         console.log(error)
+                    alert('An Invalid Username or Password was entered.');
                     });
                     const {token} = await response.json();
-                        console.log('token from front end being called. Here is info from back end -- ' + token);
+//                        console.log('token from front end being called. Here is info from back end -- ' + token);
+
+                        //Uses the authetication listener to redirect if user logs in sucessfully.
+                        firebase.auth().onAuthStateChanged(function(user) {
+                          if (user) {
+                            // User is signed in.
+                            window.location.href = "/indexAuth";
+                          } else {
+                            // No user is signed in.
+                          }
+                        });
                     }
 
+                //If response was not okay.
                 else {
                     console.log( response + "response not ok");
                 }
+
+            //Other error catching.
             } catch(error) {
                 console.error('yout code sucks');
                 throw new Error(error);
             }
         }}
+
+        //Build the login form with formik.
         >
 
         {formik => (
@@ -91,38 +121,41 @@ const LogInForm = () => {
 Function: Builds the Google Sign-in and Overall Sign-out*/
 class Login extends React.Component {
 
-    //Handles the sign-in portion.
+    //Handle the sign-in portion.
     handleSignIn = () => {
 
     var provider = new firebase.auth.GoogleAuthProvider();
+
     provider.addScope('https://www.googleapis.com/auth/plus.login');
-    firebase.auth().signInWithRedirect(provider);
-    firebase.auth().getRedirectResult().then(function(authData) {
-        console.log(authData);
-        alert(signedin);
 
+    firebase.auth().signInWithPopup(provider).then(function(authData) {
+    	console.log(authData);
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                // User is signed in.
+                window.location.href = "/indexAuth";
+
+            } else {
+                // No user is signed in.
+            }
+        });
     }).catch(function(error) {
-        console.log(error);
+    	console.log(error);
     });
+
 }
 
-//Handles the Sign-out Function.
-handleLogout = () => {
-
-    firebase.auth().signOut().then(function() {
-    // Sign-out successful.
-    }, function(error) {
-        console.log(error);
-    });
-    window.location.href = "http://localhost:3000";
-}
 
 render() {
     return (
         <div>
+        <Link href="/index">
+        <a className="card">
+        <h3>Home</h3>
+        </a>
+        </Link>
         <div className="login-form">
         <div className="hero">
-        <h1 className="title">Test Login Screen!</h1>
         <ImageHeader />
         <div className="login-form">
         <LogInForm />

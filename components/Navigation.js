@@ -4,12 +4,12 @@ export default () =>
     <nav>
         <ul>
             <li>
-                <Link href="/index">
-                    <a>Auction Hub</a>
+                <Link href="/indexAuth">
+                    <a>Home</a>
                 </Link>
             </li>
            <li>
-                <Link href="/index#currentAction">
+                <Link href="/indexAuth#currentAction">
                     <a>Current Auction</a>
                 </Link>
             </li>
@@ -19,8 +19,13 @@ export default () =>
                 </Link>
             </li>
             <li>
-                <Link href="/login">
-                    <a>Login</a>
+                <Link href="/Dashboard">
+                    <a>Dashboard</a>
+                </Link>
+            </li>
+            <li>
+                <Link href="/SignOut">
+                    <a>Signout</a>
                 </Link>
             </li>
         </ul>

@@ -2,6 +2,7 @@
 # Dependency directories
 node_modules/
 .next/
+.env
 
 # mac trash that follows me everywhere
 .DS_Store

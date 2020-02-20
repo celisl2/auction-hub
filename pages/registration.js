@@ -1,12 +1,30 @@
-import ImageHeader from '../components/ImageHeader';
+/*
+Name: Andy Estes
+Group: Team 1
+File: registration.js
+Purpose: Handles the registration form and signup for the auction application
+using Google Firebase to handle the registration.
+*/
+
+//Formik and Yup Components
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { auth, firebase } from '../src/firebase'
 
+//Local File components
+import ImageHeader from '../components/ImageHeader';
+import {loadDB} from '../lib/firebaseConfig';
+let firebase = loadDB();
 
+//Imports an authentication listener to check if a user is logged in.
+
+/*Function: Login Formik
+Builds the customer registration form.*/
 const CustomerRegistration = () => {
     return (
+        //Initilize Formik
         <Formik
+
+            //Initiliaize initial values for form.
             initialValues={{
                 firstName: '',
                 lastName: '',
@@ -15,6 +33,8 @@ const CustomerRegistration = () => {
                 password: '',
                 passwordConfirm: '',
             }}
+
+            //Validation for form to prevent bad input.
             validationSchema={
                 Yup.object({
                     firstName: Yup.string().required('Required'),
@@ -27,20 +47,24 @@ const CustomerRegistration = () => {
                         .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
 
+            //Command to handle upon submitting the form.
             onSubmit={(values, { setSubmitting }) => {
                 const {email, password } = values;
-                setTimeout(() => {
-               alert(JSON.stringify(values, null, 2));
-               setSubmitting(false);
-              }, 400);
                 // Simulate a mouse click:
 
                 firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-	                   console.log(error);
+                    //Firebase errors are handled here.
+                       console.log(error);
+                });
+
+                firebase.auth().onAuthStateChanged(user => {
+                    if(user) {
+                        //After successful creation, user will be redirected to home.html
+                        window.location = '/indexAuth';
+                    }
                 });
             }}
         >
-
         {formik => (
             <form onSubmit={formik.handleSubmit}>
                 <label htmlFor="firstName">First Name</label>
@@ -111,11 +135,11 @@ const AdminRegistration = () => {
                 })}
             onSubmit={(values, { setSubmitting }) => {
 
-                setTimeout(() => {
+        /*        setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
                 setSubmitting(false);
                 }, 400);
-
+*/
             }}
         >
         {formik => (

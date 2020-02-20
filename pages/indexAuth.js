@@ -12,14 +12,16 @@ import Link from 'next/link'
 import router from 'next/router';
 
 //Local File components.
-import LoginNav from '../components/LoginNav'
-
+import Navigation from '../components/Navigation'
+import CurrentAuction from '../components/CurrentAuction';
+import HomeProducts from '../components/HomeProducts';
 
 //Firebase components.
 import {loadDB} from '../lib/firebaseConfig';
-let firebase = loadDB()
-
 //Imports an authentication listeneer to check if a user is logged in.
+
+//import withAuth from '../components/withAuth';
+
 
 /*Class: Home
 Purpose: Builds the manual login form*/
@@ -31,7 +33,9 @@ class Home extends React.Component {
 		return(
   		<div>
 		<div className="home-body">
-  		<LoginNav />
+  		<Navigation />
+  		<CurrentAuction />
+  		<HomeProducts />
   		</div>
   		<div className="hero">
   		<div className="row">
@@ -43,4 +47,4 @@ class Home extends React.Component {
 	}
 }
 
-export default Home;
+export default withAuth(Home);

@@ -1,6 +1,8 @@
 import React from 'react';
 import router from 'next/router';
-import { auth } from '../firebase';
+//import { auth } from '../src/firebaseConfig';
+import * as auth from "firebase/auth";
+
 
 const withAuth = (Component) => {
 return class extends React.Component {
@@ -21,7 +23,7 @@ if(authUser) {
 }
 
 else {
-router.push('/');
+router.push('/index');
 }
 });
 }

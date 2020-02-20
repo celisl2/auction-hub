@@ -10,9 +10,6 @@ export default (req, res) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ token: "back-end token here - user submitted the following data " + req.body.email + ' and ' + req.body.password }));
-      //  firebase.auth().signInWithEmailAndPassword(body.email, body.password).catch(function(error) {
-	      //   console.log(error);
-      //  });
     }
     else {
         console.log(res);
