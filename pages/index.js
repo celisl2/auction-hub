@@ -17,7 +17,7 @@ import LoginNav from '../components/LoginNav'
 
 //Firebase components.
 import {loadDB} from '../lib/firebaseConfig';
-let firebase = loadDB()
+let firebase = loadDB();
 
 //Imports an authentication listeneer to check if a user is logged in.
 

@@ -24,7 +24,6 @@ import ImageHeader from '../components/ImageHeader';
 //Firebase components.
 import {loadDB} from '../lib/firebaseConfig';
 let firebase = loadDB();
-import * as auth from 'firebase/auth';
 //Imports an authentication listeneer to check if a user is logged in.
 
 /*Function: Login Formik
@@ -70,7 +69,7 @@ const LogInForm = () => {
                     alert('An Invalid Username or Password was entered.');
                     });
                     const {token} = await response.json();
-//                        console.log('token from front end being called. Here is info from back end -- ' + token);
+//                       console.log('token from front end being called. Here is info from back end -- ' + token);
 
                         //Uses the authetication listener to redirect if user logs in sucessfully.
                         firebase.auth().onAuthStateChanged(function(user) {
@@ -170,7 +169,7 @@ render() {
         </a>
         </Link>
         <button onClick={this.handleSignIn}>Sign In using google</button>
-        <button onClick={this.handleLogout}>Logout</button>
+
         </div>
         </div>
         </div>

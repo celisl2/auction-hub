@@ -18,6 +18,8 @@ import HomeProducts from '../components/HomeProducts';
 
 //Firebase components.
 import {loadDB} from '../lib/firebaseConfig';
+let firebase = loadDB();
+
 //Imports an authentication listeneer to check if a user is logged in.
 
 //import withAuth from '../components/withAuth';
@@ -47,4 +49,4 @@ class Home extends React.Component {
 	}
 }
 
-export default withAuth(Home);
+export default Home;

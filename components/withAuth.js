@@ -1,8 +1,9 @@
 import React from 'react';
 import router from 'next/router';
 //import { auth } from '../src/firebaseConfig';
-import * as auth from "firebase/auth";
 
+import {loadDB} from '../lib/firebaseConfig';
+let firebase = loadDB();
 
 const withAuth = (Component) => {
 return class extends React.Component {
