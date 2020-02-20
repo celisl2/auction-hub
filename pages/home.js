@@ -21,7 +21,16 @@ import {loadDB} from '../lib/firebaseConfig';
 let firebase = loadDB();
 
 //Imports an authentication listeneer to check if a user is logged in.
-
+//Checks to see if a suer is logged in or not.
+		firebase.auth().onAuthStateChanged(function(user) {
+		  if (user) {
+			// User is signed in.
+			console.log('User is in the home page.');
+		  } else {
+			// No user is signed in.
+			window.location.href = "/index";
+		  }
+		});
 //import withAuth from '../components/withAuth';
 
 

@@ -75,9 +75,10 @@ const LogInForm = () => {
                         firebase.auth().onAuthStateChanged(function(user) {
                           if (user) {
                             // User is signed in.
-                            window.location.href = "/indexAuth";
+                            window.location.href = "/home";
                           } else {
                             // No user is signed in.
+                            console.log('A Firebase error has occured when signing in.');
                           }
                         });
                     }
@@ -132,7 +133,7 @@ class Login extends React.Component {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 // User is signed in.
-                window.location.href = "/indexAuth";
+                window.location.href = "/home";
 
             } else {
                 // No user is signed in.
@@ -144,13 +145,13 @@ class Login extends React.Component {
 
 }
 
-
+//Render Content
 render() {
     return (
         <div>
         <Link href="/index">
         <a className="card">
-        <h3>Home</h3>
+        <h3></h3>
         </a>
         </Link>
         <div className="login-form">

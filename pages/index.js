@@ -19,14 +19,28 @@ import LoginNav from '../components/LoginNav'
 import {loadDB} from '../lib/firebaseConfig';
 let firebase = loadDB();
 
-//Imports an authentication listeneer to check if a user is logged in.
+import withAuth from '../components/withAuth'
 
+
+//Imports an authentication listeneer to check if a user is logged in.
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+	// User is signed in.
+	router.push('/home')
+
+  } else {
+	// No user is signed in.
+	console.log('A Firebase error has occured.');
+  }
+});
 /*Class: Home
 Purpose: Builds the manual login form*/
 class Home extends React.Component {
 
+
 //Render Content
 	render() {
+
 
 		return(
   		<div>

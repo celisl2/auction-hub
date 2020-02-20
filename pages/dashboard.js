@@ -28,6 +28,7 @@ class Dashboard extends React.Component {
 	//Render content.
 	render() {
 
+//Checks to see if a suer is logged in or not.
 		firebase.auth().onAuthStateChanged(function(user) {
 		  if (user) {
 			// User is signed in.

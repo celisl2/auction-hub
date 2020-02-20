@@ -21,6 +21,7 @@ console.log(authUser);
 
 if(authUser) {
 	this.setState({status: 'SIGNED_IN'});
+	router.push('/home')
 }
 
 else {

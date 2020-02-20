@@ -60,7 +60,7 @@ const CustomerRegistration = () => {
                 firebase.auth().onAuthStateChanged(user => {
                     if(user) {
                         //After successful creation, user will be redirected to home.html
-                        window.location = '/indexAuth';
+                        window.location = '/home';
                     }
                 });
             }}
