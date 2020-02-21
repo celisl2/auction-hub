@@ -5,5 +5,4 @@ node_modules/
 .env
 
 #laura's local testing and other of my stuff that needs to go away lol
-ignore/
 .DS_Store

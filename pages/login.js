@@ -3,6 +3,7 @@ import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Head from 'next/head';
+import Router from 'next/router';
 
 const LogInForm = () => {
     return (
@@ -33,10 +34,9 @@ const LogInForm = () => {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ email: email, password: pssw })
                         });
-
+                        //if the response is okay then redirect them
                         if(response.ok) {
-                            const {token} = await response.json();
-                            console.log('token from front end being called. Here is info from back end -- ' + token);
+                            Router.push('/index');
                         }
                         else {
                             console.log( response + "response not ok");
@@ -45,10 +45,7 @@ const LogInForm = () => {
                         console.error('yout code sucks');
                         throw new Error(error);
                     }
-
-
-            }} 
-
+            }}
         >
         {formik => (
             <form onSubmit={formik.handleSubmit}>
@@ -63,7 +60,6 @@ const LogInForm = () => {
                 <button type="submit">Log In</button>
             </form>
         )}
-
         </Formik>
     );
 };

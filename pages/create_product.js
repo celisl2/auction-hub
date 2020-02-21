@@ -1,6 +1,7 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {getCode} from '../utils/helperFunctions';
+import AdminNav from '../components/AdminNav';
 
 const CreateProductForm = () => {
     return (
@@ -74,6 +75,7 @@ const CreateProductForm = () => {
 
 const CreateProduct = () => 
     <div className="create-product-body">
+        <AdminNav />
         <h2>Create Auction Product</h2>
         <CreateProductForm />
     </div>

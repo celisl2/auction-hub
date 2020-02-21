@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SignOut from './SignOut';
 
 export default () =>
     <nav>
@@ -17,6 +18,9 @@ export default () =>
                 <Link href="/products">
                     <a>Products</a>
                 </Link>
+            </li>
+            <li>
+                <SignOut />
             </li>
         </ul>
     </nav>;

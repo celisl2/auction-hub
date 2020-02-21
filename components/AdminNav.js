@@ -19,12 +19,12 @@ export default () =>
             </Link>
         </li>
         <li>
-            <Link href="/edit-auction">
+            <Link href="/edit_auction">
                 <a>Edit Auction Events</a>
             </Link>
         </li>
         <li>
-            <Link href="/edit-product">
+            <Link href="/edit_product">
                 <a>Edit Product</a>
             </Link>
         </li>

@@ -94,7 +94,7 @@ const CustomerRegistration = () => {
     );
 };
 
-const AdminRegistration = () => {
+const AdminRegistration = (props) => {
     return (
         <Formik
             initialValues={{
@@ -114,6 +114,7 @@ const AdminRegistration = () => {
                     .email('Invalid email address')
                     .required('Required'),
                 password: Yup.string()
+                    .min(6, "Password should be at least 6 characters")
                     .required('Required'),
                 passwordConfirm: Yup.string()
                     .required('Required')
@@ -132,11 +133,18 @@ const AdminRegistration = () => {
                         });
 
                         if(response.ok) {
+                            //redirect user to login page
+                            /*
                             const {token} = await response.json();
                             console.log('token from front end being called. Here is info from back end -- ' + token);
+                            */
+                            if(Cookies.get('ssid') !== undefined) {
+
+                            }
                         }
                         else {
-                            console.log( response + "response not ok");
+                            //display errors here
+                            console.log("response not ok");
                         }
                     } catch(error) {
                         console.error('yout code sucks');
