@@ -6,3 +6,4 @@ node_modules/
 
 #laura's local testing and other of my stuff that needs to go away lol
 .DS_Store
+.vscode

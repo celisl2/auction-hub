@@ -3,7 +3,10 @@ import CurrentAuction from '../components/CurrentAuction';
 import HomeProducts from '../components/HomeProducts';
 import {loadDB} from '../lib/db';
 import HomeForbidden from '../components/HomeForbidden';
+import Loading from '../components/Loading';
 const React = require('react');
+import Cookies from 'js-cookie';
+import Router from 'next/router';
 
 let firebase = loadDB();
 
@@ -21,21 +24,48 @@ class Home extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            user: null
+            user: 'loading'
         }
     }
 
     componentDidMount() {
-        firebase.auth().onAuthStateChanged((user) => { this.setState({user}) })
+        this._isMounted = true;
+        
+        firebase.auth().onAuthStateChanged((user) => {
+            if(user) {
+                if(this._isMounted)
+                    this.setState({ user });
+
+                user.getIdToken().then(function (token) {
+                    Cookies.set('ssid', token);
+                })
+            }
+            else {
+                if(this._isMounted)
+                    this.setState(null);
+                    
+                setTimeout(() => {
+                    Router.push('/login');
+                }, 4000);
+                
+                
+            }
+        })
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     render() {
-        //short hand conditional for if/else
-        let content = this.state.user ? <HomeAuth /> : <HomeForbidden />;
-        return (
-            <div>
-                {content}
-            </div>
-        )
+        //we check for state since every time state is changed the render function will be called again
+        //let content = Cookies.get('ssid') ? <HomeAuth /> : <HomeForbidden />; 
+        if(this.state.user === 'loading')
+            return <Loading />;
+        else if(this.state.user === null)
+            return <HomeForbidden />;
+        else
+            return <HomeAuth />;
     }
 
 };

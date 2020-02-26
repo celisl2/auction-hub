@@ -2,6 +2,10 @@ import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import {loadDB} from '../lib/db';
+let firebase = loadDB();
+import "firebase/auth";
+import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Router from 'next/router';
 
@@ -24,23 +28,30 @@ const LogInForm = () => {
                 onSubmit={ async (values, {setSubmitting}) => {
                 setSubmitting(true)
                 
-                    //event.preventDefault()
                     const email = values.email
                     const pssw = values.password
 
                     try {
-                        const response = await fetch('api/login', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: email, password: pssw })
-                        });
-                        //if the response is okay then redirect them
-                        if(response.ok) {
-                            Router.push('/index');
-                        }
-                        else {
-                            console.log( response + "response not ok");
-                        }
+                        firebase.auth().signInWithEmailAndPassword(email, pssw)
+                            .then(() => {
+                                console.log('logged in fine from firebase')
+                                Router.push('/index');
+                            })
+                            .catch((error) => {
+                                let errorCode = error.code;
+                                    if(errorCode == 'invalid-email') {
+                                        Cookies.set('logInError', 'Email address not valid');
+                                    } else if(errorCode == 'user-disabled') {
+                                        Cookies.set('logInError', 'Your account has been disabled. Please contact an adiministrator');
+                                    } else if(errorCode == 'user-not-found') {
+                                        Cookies.set('logInError', 'There is no account associated with this email. Please create an account or double check the email entered.');
+                                    } else if( errorCode == 'wrong-password') {
+                                        Cookies.set('logInError', 'Incorrect password. Please enter a valid passoword associated with that email.');
+                                    } else {
+                                        console.log(error);
+                                    }
+                            });
+
                     } catch(error) {
                         console.error('yout code sucks');
                         throw new Error(error);

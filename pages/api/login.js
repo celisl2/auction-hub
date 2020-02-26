@@ -11,6 +11,7 @@ export default (req, res) => {
         firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
             .then(() => {
                 Cookies.set('ssid', Date.now());
+                console.log('logged in fine from firebase')
             })
             .catch((error) => {
                 let errorCode = error.code;
@@ -26,6 +27,7 @@ export default (req, res) => {
                         console.log(error);
                     }
             });
+            console.log('I GUESS SIGNED IN FINE LOL ' + Cookies.get('ssid'));
 
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
