@@ -2,6 +2,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {getCode} from '../utils/helperFunctions';
 
+import createAuctionProduct from './api/createProductQuery';
+
 const CreateProductForm = () => {
     return (
         <Formik
@@ -22,9 +24,41 @@ const CreateProductForm = () => {
                     maxBid: Yup.number().required('Please enter max bid'),
                     productPickUpInfo: Yup.string().notRequired()
                 })}
+
+
+            onSubmit={(values, { setSubmitting }) => {
+            
+                alert(JSON.stringify(values, null, 2));
+
+                createAuctionEvent(values)
+                    .then( (results) => {
+                        alert("INDEX.JS: Auction event created successfully!");
+                    })
+                    .catch( (error) => {
+                        alert("INDEX.JS: There was a problem creating an auction event:\n\t" +
+                        error.code + " : " + error.message + "\n");
+                    })
+
+                setSubmitting(false);
+                
+            }}
+            //    onSubmit={(values) => {
             onSubmit={(values, { setSubmitting }) => {
                 setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
+
+                //createAuctionProduct(values)
+                createAuctionProduct("vOwsw3o6VFijgeOEDKXM", values)
+                /*
+                    .then( (results) => {
+                        alert("INDEX.JS: Auction event created successfully!");
+                    })
+                    .catch( (error) => {
+                        alert("INDEX.JS: There was a problem creating an auction event:\n\t" +
+                        error.code + " : " + error.message + "\n")
+                    })
+                */
+
                 setSubmitting(false);
                 }, 400);
             }}
