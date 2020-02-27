@@ -7,6 +7,8 @@ import * as Yup from 'yup';
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
 
+import createAuctionEvent from './api/createAuctionQuery';
+
 const CreateAuctionForm = () => {
     return(
         <Formik
@@ -49,12 +51,28 @@ const CreateAuctionForm = () => {
                     pickUpInformation: Yup.string().required('Enter pickup information for all products in auction. This information can be overriden in the create products page.')
 
                 })}
-            onSubmit={(values) => {
-                
+            
+            
+            //    onSubmit={(values) => {
+            onSubmit={(values, { setSubmitting }) => {
+                setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
-                //setSubmitting(false);
-                
+
+                createAuctionEvent(values)
+                /*
+                    .then( (results) => {
+                        alert("INDEX.JS: Auction event created successfully!");
+                    })
+                    .catch( (error) => {
+                        alert("INDEX.JS: There was a problem creating an auction event:\n\t" +
+                        error.code + " : " + error.message + "\n")
+                    })
+                */
+
+                setSubmitting(false);
+                }, 400);
             }}
+
         >
             {formik => (
             <form onSubmit={formik.handleSubmit}>
