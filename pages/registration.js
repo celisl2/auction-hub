@@ -1,6 +1,7 @@
 import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Link from 'next/link'
 
 const CustomerRegistration = () => {
     return (
@@ -44,12 +45,12 @@ const CustomerRegistration = () => {
                             console.log( response + "response not ok");
                         }
                     } catch(error) {
-                        console.error('yout code sucks');
+                        console.error('Your code sucks');
                         throw new Error(error);
                     }
 
 
-            }} 
+            }}
         >
         {formik => (
             <form onSubmit={formik.handleSubmit}>
@@ -67,7 +68,7 @@ const CustomerRegistration = () => {
                 <input name="email" {...formik.getFieldProps('email')} />
                 {formik.touched.email && formik.errors.email ? (
                     <div>{formik.errors.email}</div>) : null}
-                
+
                 <label htmlFor="phone">Phone</label>
                 <input name="phone" {...formik.getFieldProps('phone')} />
                 {formik.touched.phone && formik.errors.phone ? (
@@ -152,7 +153,7 @@ const AdminRegistration = (props) => {
                     }
 
 
-            }} 
+            }}
         >
         {formik => (
             <form onSubmit={formik.handleSubmit}>
@@ -195,7 +196,7 @@ const Registration = () =>
         <div className="registration-content">
             <h2>Register</h2>
             <CustomerRegistration />
-            {/* will need to either separate admin registration to other file or 
+            {/* will need to either separate admin registration to other file or
                 use logic to to only display admin when clicking on the admin link
              */}
             <hr />

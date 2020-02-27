@@ -22,21 +22,18 @@ const LogInForm = () => {
                     email: Yup.string()
                         .required('Please enter your email')
                         .email('Invalid Email'),
-                    password: Yup.string()
-                        .required('Please enter password')
                 })}
 
                 onSubmit={ async (values, {setSubmitting}) => {
                 setSubmitting(true)
 
                     const email = values.email
-                    const pssw = values.password
 
                     try {
-                        firebase.auth().signInWithEmailAndPassword(email, pssw)
+                        firebase.auth().sendPasswordResetEmail(email)
                             .then(() => {
-                                console.log('logged in fine from firebase')
-                                Router.push('/index');
+                                console.log('Sent recovery password to email')
+                                Router.push('/recoverysent');
                             })
                             .catch((error) => {
                                 let errorCode = error.code;
@@ -46,15 +43,13 @@ const LogInForm = () => {
                                         Cookies.set('logInError', 'Your account has been disabled. Please contact an adiministrator');
                                     } else if(errorCode == 'user-not-found') {
                                         Cookies.set('logInError', 'There is no account associated with this email. Please create an account or double check the email entered.');
-                                    } else if( errorCode == 'wrong-password') {
-                                        Cookies.set('logInError', 'Incorrect password. Please enter a valid passoword associated with that email.');
                                     } else {
                                         console.log(error);
                                     }
                             });
 
                     } catch(error) {
-                        console.error('yout code sucks');
+                        console.error('An unknown error has occurred.');
                         throw new Error(error);
                     }
             }}
@@ -65,18 +60,16 @@ const LogInForm = () => {
                 <input name="email" {...formik.getFieldProps('email')} />
                     {formik.touched.email && formik.errors.email ? (
                         <div>{formik.errors.email}</div>) : null}
-                <label htmlFor="password">Password</label>
-                <input name="password" type="password" autoComplete="off" {...formik.getFieldProps('password')} />
                     {formik.touched.password && formik.errors.password ? (
                         <div>{formik.errors.password}</div>) : null}
-                <button type="submit">Log In</button>
+                <button type="submit">Recover Account</button>
             </form>
         )}
         </Formik>
     );
 };
 
-let Login = () =>
+let Recovery = () =>
     <div className="login-body">
         <Head>
             <title>Auction Hub</title>
@@ -88,13 +81,9 @@ let Login = () =>
         <div className="login-form">
             <LogInForm />
         </div>
-        <div className="login-register-recovery">
-            <p>Not registered yet{getCode(63)}</p>
+        <div className="login-register">
+            <p>Enter your Email to have a recovery email sent.{getCode(63)}</p>
             {/** need on click for the buttons below */}
-            <Link href="/recovery">
-            <a className="card">
-            <h3>Forgot Password&rarr;</h3>
-            </a></Link>
             <Link href="/registration">
             <a className="card">
             <h3>Register&rarr;</h3>
@@ -105,4 +94,4 @@ let Login = () =>
             </a></Link>
         </div>
     </div>;
-export default Login;
+export default Recovery;
