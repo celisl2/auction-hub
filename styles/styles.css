@@ -30,3 +30,86 @@ h4 {
 p {
     font-family: 'Open Sans', Arial, sans-serif;
 }
+
+label {
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+
+.login-input {
+    margin-bottom: 3.2%;
+}
+
+.image-header {
+    background: url('../public//images/auction-lady.png') center 18% no-repeat;
+    min-height: 48vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    width: 100%;
+    background-size: cover;
+    background-position: 60% 50%;
+    margin-bottom: 5%;
+}
+
+h1.login-page{
+    margin-bottom: 2%;
+    border-bottom: 4px solid #333366;
+    color: #fff;
+}
+
+.login-text {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #fff;
+    opacity: 1;
+}
+.login-p {
+    margin-bottom: 1%;
+}
+.login-form {
+    border: 1px solid #333366;
+    padding: 2%;
+    border-radius: 2%;
+}
+
+.login-header {
+    margin-bottom: 3%;
+    font-weight: bold;
+    background-color: #efefef;
+    padding: 1%;
+    width: 50%;
+}
+button.login-button {
+    background-color: #66b8e0;
+    color: #000;
+    border-color: #309fd5;
+    width: 50%;
+    display: flex; justify-content: center;
+    margin: 0 auto;
+}
+.login-special {
+    display: flex;
+    justify-content: center;
+    margin: 3%;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+a.plain-link {
+    border: none;
+    border-top: 2px solid #efefef;
+    background-color: #6c757d;
+    padding: 1%;
+}
+p.plain-link {
+    margin-bottom: none;
+}
+
+
+@media (min-width: 768px) {
+    .login-form {
+        max-width: 50%;
+    }
+}
