@@ -63,8 +63,8 @@ const LogInForm = () => {
             }}
         >
         {formik => (
-            <Form>
-                <Form.Group onSubmit={formik.handleSubmit}>
+            <Form onSubmit={formik.handleSubmit}>
+                <Form.Group>
                     <Form.Label htmlFor="email">Email</Form.Label>
                     <Form.Control className="login-input" type="email" placeholder="Enter email" name="email" {...formik.getFieldProps('email')} />
                         {formik.touched.email && formik.errors.email ? (
