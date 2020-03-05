@@ -1,7 +1,7 @@
 import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Link from 'next/link'
+import Link from 'next/link';
 
 const CustomerRegistration = () => {
     return (
@@ -196,11 +196,6 @@ const Registration = () =>
         <div className="registration-content">
             <h2>Register</h2>
             <CustomerRegistration />
-            {/* will need to either separate admin registration to other file or
-                use logic to to only display admin when clicking on the admin link
-             */}
-            <hr />
-            <AdminRegistration />
         </div>
     </div>;
 export default Registration;
