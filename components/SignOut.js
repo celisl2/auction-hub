@@ -3,12 +3,13 @@ import "firebase/auth";
 import Cookies from 'js-cookie';
 import Router from 'next/router';
 const React = require('react')
+import Button from 'react-bootstrap/Button';
 
 let firebase = loadDB();
 
 const SignOut = () => {
     return (
-        <button onClick={ function () {
+        <Button variant="dark" onClick={ function () {
             firebase.auth().signOut().then(() => {
             //delete cookies
             Cookies.remove('ssid');
@@ -18,7 +19,7 @@ const SignOut = () => {
         })
         }}>
             Log Out
-        </button>
+        </Button>
     );
 };
 

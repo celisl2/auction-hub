@@ -4,6 +4,8 @@ import HomeProducts from '../components/HomeProducts';
 import {loadDB} from '../lib/db';
 import HomeForbidden from '../components/HomeForbidden';
 import Loading from '../components/Loading';
+import Footer from '../components/Footer';
+import {getCode} from '../utils/helperFunctions';
 const React = require('react');
 import Cookies from 'js-cookie';
 import Router from 'next/router';
@@ -15,6 +17,8 @@ const HomeAuth = () =>
         <Navigation />
         <CurrentAuction />
         <HomeProducts />
+        <Footer />
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>;
 
 

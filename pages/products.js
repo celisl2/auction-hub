@@ -3,6 +3,7 @@ import {getCode} from '../utils/helperFunctions';
 import {loadDB} from '../lib/db';
 import HomeForbidden from '../components/HomeForbidden';
 import Loading from '../components/Loading';
+import Footer from '../components/Footer';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
 const React = require('react');
@@ -33,6 +34,8 @@ let Products = () =>
             <h3>Products</h3>
              {/* logic here to display all products */}
         </div>
+        <Footer />
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>;
 
 //This class renders a react component based on if the user is logged in or not
