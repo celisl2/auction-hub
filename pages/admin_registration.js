@@ -34,6 +34,7 @@ const AdminRegistrationForm = (props) => {
                     const email = values.email
                     const pssw = values.password
 
+                    //! The code in this try catch should be changed 
                     try {
                         const response = await fetch('api/registration', {
                             method: 'POST',

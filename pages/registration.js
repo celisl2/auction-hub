@@ -1,13 +1,7 @@
 import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-<<<<<<< HEAD
 import Link from 'next/link';
-=======
-import Link from 'next/link'
-import Router from 'next/router';
-
->>>>>>> 542913e53156f0e34e367296ab8e61e345c07deb
 
 const CustomerRegistration = () => {
     return (
