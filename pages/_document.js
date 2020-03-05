@@ -23,12 +23,14 @@ export default class MyDocument extends Document {
             return ( 
                 <html>
                     <Head>
-                    <link
-                    rel="stylesheet"
-                    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-                    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-                    crossOrigin="anonymous"
-                    />
+                        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+                        <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700|Open+Sans:300,400|Oswald:300,400&display=swap" rel="stylesheet"></link>
+                        <link
+                        rel="stylesheet"
+                        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+                        crossOrigin="anonymous"
+                        />
                         {/* Step 5: Output the styles in the head  */ }
                         {this.props.styleTags} 
                     </Head> 

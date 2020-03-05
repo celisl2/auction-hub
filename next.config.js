@@ -1,7 +1,6 @@
 require('dotenv').config();
 const withCSS = require('@zeit/next-css')
 const webpack = require('webpack');
-//const withSass = require('@zeit/next-sass');
 
 module.exports = {
     env: {
@@ -31,10 +30,3 @@ module.exports = {
         config.plugins.push(new webpack.DefinePlugin(env));
 return config;}};
 
-/*
-module.exports = withSass({
-    cssLoaderOptions: {
-        url: false
-    },
-})
-*/

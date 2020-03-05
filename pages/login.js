@@ -9,6 +9,9 @@ import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Router from 'next/router';
 import Link from 'next/link'
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Footer from '../components/Footer';
 
 const LogInForm = () => {
     return (
@@ -60,17 +63,20 @@ const LogInForm = () => {
             }}
         >
         {formik => (
-            <form onSubmit={formik.handleSubmit}>
-                <label htmlFor="email">Email</label>
-                <input name="email" {...formik.getFieldProps('email')} />
-                    {formik.touched.email && formik.errors.email ? (
-                        <div>{formik.errors.email}</div>) : null}
-                <label htmlFor="password">Password</label>
-                <input name="password" type="password" autoComplete="off" {...formik.getFieldProps('password')} />
-                    {formik.touched.password && formik.errors.password ? (
-                        <div>{formik.errors.password}</div>) : null}
-                <button type="submit">Log In</button>
-            </form>
+            <Form onSubmit={formik.handleSubmit}>
+                <Form.Group>
+                    <Form.Label htmlFor="email">Email</Form.Label>
+                    <Form.Control className="login-input" type="email" placeholder="Enter email" name="email" {...formik.getFieldProps('email')} />
+                        {formik.touched.email && formik.errors.email ? (
+                            <div>{formik.errors.email}</div>) : null}
+                    <Form.Label htmlFor="password">Password</Form.Label>
+                    <Form.Control className="login-input" type="password" placeholder="Password" name="password" autoComplete="off" {...formik.getFieldProps('password')} />
+                        {formik.touched.password && formik.errors.password ? (
+                            <div>{formik.errors.password}</div>) : null}
+                    <button className="btn btn-primary login-button" type="submit">Log In</button>
+                </Form.Group>
+            </Form>
+            
         )}
         </Formik>
     );
@@ -79,30 +85,31 @@ const LogInForm = () => {
 let Login = () =>
     <div className="login-body">
         <Head>
-            <title>Auction Hub</title>
-            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-            <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700|Open+Sans:300,400|Oswald:300,400&display=swap" rel="stylesheet"></link>
-
+            <title>Log In | Auction Hub</title>
         </Head>
-        <ImageHeader />
-        <div className="login-form">
-            <LogInForm />
-        </div>
-        <div className="login-register-recovery">
-            <p>Not registered yet{getCode(63)}</p>
-            {/** need on click for the buttons below */}
-            <Link href="/recovery">
-            <a className="card">
-            <h3>Forgot Password&rarr;</h3>
-            </a></Link>
-            <Link href="/registration">
-            <a className="card">
-            <h3>Register&rarr;</h3>
-            </a></Link>
-            <Link href="/registration">
-            <a className="card">
-            <h3>Admin Registration&rarr;</h3>
-            </a></Link>
-        </div>
+        
+            <ImageHeader />
+            <Container>
+                <h3 className="text-center mx-auto login-header">Log In</h3>
+            <div className="mx-auto login-form">
+                <LogInForm />
+                <div className='line'></div>
+                <Link href="/recovery">
+                    <a className="card plain-link btn btn-secondary">Forgot Password</a>
+                </Link>
+            </div>
+            <div className="login-register-recovery">
+                <p className="login-special">Not registered yet{getCode(63)}</p>
+                {/** need on click for the buttons below */}
+                <Link href="/registration">
+                    <a className="card">Register</a>
+                </Link>
+                <Link href="/registration">
+                    <a className="card">Administrator Registration</a>
+                </Link>
+            </div>
+        </Container>
+        <Footer />
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>;
 export default Login;

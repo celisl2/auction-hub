@@ -1,26 +1,16 @@
-import Link from 'next/link';
 import SignOut from './SignOut';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
 
 export default () =>
-    <nav>
-        <ul>
-            <li>
-                <Link href="/index">
-                    <a>Auction Hub</a>
-                </Link>
-            </li>
-            <li>
-                <Link href="/index#currentAction">
-                    <a>Current Auction</a>
-                </Link>
-            </li>
-            <li>
-                <Link href="/products">
-                    <a>Products</a>
-                </Link>
-            </li>
-            <li>
-                <SignOut />
-            </li>
-        </ul>
-    </nav>;
+    <Navbar bg='light' expand='lg'>
+        <Navbar.Brand href="/index">Auction Hub</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className='mr-auto'>
+                <Nav.Link href="#currentAuction">Current Auction</Nav.Link>
+                <Nav.Link href="/products">Products</Nav.Link>
+            </Nav>
+            <SignOut />
+        </Navbar.Collapse>
+    </Navbar>;
