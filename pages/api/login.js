@@ -27,6 +27,9 @@ export default (req, res) => {
                         console.log(error);
                     }
             });
+
+
+    
             console.log('I GUESS SIGNED IN FINE LOL ' + Cookies.get('ssid'));
 
             res.statusCode = 200;
@@ -36,5 +39,5 @@ export default (req, res) => {
         console.log(res);
         console.log('in else at api/login');
     }
-    
+
 };

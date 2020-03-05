@@ -1,7 +1,13 @@
 import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+<<<<<<< HEAD
 import Link from 'next/link';
+=======
+import Link from 'next/link'
+import Router from 'next/router';
+
+>>>>>>> 542913e53156f0e34e367296ab8e61e345c07deb
 
 const CustomerRegistration = () => {
     return (
@@ -38,8 +44,11 @@ const CustomerRegistration = () => {
                         });
 
                         if(response.ok) {
+                            console.log('response ok');
                             const {token} = await response.json();
                             console.log('token from front end being called. Here is info from back end -- ' + token);
+                            Router.push('/login');
+
                         }
                         else {
                             console.log( response + "response not ok");
@@ -48,7 +57,6 @@ const CustomerRegistration = () => {
                         console.error('Your code sucks');
                         throw new Error(error);
                     }
-
 
             }}
         >
