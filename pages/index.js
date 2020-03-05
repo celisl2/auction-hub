@@ -30,11 +30,21 @@ class Home extends React.Component {
 
     componentDidMount() {
         this._isMounted = true;
-        
+
         firebase.auth().onAuthStateChanged((user) => {
             if(user) {
-                if(this._isMounted)
+
+                if (user.emailVerified) {
+                  console.log('Email is verified');
+                }
+                else {
+                  console.log('Email is not verified');
+                  Router.push('/verify');
+                }
+
+                 if(this._isMounted){
                     this.setState({ user });
+                }
 
                 user.getIdToken().then(function (token) {
                     Cookies.set('ssid', token);
@@ -43,12 +53,12 @@ class Home extends React.Component {
             else {
                 if(this._isMounted)
                     this.setState(null);
-                    
+
                 setTimeout(() => {
                     Router.push('/login');
                 }, 4000);
-                
-                
+
+
             }
         })
     }
@@ -59,7 +69,7 @@ class Home extends React.Component {
 
     render() {
         //we check for state since every time state is changed the render function will be called again
-        //let content = Cookies.get('ssid') ? <HomeAuth /> : <HomeForbidden />; 
+        //let content = Cookies.get('ssid') ? <HomeAuth /> : <HomeForbidden />;
         if(this.state.user === 'loading')
             return <Loading />;
         else if(this.state.user === null)
