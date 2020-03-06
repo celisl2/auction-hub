@@ -1,30 +1,33 @@
 // /////////////////////////////////////////////////////////
 //    
-//    Filename:   createProductQuery.js
+//    Filename:   updateAuctionProduct.js
 //    Programmer: Robert Ashley
-//    Created:    21 Feb 2020
+//    Created:    6 Mar 2020
 //    Updated:    
 //
 // /////////////////////////////////////////////////////////
 
 import {loadDB} from '../../lib/db';
+import Cookies from 'js-cookie';
+
 let firebase = loadDB();
 
-function createAuctionProduct (auctionEventID, productData) {
+export function updateAuctionProduct (auctionEventID, productID, productData) {
     
     // To Do: Add an authentication check to assure user has privelleges to create auction product listings.
-    
     firebase
         .firestore()
-        .collection("/AuctionEvent/" + auctionEventID + "/AuctionProduct")
-        .add(productData)
+        .doc("/AuctionEvent/" + auctionEventID + "/AuctionProduct/" + productID)
+        .update(productData)
         .then( (results) => {
             //console.log("DEBUG:: Product creation successful: Product ID " + results.id);
             alert("DEBUG:: Product creation successful: Product ID " + results.id);
             return results;
         })
         .catch( (error) => {
-            alert("DEBUG:: Product creation unsuccessful\n" + error.code + " : " + error.message);
+            let errorMessage = "Error in updateAuctionProduct: Product creation unsuccessful\n" + error.code + " : " + error.message
+            console.error(errorMessage)
+            Cookies.set('errorMessage', errorMessage)
             return error;
         })
 }

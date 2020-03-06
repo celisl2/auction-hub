@@ -55,15 +55,6 @@ const CreateProductForm = () => {
 
                 //createAuctionProduct(values)
                 createAuctionProduct("vOwsw3o6VFijgeOEDKXM", values)
-                /*
-                    .then( (results) => {
-                        alert("INDEX.JS: Auction event created successfully!");
-                    })
-                    .catch( (error) => {
-                        alert("INDEX.JS: There was a problem creating an auction event:\n\t" +
-                        error.code + " : " + error.message + "\n")
-                    })
-                */
 
                 setSubmitting(false);
                 }, 400);
