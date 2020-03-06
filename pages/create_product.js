@@ -1,6 +1,12 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 import {getCode} from '../utils/helperFunctions';
+import AdminNav from '../components/AdminNav';
 
 import createAuctionProduct from './api/createProductQuery';
 
@@ -65,39 +71,55 @@ const CreateProductForm = () => {
         >
 
         {formik => (
-            <form onSubmit={formik.handleSubmit}>
-                <label htmlFor="productName">Product Name</label>
-                <input name="productName" {...formik.getFieldProps('productName')} />
-                {formik.touched.productName && formik.errors.productName ? (
-                    <div>{formik.errors.productName}</div>) : null}
-
-                <label htmlFor="productDescription">Product Description</label>
-                <input name="productDescription" {...formik.getFieldProps('productDescription')} />
-                {formik.touched.productDescription && formik.errors.productDescription ? (
-                    <div>{formik.errors.productDescription}</div>) : null}
-                
-                <label htmlFor="productImageURL">Image URL</label>
-                <input name="productImageURL" {...formik.getFieldProps('productImageURL')} />
-                {formik.touched.productImageURL && formik.errors.productImageURL ? (
-                    <div>{formik.errors.productImageURL}</div>) : null}
-                
-                
-                <label htmlFor="minBid">Min Bid</label>
-                <input name="minBid" {...formik.getFieldProps('minBid')} />
-                {formik.touched.minBid && formik.errors.minBid ? (
-                    <div>{formik.errors.minBid}</div>) : null}
-
-                <label htmlFor="maxBid">Max Bid</label>
-                <input name="maxBid" {...formik.getFieldProps('maxBid')} />
-                {formik.touched.maxBid && formik.errors.maxBid ? (
-                    <div>{formik.errors.maxBid}</div>) : null}
-                
-                <label htmlFor="productPickUpInfo">Product Pick Up Information <span>{getCode(40)}optional{getCode(41)}</span></label>
-                <input name="productPickUpInfo" {...formik.getFieldProps('productPickUpInfo')} />
-                {formik.touched.productPickUpInfo && formik.errors.productPickUpInfo ? (
-                    <div>{formik.errors.productPickUpInfo}</div>) : null}
-                    <button type="submit">Save</button>
-            </form>
+            <Form onSubmit={formik.handleSubmit}>
+            <Form.Group>
+                <Row>
+                    <Col>
+                        <Form.Label htmlFor="productName">Product Name</Form.Label>
+                        <Form.Control name="productName" {...formik.getFieldProps('productName')} />
+                        {formik.touched.productName && formik.errors.productName ? (
+                            <div>{formik.errors.productName}</div>) : null}
+                    </Col>
+                    <Col>
+                        <Form.Label htmlFor="productImageURL">Image URL</Form.Label>
+                        <Form.Control name="productImageURL" {...formik.getFieldProps('productImageURL')} />
+                        {formik.touched.productImageURL && formik.errors.productImageURL ? (
+                            <div>{formik.errors.productImageURL}</div>) : null}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Label htmlFor="productDescription">Product Description</Form.Label>
+                        <Form.Control name="productDescription" as="textarea" rows="2" {...formik.getFieldProps('productDescription')} />
+                        {formik.touched.productDescription && formik.errors.productDescription ? (
+                            <div>{formik.errors.productDescription}</div>) : null}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Label htmlFor="minBid">Min Bid</Form.Label>
+                        <Form.Control name="minBid" {...formik.getFieldProps('minBid')} />
+                        {formik.touched.minBid && formik.errors.minBid ? (
+                            <div>{formik.errors.minBid}</div>) : null}
+                    </Col>
+                    <Col>
+                        <Form.Label htmlFor="maxBid">Max Bid</Form.Label>
+                        <Form.Control name="maxBid" {...formik.getFieldProps('maxBid')} />
+                        {formik.touched.maxBid && formik.errors.maxBid ? (
+                            <div>{formik.errors.maxBid}</div>) : null}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Label htmlFor="productPickUpInfo">Product Pick Up Information <span>{getCode(40)}optional{getCode(41)}</span></Form.Label>
+                        <Form.Control name="productPickUpInfo" {...formik.getFieldProps('productPickUpInfo')} />
+                        {formik.touched.productPickUpInfo && formik.errors.productPickUpInfo ? (
+                            <div>{formik.errors.productPickUpInfo}</div>) : null}
+                    </Col>
+                </Row>
+            </Form.Group>
+            <Button variant="success" type="submit">Save</Button>
+        </Form>
         )}
 
         </Formik>
@@ -108,8 +130,12 @@ const CreateProductForm = () => {
 
 const CreateProduct = () => 
     <div className="create-product-body">
-        <h2>Create Auction Product</h2>
-        <CreateProductForm />
+        <AdminNav />
+        <Container>
+            <h2>Create Auction Product</h2>
+            <CreateProductForm />
+        </Container>
+        
     </div>
 
 export default CreateProduct;

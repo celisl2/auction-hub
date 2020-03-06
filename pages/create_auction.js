@@ -1,11 +1,13 @@
-/*
-    TODO: add block comments to all pages
-*/
-
 import { Formik} from 'formik';
 import * as Yup from 'yup';
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
+import SelectState from '../components/SelectStates';
 
 import createAuctionEvent from './api/createAuctionQuery';
 
@@ -75,70 +77,93 @@ const CreateAuctionForm = () => {
 
         >
             {formik => (
-            <form onSubmit={formik.handleSubmit}>
-                <label htmlFor="title">Title</label>
-                <input name="title" {...formik.getFieldProps('title')} />
-                    {formik.touched.title && formik.errors.title ? (
-                        <div>{formik.errors.title}</div>) : null}
-        
-                <label htmlFor="date">Date</label>
-                <input name="date" {...formik.getFieldProps('date')} />
-                    {formik.touched.date && formik.errors.date ? (
-                        <div>{formik.errors.date}</div>) : null}
-                
-                <label htmlFor="time">Time</label>
-                <input name="time" {...formik.getFieldProps('time')} />
-                    {formik.touched.time && formik.errors.time ? (
-                        <div>{formik.errors.time}</div>) : null}
-
-                <label htmlFor="description">Description</label>
-                <input name="description" {...formik.getFieldProps('description')} />
-                    {formik.touched.description && formik.errors.description ? (
-                        <div>{formik.errors.description}</div>) : null}
-
-                <label htmlFor="imageURL">Image URL</label>
-                <input name="imageURL" {...formik.getFieldProps('imageURL')} />
-                    {formik.touched.imageURL && formik.errors.imageURL ? (
+                <Form onSubmit={formik.handleSubmit}>
+            <Form.Group>
+                <Row>
+                    <Col>
+                        <Form.Label htmlFor="title">Title</Form.Label>
+                        <Form.Control name="title" {...formik.getFieldProps('title')} />
+                        {formik.touched.title && formik.errors.title ? (
+                            <div>{formik.errors.title}</div>) : null}
+                    </Col>
+                    <Col>
+                        <Form.Label htmlFor="imageURL">Image URL</Form.Label>
+                        <Form.Control name="imageURL" {...formik.getFieldProps('imageURL')} />
+                        {formik.touched.imageURL && formik.errors.imageURL ? (
                         <div>{formik.errors.imageURL}</div>) : null}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Label htmlFor="description">Description</Form.Label>
+                        <Form.Control name="description" as="textarea" rows="3" {...formik.getFieldProps('description')} />
+                            {formik.touched.description && formik.errors.description ? (
+                                <div>{formik.errors.description}</div>) : null}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Label htmlFor="date">Date</Form.Label>
+                        <Form.Control name="date" {...formik.getFieldProps('date')} />
+                        {formik.touched.date && formik.errors.date ? (
+                        <div>{formik.errors.date}</div>) : null}
+                    </Col>
+                    <Col>
+                        <Form.Label htmlFor="time">Time</Form.Label>
+                        <Form.Control name="time" {...formik.getFieldProps('time')} />
+                        {formik.touched.time && formik.errors.time ? (
+                        <div>{formik.errors.time}</div>) : null}
+                    </Col>
+                </Row>
                 
-                <label htmlFor="location.addressLine1">Address</label>
-                <input name="location.addressLine1" {...formik.getFieldProps('location.addressLine1')} />
+                <Form.Label htmlFor="location.addressLine1">Address</Form.Label>
+                <Form.Control name="location.addressLine1" {...formik.getFieldProps('location.addressLine1')} />
                 {formik.touched.addressLine1 && formik.errors.addressLine1 ? (
                         <div>{formik.errors.addressLine1}</div>) : null}
 
-                <label htmlFor="location.addressLine2">Appartment{getCode(44)} suite{getCode(44)} etc{getCode(46)}</label>
-                <input name="location.addressLine2" {...formik.getFieldProps('location.addressLine2')} />
+                <Form.Label htmlFor="location.addressLine2">Appartment{getCode(44)} suite{getCode(44)} etc{getCode(46)}</Form.Label>
+                <Form.Control name="location.addressLine2" {...formik.getFieldProps('location.addressLine2')} />
                 {formik.touched.addressLine2 && formik.errors.addressLine2 ? (
                         <div>{formik.errors.addressLine2}</div>) : null}
 
-                <label htmlFor="location.city">City</label>
-                <input name="location.city" {...formik.getFieldProps('location.city')} />
+                <Form.Label htmlFor="location.city">City</Form.Label>
+                <Form.Control name="location.city" {...formik.getFieldProps('location.city')} />
                 {formik.touched.city && formik.errors.city ? (
                         <div>{formik.errors.city}</div>) : null}
                 
-                <label htmlFor="location.state">State</label>
-                <input name="location.state" {...formik.getFieldProps('location.state')} />
+                <Form.Label htmlFor="location.state">State</Form.Label>
+                <SelectState/>
+                {/**<Form.Control name="location.state" {...formik.getFieldProps('location.state')} />
                 {formik.touched.state && formik.errors.state ? (
                         <div>{formik.errors.state}</div>) : null}
+                 */}
                 
-                <label htmlFor="location.zip">Zip Code</label>
-                <input name="location.zip" {...formik.getFieldProps('location.zip')} />
+                
+                <Form.Label htmlFor="location.zip">Zip Code</Form.Label>
+                <Form.Control name="location.zip" {...formik.getFieldProps('location.zip')} />
                 {formik.touched.zip && formik.errors.zip ? (
                         <div>{formik.errors.zip}</div>) : null}
-                
-                <label htmlFor="paymentLimitTime">Payment Time Limit</label>
-                <input name="paymentLimitTime" {...formik.getFieldProps('paymentLimitTime')} />
-                    {formik.touched.paymentLimitTime && formik.errors.paymentLimitTime ? (
+                <Row>
+                    <Col>
+                        <Form.Label htmlFor="paymentLimitTime">Payment Time Limit</Form.Label>
+                        <Form.Control name="paymentLimitTime" {...formik.getFieldProps('paymentLimitTime')} />
+                        {formik.touched.paymentLimitTime && formik.errors.paymentLimitTime ? (
                         <div>{formik.errors.paymentLimitTime}</div>) : null}
-                
-                <label htmlFor="pickUpInformation">Pick Up Information</label>
-                <input name="pickUpInformation" {...formik.getFieldProps('pickUpInformation')} />
-                    {formik.touched.pickUpInformation && formik.errors.pickUpInformation ? (
+                    </Col>
+                    <Col>
+                        <Form.Label htmlFor="pickUpInformation">Pick Up Information</Form.Label>
+                        <Form.Control name="pickUpInformation" {...formik.getFieldProps('pickUpInformation')} />
+                        {formik.touched.pickUpInformation && formik.errors.pickUpInformation ? (
                         <div>{formik.errors.pickUpInformation}</div>) : null}
-
-
-                <button type="submit">Submit</button>
-            </form>
+                    </Col>
+                </Row>
+                
+                
+                
+                        
+            </Form.Group>
+            <Button variant="success" type="submit">Save</Button>
+            </Form>
             )}
             
 
@@ -149,7 +174,10 @@ const CreateAuctionForm = () => {
 let CreateAuction = () =>
     <div className="auction-creation-body">
         <AdminNav />
-        <h2>Create Auction Event</h2>
-        <CreateAuctionForm />
+        <Container>
+            <h2>Create Auction Event</h2>
+            <CreateAuctionForm />
+        </Container>
+        
     </div>;
 export default CreateAuction;

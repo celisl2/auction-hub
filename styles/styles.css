@@ -188,6 +188,12 @@ footer > div {
     margin-bottom: 0;
     color: #fff;
 }
+.next-link {
+    cursor: pointer;
+}
+.card-format {
+    margin-bottom: 3%;
+}
 
 
 @media (min-width: 768px) {
