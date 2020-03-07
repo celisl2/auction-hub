@@ -113,12 +113,9 @@ export function placeBid (auctionEventId, productId, userAccountId, productMinBi
 // ==================================================================================================================================
 
 
-
-
 export function placeBid (auctionEventId, productId, bidAmount) {
 
     // to do : test by pulling user data from auth.
-
 
     if(firebase.auth().currentUser !== null) {
 
@@ -154,7 +151,7 @@ export function placeBid (auctionEventId, productId, bidAmount) {
                     console.error("DEBUG: currentTimestamp=" + new Date(currentTimestamp) + "    beginEventTime=" + new Date (beginEventTime) + "     endEventTime=" + new Date(endEventTime));
                     //Cookies.set('errorMesssage', errorMessage);
                     console.error(errorMessage);
-                    return false;
+                    /* return false;  */ return Promise.reject(error);
                 }
 
                 // ... then product data for the product that's being bid on ...
@@ -175,7 +172,7 @@ export function placeBid (auctionEventId, productId, bidAmount) {
                         let errorMessage = "You cannot bid on a product: This product was already won via buyout."
                         //Cookies.set('errorMesssage', errorMessage);
                         console.error(errorMessage);
-                        return false;
+                        /* return false;  */ return Promise.reject(error);
                     }
 
                     // .. and get the data for the current highest bid on the product for comparison.
@@ -191,61 +188,16 @@ export function placeBid (auctionEventId, productId, bidAmount) {
 
                         let currentHighBidAmount = hasBids ? currentHighestBid.data().amount : productSnapshot.data().bid;
 
-                        // Check for buyout first
-                        /*
-                        if ( hasBids && currentHighBidAmount <= productBuyout) {
-                            // This product has been bid on and bought out. The user cannot bid on this product.
-                            console.error("Error: In placeBid -- This product has already been purchased. Bid Placement Aborted for user ")
-                            return false;
-                        }
-                        */
-
-                        // Check if the bid is of valid amount ( old highest bid < new amount <= buyout )
-                        /*
-                        if ( (!hasBids && bidAmount >= productMinBid || bidAmount > currentHighBidAmount) && bidAmount <= productBuyout  ) {
-                            // The bid provided is the minumum+/first bid, or is greater than the current highest bid AND the bid fits within the buyout maximum
-                            
-                            let bidData = {
-                                amount: bidAmount,
-                                timestamp: currentTimestamp,
-                                userAccountId: firebase.auth().currentUser
-                            };
-
-                            // (!!!) I am assuming here that the bids will use the userAccountId as its document ID so that the highest bid per user is placed.
-                            firebase
-                                .firestore()
-                                .doc('/AuctionEvent/' + auctionEventId + 
-                                    '/AuctionProduct/' + productId + 
-                                    '/BidHistory/' + userAccountId)
-                                .set(bidData)
-                                
-                                // Alt: If we want to store ALL bids and use RNG document IDs, use commented instead:
-                                //.collection('/AuctionEvent/' + auctionEventId + '/AuctionProduct/' + productId + '/BidHistory/')
-                                //.add(bidData)
-                                
-                                .then( (results) => {
-                                    console.log("placeBid: Bid placed by user as document" + userAccountId);
-                                    return true;
-                                })
-                                .catch( (error) => {
-                                    console.error("Error: in placeBid: Firebase error " + error.code + " : " + error.message);
-                                    return false;
-                                })
-                        }
-                        */
                         let currentUserAccountId = firebase.auth().currentUser.uid
                         console.log("UID:" + currentUserAccountId);
-
-
 
                         if (bidAmount >= productMinBid) {
                             let bidData = {
                                 amount: bidAmount,
-                                timestamp: currentTimestamp,
-                                userAccountId: currentUserAccountId
+                                timestamp: currentTimestamp
                             };
 
-                            // (!!!) I am assuming here that the bids will use the userAccountId as its document ID so that the highest bid per user is placed.
+// (!!!) I am assuming here that the bids will use the userAccountId as its document ID so that the highest bid per user is placed.
                             firebase
                                 .firestore()
                                 .doc('/AuctionEvent/' + auctionEventId + 
@@ -258,45 +210,36 @@ export function placeBid (auctionEventId, productId, bidAmount) {
                                 //.add(bidData)
                                 
                                 .then( (results) => {
-                                    console.log("placeBid: Bid placed by user as document" + currentUserAccountId);
-                                    return true;
+                                    console.log("placeBid: Bid placed by user as document: " + currentUserAccountId);
+                                    /* return true; */ return Promise.resolve(currentUserAccountId);
                                 })
-                                .catch( (error) => {
-                                    console.error("Error: in placeBid: Firebase error " + error.code + " : " + error.message);
-                                    return false;
+                                .catch( (setBidError) => {
+                                    console.error("Error: in placeBid: Firebase error " + setBidError.code + " : " + setBidError.message);
+                                    /* return false;  */ return Promise.reject(setBidError);
                                 })
                         }
                         else {
                             let errorMessage = "Error: In placeBid: Bid being placed by " + userAccountId + "not in valid range. Bid given: " + bidAmount + ".";
                             console.error(errorMessage);
                             //Cookies.set('errorMessage', errorMessage);
-                            return false;
+                            /* return false;  */ return Promise.reject(error);
                         }
 
                     })    
 
-
                 }) .catch ( (productError) => {
-                    let errorMessage = "In submitting the bid, there was an error: " + JSON.stringify(productError);
+                    let errorMessage = "In submitting the bid, there was an error in obtaining and processing product data: " + JSON.stringify(productError);
                     //Cookies.set('errorMesssage', errorMessage);
                     console.error(errorMessage);
-                    return false;
+                    /* return false;  */ return Promise.reject(productError);
                 })
 
             }) .catch ( (eventError) => {
-                let errorMessage = "In submitting the bid, there was an error: " + JSON.stringify(eventError);
+                let errorMessage = "In submitting the bid, there was an error in obtaining and processing product data: " + JSON.stringify(eventError);
                 //Cookies.set('errorMesssage', errorMessage);
                 console.error(errorMessage);
-                return false;
+                /* return false;  */ return Promise.reject(eventError);
             })
-
-        // Need to revise how this error is used: erroneously calls
-        /*
-        let errorMessage = "An unknown error occurred in placeBid in createBidQuery.js"
-        //Cookies.set('errorMessage', errorMessage);
-        console.error(errorMessage);
-        return false;
-        */
 
     }
 }
