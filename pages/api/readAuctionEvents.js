@@ -22,14 +22,15 @@ import { useState, useEffect } from 'react';
 // ===== Listener / .onSnapshot() Version =====
 // ================================================================================================
 
-function useAuctionEventOnSnapshot(AuctionEventId) {
+//function useAuctionEventOnSnapshot(auctionEventId) {
+export function getAuctionEventOnSnapshot(auctionEventId) {
     const [auctionEvent, setAuctionEvent] = useState([])
 
     useEffect( () => {
         
         loadDB()
             .firestore()
-            .collection('AuctionEvent/' + AuctionEventId)
+            .collection('AuctionEvent/' + auctionEventId)
             .onSnapshot( (snapshot) => {
 
                 const newAuctionEventData = {
@@ -48,18 +49,21 @@ function useAuctionEventOnSnapshot(AuctionEventId) {
     return auctionEvent;
 }
 
-
+/*
 export function getAuctionEventOnSnapshot (AuctionEventId) {
     const auctionEventObject = 
     useAuctionEventOnSnapshot(AuctionEventId);
 
     return auctionEventObject;
 }
+*/
+
 
 // =========== One Time / .get() Version ===========
 // ================================================================================================
 
-function useAuctionEvent(AuctionEventId) {
+//function useAuctionEvent(AuctionEventId) {
+export function getAuctionEvent(AuctionEventId) {
     const [auctionEvent, setAuctionEvent] = useState([])
 
     useEffect( () => {
@@ -69,12 +73,19 @@ function useAuctionEvent(AuctionEventId) {
             .collection('AuctionEvent/' + AuctionEventId + '/AuctionProduct')
             .get()
             .then( (snapshot) => {
+
+                console.log (JSON.stringify(snapshot));
+                
                 const newAuctionEventData = {
                     id: snapshot.id,
                     ...snapshot.data()
                 };
+                
+                newAuctionEventData.timeStart = newAuctionEventData.timeStart.seconds * 1000 + newAuctionEventData.timeStart.nanoseconds;
+                newAuctionEventData.timeEnd = newAuctionEventData.timeEnd.seconds * 1000 + newAuctionEventData.timeEnd.nanoseconds;
 
-                setAuctionEvent(newAuctionEventData);
+                //setAuctionEvent(newAuctionEventData);
+                setAuctionEvent([]);
             })
             .catch ( (err) => {
                 console.error("Error in useAuctionEvent: " + err.code + " => " + err.message);
@@ -86,12 +97,13 @@ function useAuctionEvent(AuctionEventId) {
     return auctionEvent;
 }
 
+/*
 export function getAuctionEvent (AuctionEventId) {
     const auctionEventObject = useAuctionEvent(AuctionEventId);
 
     return auctionEventObject;
 }
-
+*/
 
 
 
@@ -102,7 +114,8 @@ export function getAuctionEvent (AuctionEventId) {
 // ================================================================================================
 
 
-function useAllAuctionEventsOnSnapshot() {
+//function useAllAuctionEventsOnSnapshot() {
+export function getAllAuctionEventsOnSnapshot() {
     const [auctionEvent, setAuctionEvent] = useState([])
 
     useEffect( () => {
@@ -127,18 +140,20 @@ function useAllAuctionEventsOnSnapshot() {
     return auctionEvent;
 }
 
-
+/*
 export function getAllAuctionEventsOnSnapshot () {
     const auctionEventObject = 
     useAllAuctionEventsOnSnapshot();
 
     return auctionEventObject;
 }
+*/
 
 // =========== One Time / .get() Version ===========
 // ================================================================================================
 
-function useAllAuctionEvents() {
+//function useAllAuctionEvents() {
+export function getAllAuctionEvents() {
     const [auctionEvent, setAuctionEvent] = useState([])
 
     useEffect( () => {
@@ -165,43 +180,12 @@ function useAllAuctionEvents() {
     return auctionEvent;
 }
 
+/*
 export function getAllAuctionEvents () {
     const auctionEventObject = useAllAuctionEvents();
 
     return auctionEventObject;
 }
-
-
-
-export default getAuctionEventsOnSnapshot;
-
-
-// ================================================================================================
-// ================================================================================================
-
-
-
-/*
-const auctionProductList = () => {
-    const prods = useAuctionProducts()
-
-    return (
-       <div>
-            <h1>Products</h1>
-            <ul>
-                {prods.map( (prod) => 
-                    <li key={prod.id}>
-                        <h3>{prod.name}</h3>
-                        <img data-src={prod.image} alt="ImageGoesHere" /> 
-                        <br/> ImageURL: {prod.image}
-                        <br/><b>Description:</b> {prod.description}
-                        <br/><b>MinBid:</b> ${prod.bid} <br/><b>Buyout</b>: ${prod.buyoutPrice}
-                        <br/>BIDS ---
-                        <br/><br/>
-                    </li>
-                )}
-            </ul>
-        </div>
-    )
-}
 */
+
+export default getAllAuctionEventsOnSnapshot;
