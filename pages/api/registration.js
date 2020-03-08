@@ -2,7 +2,6 @@ import {loadDB} from '../../lib/db';
 let firebase = loadDB();
 import "firebase/auth";
 import Cookies from 'js-cookie'
-import Router from 'next/router';
 
 export default (req, res) => {
 
@@ -22,19 +21,23 @@ export default (req, res) => {
                 //this returns token -> when signed in
                 console.log('**** TOKEN HERE ****' + idToken);
                 if(idToken) {
-                    Cookies.set('ssid', Date.now());
-                    firebase.auth().onAuthStateChanged(function(user) {
-                        user.sendEmailVerification();
-                        console.log('Email verification has been sent.')
-
-                        });
-                }
+                   Cookies.set('ssid', Date.now());
+              }
             });
         });
 
-        res.statusCode = 200;
+        firebase.auth().onAuthStateChanged(function(user) {
+              if (user) {
+            user.sendEmailVerification();
+            console.log("Sent Email Verification.");
+        }
+
+        });
+
+        res.statusCode = 600;
         res.setHeader('Content-Type', 'application/json');
-        //res.end(JSON.stringify({ token: "user added"}));
+        res.end(JSON.stringify({ token: "user added"}));
+
     } else {
         console.log(res);
         console.log('in else at api/login');
