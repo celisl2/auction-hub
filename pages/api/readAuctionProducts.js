@@ -109,7 +109,7 @@ export function getAuctionProductOnSnapshot(auctionEventId, productId) {
         
         loadDB()
             .firestore()
-            .collection('AuctionEvent/' + auctionEventId + '/AuctionProduct/' + productId)
+            .doc('AuctionEvent/' + auctionEventId + '/AuctionProduct/' + productId)
             .onSnapshot( (snapshot) => {
                 const newAuctionProducts = {
                     id: snapshot.id,
@@ -146,7 +146,7 @@ export function getAuctionProduct(auctionEventId, productId) {
         
         loadDB()
             .firestore()
-            .collection('AuctionEvent/' + auctionEventId + '/AuctionProduct' + productId)
+            .doc('AuctionEvent/' + auctionEventId + '/AuctionProduct' + productId)
             .get()
             .then( (snapshot) => {
                 const newAuctionProduct = {

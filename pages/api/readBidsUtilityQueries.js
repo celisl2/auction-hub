@@ -15,7 +15,7 @@ import {loadDB} from '../../lib/db';
 import { useState, useEffect } from 'react';
 
 
-export function useBids (auctionEventId, productId) {
+export function getBids (auctionEventId, productId) {
 
     // << Do auth checks here >>
 
@@ -40,7 +40,7 @@ export function useBids (auctionEventId, productId) {
 }
 
 
-export function useBidsOnSnapshot  (auctionEventId, productId) {
+export function getBidsOnSnapshot  (auctionEventId, productId) {
 
     // << Do auth checks here >>
 
@@ -72,9 +72,53 @@ export function useBidsOnSnapshot  (auctionEventId, productId) {
 }
 
 
+
+// Read Highest Bid (one time)
+// --------------------------------------------------------------
+export function getHighestBid (auctionEventId, productId) {
+
+    // << Do auth checks here >>
+    
+    const [highestBid, setHighestBid] = useState([])
+
+    useEffect( () => {
+        
+        firebase
+            .firestore()
+            .collection('/AuctionEvent/' + auctionEventId + '/AuctionProduct/' + productId + '/BidHistory')  // Path to Bids for the above product parameters.
+            .orderBy('amount', 'desc')  // Order documents with bid amount greatest to least
+            .limit(1)  // Just give me the first (largest) one.
+            .get()
+            .then( (snapshot) => {
+                
+                let newBidData = {};  // set as flag to tell that no bids existed/obtainable.
+
+                if (snapshot.size === 1) {
+                   newBidData = {
+                       id: snapshot.docs[0].id,
+                       ...snapshot.docs[0].data()
+                   }
+                }
+
+                setHighestBid(newBidData);
+            })
+            .catch( (error) => {
+                let errorMessage = "Error in getHighestBidOnSnapshot: Firebase error.\n" + error.code + " : " + error.message;
+                console.error(errorMessage)
+                return false;
+            })
+        
+        // ...
+        return;
+    }, []);
+
+    return highestBid;
+}
+
+
 // Read Highest Bid (Listener Event)
 // --------------------------------------------------------------
-export function useHighestBid  (auctionEventId, productId) {
+export function getHighestBidOnSnapshot  (auctionEventId, productId) {
 
     // << Do auth checks here >>
     
@@ -89,14 +133,63 @@ export function useHighestBid  (auctionEventId, productId) {
             .limit(1)  // Just give me the first (largest) one.
             .onSnapshot( (snapshot) => {
                 
-                const newBidData = {};  // set as flag to tell that no bids existed/obtainable.
+                let newBidData = {};  // set as flag to tell that no bids existed/obtainable.
 
                 if (snapshot.size === 1) {
-
                    newBidData = {
                        id: snapshot.docs[0].id,
                        ...snapshot.docs[0].data()
                    }
+                }
+
+                setHighestBid(newBidData);
+            }, (error) => {
+                let errorMessage = "Error in getHighestBidOnSnapshot: Firebase error.\n" + error.code + " : " + error.message;
+                console.error(errorMessage)
+                return false;
+            })
+        
+        // ...
+        return;
+    }, []);
+
+    return highestBid;
+}
+
+export function getHighestBidOffset  (auctionEventId, productId, indexOffset) {
+
+    // << Do auth checks here >
+    
+    const [highestBid, setHighestBid] = useState([])
+
+    useEffect( () => {
+
+        if (typeof indexOffset != "number") {
+            let errorMessage = "Error in getHighestBidOffset: indexOffset provided is not a number.";
+            console.error(errorMessage)
+            return false;
+        }
+
+        // To Do: get product data so that we know if a product is sold or not?
+
+        firebase
+            .firestore()
+            .collection('/AuctionEvent/' + auctionEventId + '/AuctionProduct/' + productId + '/BidHistory')  // Path to Bids for the above product parameters.
+            .orderBy('amount', 'desc')  // Order documents with bid amount greatest to least
+            //.startAt()
+            //.limit(1)  // Just give me the first (largest) one.
+            .get()
+            .then( (snapshot) => {
+
+
+                const bidData = snapshot.docs.map((bid) => ({
+                    id: bid.id,
+                    ...bid.data()
+                }));
+
+                if (indexOffset < snapshot.size) {
+
+                   return bidData[indexOffset]
 
                 }
 
@@ -109,4 +202,3 @@ export function useHighestBid  (auctionEventId, productId) {
 
     return highestBid;
 }
-

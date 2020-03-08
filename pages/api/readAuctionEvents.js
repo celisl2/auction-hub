@@ -10,7 +10,8 @@
 
 
 
-import loadDB from '../../lib/db';
+import {loadDB} from '../../lib/db';
+    let firebase = loadDB();
 import { useState, useEffect } from 'react';
 
 
@@ -28,9 +29,9 @@ export function getAuctionEventOnSnapshot(auctionEventId) {
 
     useEffect( () => {
         
-        loadDB()
+        firebase
             .firestore()
-            .collection('AuctionEvent/' + auctionEventId)
+            .doc('/AuctionEvent/' + auctionEventId)
             .onSnapshot( (snapshot) => {
 
                 const newAuctionEventData = {
@@ -68,9 +69,9 @@ export function getAuctionEvent(AuctionEventId) {
 
     useEffect( () => {
         
-        loadDB()
+        firebase
             .firestore()
-            .collection('AuctionEvent/' + AuctionEventId + '/AuctionProduct')
+            .doc('/AuctionEvent/' + AuctionEventId)
             .get()
             .then( (snapshot) => {
 
@@ -120,9 +121,9 @@ export function getAllAuctionEventsOnSnapshot() {
 
     useEffect( () => {
         
-        loadDB()
+        firebase
             .firestore()
-            .collection('AuctionEvent/')
+            .collection('/AuctionEvent/')
             .onSnapshot( (snapshot) => {
                 const newAuctionEventData = snapshot.docs.map((auctionEvent) => ({
                     id: auctionEvent.id,
@@ -158,9 +159,9 @@ export function getAllAuctionEvents() {
 
     useEffect( () => {
         
-        loadDB()
+        firebase
             .firestore()
-            .collection('AuctionEvent/')
+            .collection('/AuctionEvent/')
             .get()
             .then( (snapshot) => {
                 const newAuctionEventData = snapshot.docs.map((auctionEvent) => ({
