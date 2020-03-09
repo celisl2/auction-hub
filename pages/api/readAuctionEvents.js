@@ -34,10 +34,19 @@ export function getAuctionEventOnSnapshot(auctionEventId) {
             .doc('/AuctionEvent/' + auctionEventId)
             .onSnapshot( (snapshot) => {
 
-                const newAuctionEventData = {
+                let newAuctionEventData = {
                     id: snapshot.id,
                     ...snapshot.data()
                 };
+
+                // MARCH 9 EDITS
+                if (newAuctionEventData.hasOwnProperty("timeStart")) {
+                    newAuctionEventData.timeStart = newAuctionEventData.timeStart.toDate();
+                }
+
+                if (newAuctionEventData.hasOwnProperty("timeEnd")) {
+                    newAuctionEventData.timeEnd = newAuctionEventData.timeEnd.toDate();
+                }
 
                 setAuctionEvent(newAuctionEventData);
             }, (err) => {
@@ -74,19 +83,24 @@ export function getAuctionEvent(AuctionEventId) {
             .doc('/AuctionEvent/' + AuctionEventId)
             .get()
             .then( (snapshot) => {
-
-                console.log (JSON.stringify(snapshot));
                 
-                const newAuctionEventData = {
+                let newAuctionEventData = {
                     id: snapshot.id,
                     ...snapshot.data()
                 };
-                
-                newAuctionEventData.timeStart = newAuctionEventData.timeStart.seconds * 1000 + newAuctionEventData.timeStart.nanoseconds;
-                newAuctionEventData.timeEnd = newAuctionEventData.timeEnd.seconds * 1000 + newAuctionEventData.timeEnd.nanoseconds;
 
-                //setAuctionEvent(newAuctionEventData);
-                setAuctionEvent([]);
+                // MARCH 9 EDITS
+                if (newAuctionEventData.hasOwnProperty("timeStart")) {
+                    newAuctionEventData.timeStart = newAuctionEventData.timeStart.toDate();
+                }
+
+                if (newAuctionEventData.hasOwnProperty("timeEnd")) {
+                    newAuctionEventData.timeEnd = newAuctionEventData.timeEnd.toDate();
+                }
+
+                console.log ( "getAuctionEvent:", JSON.stringify(newAuctionEventData, null, 4));
+
+                setAuctionEvent(newAuctionEventData);
             })
             .catch ( (err) => {
                 console.error("Error in useAuctionEvent: " + err.code + " => " + err.message);
@@ -125,10 +139,21 @@ export function getAllAuctionEventsOnSnapshot() {
             .firestore()
             .collection('/AuctionEvent/')
             .onSnapshot( (snapshot) => {
-                const newAuctionEventData = snapshot.docs.map((auctionEvent) => ({
+                let newAuctionEventData = snapshot.docs.map((auctionEvent) => ({
                     id: auctionEvent.id,
                     ...auctionEvent.data()
                 }));
+
+                newAuctionEventData.forEach( (auction) => {
+                    // MARCH 9 EDITS
+                    if (newAuctionEventData.hasOwnProperty("timeStart")) {
+                        newAuctionEventData.timeStart = newAuctionEventData.timeStart.toDate();
+                    }
+
+                    if (newAuctionEventData.hasOwnProperty("timeEnd")) {
+                        newAuctionEventData.timeEnd = newAuctionEventData.timeEnd.toDate();
+                    }
+                })
 
                 setAuctionEvent(newAuctionEventData);
             }, (err) => {
@@ -164,10 +189,21 @@ export function getAllAuctionEvents() {
             .collection('/AuctionEvent/')
             .get()
             .then( (snapshot) => {
-                const newAuctionEventData = snapshot.docs.map((auctionEvent) => ({
+                let newAuctionEventData = snapshot.docs.map((auctionEvent) => ({
                     id: auctionEvent.id,
                     ...auctionEvent.data()
                 }));
+
+                newAuctionEventData.forEach( (auction) => {
+                    // MARCH 9 EDITS
+                    if (newAuctionEventData.hasOwnProperty("timeStart")) {
+                        newAuctionEventData.timeStart = newAuctionEventData.timeStart.toDate();
+                    }
+
+                    if (newAuctionEventData.hasOwnProperty("timeEnd")) {
+                        newAuctionEventData.timeEnd = newAuctionEventData.timeEnd.toDate();
+                    }
+                })
 
                 setAuctionEvent(newAuctionEventData);
             })

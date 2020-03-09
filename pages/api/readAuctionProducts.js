@@ -165,20 +165,3 @@ export function getAuctionProduct(auctionEventId, productId) {
 
     return auctionProduct;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//export default getAuctionProductsOnSnapshot;

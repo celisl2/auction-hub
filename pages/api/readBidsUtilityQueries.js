@@ -6,7 +6,7 @@
 //                    rest of the system.
 //          Created:  6 Mar 2020
 //          Updates --------------------------------------------------
-//
+//              9 March 2020 Robert Ashley: Added preprocessing for sub-objects such as timestamps.
 // ===================================================================
 
 
@@ -30,6 +30,11 @@ export function getBids (auctionEventId, productId) {
             }));
             // It may report a "cyclic reference error" -- this is because the reference 
             // userAccountId. 
+
+            // March 9 Edit
+            if (newBidData.hasOwnProperty("timestamp")) {
+                newBidData.timestamp = newBidData.timestamp.toDate();
+            }
 
             return newBidData;
         })
@@ -56,6 +61,13 @@ export function getBidsOnSnapshot  (auctionEventId, productId) {
                     id: bid.id,
                     ...bid.data()
                 }));
+
+                newBidData.forEach((bid) => {
+                    // March 9 Edit
+                if (bid.hasOwnProperty("timestamp")) {
+                    bid.timestamp = bid.timestamp.toDate();
+            }
+                })
 
                 setBids(newBidData);
             })
@@ -98,6 +110,10 @@ export function getHighestBid (auctionEventId, productId) {
                        id: snapshot.docs[0].id,
                        ...snapshot.docs[0].data()
                    }
+                   // March 9 Edit
+                    if (newBidData.hasOwnProperty("timestamp")) {
+                        newBidData.timestamp = newBidData.timestamp.toDate();
+                    }
                 }
 
                 setHighestBid(newBidData);
@@ -139,7 +155,11 @@ export function getHighestBidOnSnapshot  (auctionEventId, productId) {
                    newBidData = {
                        id: snapshot.docs[0].id,
                        ...snapshot.docs[0].data()
-                   }
+                    }
+                    // March 9 Edit
+                    if (newBidData.hasOwnProperty("timestamp")) {
+                        newBidData.timestamp = newBidData.timestamp.toDate();
+                    }
                 }
 
                 setHighestBid(newBidData);
@@ -189,6 +209,10 @@ export function getHighestBidOffset  (auctionEventId, productId, indexOffset) {
 
                 if (indexOffset < snapshot.size) {
 
+                    // March 9 Edit
+                    if (newBidData[indexOffset].hasOwnProperty("timestamp")) {
+                        newBidData[indexOffset].timestamp = newBidData[indexOffset].timestamp.toDate();
+                    }
                    return bidData[indexOffset]
 
                 }
