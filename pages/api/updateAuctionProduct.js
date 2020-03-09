@@ -22,13 +22,13 @@ export function updateAuctionProduct (auctionEventID, productID, productData) {
         .then( (results) => {
             //console.log("DEBUG:: Product creation successful: Product ID " + results.id);
             alert("DEBUG:: Product creation successful: Product ID " + results.id);
-            return results;
+            return true;
         })
         .catch( (error) => {
             let errorMessage = "Error in updateAuctionProduct: Product creation unsuccessful\n" + error.code + " : " + error.message
             console.error(errorMessage)
             Cookies.set('errorMessage', errorMessage)
-            return error;
+            return false;
         })
 }
 

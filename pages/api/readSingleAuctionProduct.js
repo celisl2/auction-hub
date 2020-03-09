@@ -1,9 +1,9 @@
 // /////////////////////////////////////////////////////////
 //    
-//    Filename:   readAuctionProducts.js
+//    Filename:   readSingleAuctionProduct.js
 //    Programmer: Robert Ashley
 //    Created:    9 March 2020
-//    Purpose: Returns the JSON data of a all products in a single auction event 
+//    Purpose: Returns the JSON data of a product in a single auction event 
 //      indicated by the auctionEventId in request from the Firestore database via 
 //      http response
 //
@@ -19,16 +19,17 @@ export default (req, res) => {
         try {
             if (req.method === 'POST') {
                 let auctionEventId = req.params.auctionEventId;
+                let productId = req.params.productId;
     
                 loadDB()
                     .firestore()
-                    .collection('/AuctionEvent/' + auctionEventId + '/AuctionProduct/')
+                    .doc('/AuctionEvent/' + auctionEventId + '/AuctionProduct/' + productId)
                     .onSnapshot( (snapshot) => {
-                        let productData = snapshot.docs.map((product) => ({
-                            id: product.id,
-                            ...product.data()
-                        }));
-    
+                        let productData = {
+                            id: snapshot.id,
+                            ...snapshot.data()
+                        }
+
                         res.setHeader('Content-Type', 'application/json');
                         res.json(productData);
                         res.status(200).end();
