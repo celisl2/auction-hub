@@ -206,6 +206,13 @@ h2.global-title {
     width: 100% !important;
     margin: 4%;
 }
+.icon-format {
+    margin: 1%;
+    background-color: #007bff;
+    padding: .1%;
+    border: 0 solid;
+    border-radius: 50%;
+}
 
 
 @media (min-width: 768px) {

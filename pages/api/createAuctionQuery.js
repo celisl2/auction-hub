@@ -11,6 +11,7 @@
 
 import {loadDB} from '../../lib/db';
 
+/*
 function createAuctionEvent (EventData) {
 
     // To Do: Add an authentication check to assure user has privelleges to create auction events.
@@ -32,6 +33,34 @@ function createAuctionEvent (EventData) {
         })
 
 }
+*/
+export default (req, res) => {
+    if(req.method === 'POST') {
+        console.log(req.body)
+        let EventData = req.body;
+        loadDB()
+        .firestore()
+        .collection("/AuctionEvent")
+        .add(EventData)
+        .then( (results) => {
+            //console.log("DEBUG:: Auction event creation successful: Auction ID " + results.id);
+            //alert("DEBUG:: Auction event creation successful: Auction ID " + results.id)
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({token: true});
+            //return results;
+        })
+        .catch( (error) => {
+            //alert("DEBUG:: Auction event creation unsuccessful\nError: " + error.code + " : " + error.message);
+            console.error("Auction event creation unsuccessful\nError: " + error.code + " : " + error.message)
+            res.statusCode = 500;
+
+            res.setHeader('Content-Type', 'application/json');
+            res.json({token: false});
+            //return error;
+        })
+    }
+}
 
 
-export default createAuctionEvent;
+//export default createAuctionEvent;
