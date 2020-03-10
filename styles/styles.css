@@ -195,6 +195,18 @@ footer > div {
     margin-bottom: 3%;
 }
 
+h2.global-title {
+    margin: 2%;
+    font-weight: bold;
+    background-color: #efefef;
+    padding: 1%;
+    text-align: center;
+}
+.format-feild {
+    width: 100% !important;
+    margin: 4%;
+}
+
 
 @media (min-width: 768px) {
     .login-form {

@@ -1,4 +1,4 @@
-import { Formik} from 'formik';
+import { Formik, Field} from 'formik';
 import * as Yup from 'yup';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
@@ -8,8 +8,29 @@ import Col from 'react-bootstrap/Col';
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
 import SelectState from '../components/SelectStates';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+
 
 import createAuctionEvent from './api/createAuctionQuery';
+
+const DatePickerWrapper = (props) => {
+
+    const handleChange = (date) => {
+      props.form.setFieldValue(props.field.name, date)
+    }
+  
+    return (
+      <DatePicker
+        selected={props.field.value}
+        onChange={handleChange}
+        minDate={moment()}
+        isClearable={true}
+        className="form-control format-feild"
+      />
+    )
+  }
+  
 
 const CreateAuctionForm = () => {
     return(
@@ -17,7 +38,8 @@ const CreateAuctionForm = () => {
             initialValues={{
                 title: '',
                 date: '',
-                time: '',
+                startTime: '',
+                endTime: '',
                 description: '',
                 imageURL: '',
                 location: {
@@ -36,8 +58,10 @@ const CreateAuctionForm = () => {
                         .required('Please enter auction title'),
                     date: Yup.string()
                         .required('Please enter auction date'),
-                    time: Yup.string()
-                        .required('Please enter auction time'),
+                    startTime: Yup.string()
+                        .required('Please enter auction start time'),
+                    endTime: Yup.string()
+                        .required('Please enter time when auction event will end'),
                     description: Yup.string()
                         .required('Please enter auction description'),
                     imageURL: Yup.string()
@@ -61,15 +85,6 @@ const CreateAuctionForm = () => {
                 alert(JSON.stringify(values, null, 2));
 
                 createAuctionEvent(values)
-                /*
-                    .then( (results) => {
-                        alert("INDEX.JS: Auction event created successfully!");
-                    })
-                    .catch( (error) => {
-                        alert("INDEX.JS: There was a problem creating an auction event:\n\t" +
-                        error.code + " : " + error.message + "\n")
-                    })
-                */
 
                 setSubmitting(false);
                 }, 400);
@@ -104,17 +119,28 @@ const CreateAuctionForm = () => {
                 <Row>
                     <Col>
                         <Form.Label htmlFor="date">Date</Form.Label>
-                        <Form.Control name="date" {...formik.getFieldProps('date')} />
+                        {/**<Form.Control name="date" {...formik.getFieldProps('date')} /> */}
+                        
+                        <Field className="form-control" name="date" component={DatePickerWrapper} {...formik.getFieldProps('date')}/>
                         {formik.touched.date && formik.errors.date ? (
                         <div>{formik.errors.date}</div>) : null}
                     </Col>
+                </Row>
+                <Row>
                     <Col>
-                        <Form.Label htmlFor="time">Time</Form.Label>
-                        <Form.Control name="time" {...formik.getFieldProps('time')} />
-                        {formik.touched.time && formik.errors.time ? (
-                        <div>{formik.errors.time}</div>) : null}
+                        <Form.Label htmlFor="startTime">Start Time</Form.Label>
+                        <Form.Control name="startTime" {...formik.getFieldProps('startTime')} type="time"/>
+                        {formik.touched.startTime && formik.errors.startTime ? (
+                        <div>{formik.errors.startTime}</div>) : null}
+                    </Col>
+                    <Col>
+                        <Form.Label htmlFor="endTime">End Time</Form.Label>
+                        <Form.Control name="endTime" {...formik.getFieldProps('endTime')} type="time"/>
+                        {formik.touched.endTime && formik.errors.endTime ? (
+                        <div>{formik.errors.endTime}</div>) : null}
                     </Col>
                 </Row>
+
                 
                 <Form.Label htmlFor="location.addressLine1">Address</Form.Label>
                 <Form.Control name="location.addressLine1" {...formik.getFieldProps('location.addressLine1')} />
