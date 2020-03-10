@@ -10,6 +10,7 @@ export default () =>
             <Nav className='mr-auto'>
                 <Nav.Link href="#currentAuction">Current Auction</Nav.Link>
                 <Nav.Link href="/products">Products</Nav.Link>
+                <Nav.Link href="/StripeCheckout">Send me Money</Nav.Link>
             </Nav>
             <SignOut />
         </Navbar.Collapse>

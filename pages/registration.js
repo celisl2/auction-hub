@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link'
 import Router from 'next/router'
-import Link from 'next/link';
 
 const CustomerRegistration = () => {
     return (
