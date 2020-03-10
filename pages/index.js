@@ -1,29 +1,15 @@
-import Navigation from '../components/Navigation';
-import CurrentAuction from '../components/CurrentAuction';
-import HomeProducts from '../components/HomeProducts';
-import {loadDB} from '../lib/db';
+import HomeAuth from '../components/HomeAuth';
 import HomeForbidden from '../components/HomeForbidden';
 import Loading from '../components/Loading';
-import Footer from '../components/Footer';
-import {getCode} from '../utils/helperFunctions';
-const React = require('react');
+import {loadDB} from '../lib/db';
+import Container from 'react-bootstrap/Container';
+import React from 'react';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
 
 let firebase = loadDB();
 
-const HomeAuth = () =>
-    <div className="home-body">
-        <Navigation />
-        <CurrentAuction />
-        <HomeProducts />
-        <Footer />
-        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-    </div>;
-
-
 //This class renders a react component based on if the user is logged in or not
-//Here's the tutorial i found this from https://medium.com/@650egor/react-30-day-challenge-day-3-firebase-user-authentication-879e484e5934
 class Home extends React.Component {
     constructor(props) {
         super(props)
@@ -32,21 +18,31 @@ class Home extends React.Component {
         }
     }
 
+    static async getInitialProps(ctx) {
+         //get auction from api
+        const res = await fetch('http://localhost:3000/api/readAuctionEvents');
+        const json = await res.json();
+        return {
+            apiData: {
+                auctionEvent: json
+            }
+        }
+    }
+
     componentDidMount() {
         this._isMounted = true;
 
         firebase.auth().onAuthStateChanged((user) => {
             if(user) {
-
                 if (user.emailVerified) {
-                  console.log('Email is verified');
+                    console.log('Email is verified');
                 }
                 else {
-                  console.log('Email is not verified');
-                  Router.push('/verify');
+                    console.log('Email is not verified');
+                    Router.push('/verify');
                 }
 
-                 if(this._isMounted){
+                if(this._isMounted){
                     this.setState({ user });
                 }
 
@@ -61,8 +57,6 @@ class Home extends React.Component {
                 setTimeout(() => {
                     Router.push('/login');
                 }, 4000);
-
-
             }
         })
     }
@@ -73,15 +67,26 @@ class Home extends React.Component {
 
     render() {
         //we check for state since every time state is changed the render function will be called again
-        //let content = Cookies.get('ssid') ? <HomeAuth /> : <HomeForbidden />;
-        if(this.state.user === 'loading')
-            return <Loading />;
-        else if(this.state.user === null)
-            return <HomeForbidden />;
-        else
-            return <HomeAuth />;
+        if(this.state.user === 'loading') {
+            return (
+            <Container>
+                <Loading />
+            </Container>
+            );
+        }
+        else if(this.state.user === null) {
+            return  (
+                <Container>
+                    <HomeForbidden />
+                </Container>
+            );
+        }
+        else {
+            return  (
+                <HomeAuth data={this.props.apiData}/>
+            );
+        }
     }
-
 };
 
-module.exports = Home;
+export default Home;
