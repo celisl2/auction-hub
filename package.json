@@ -5,8 +5,11 @@
         "start": "next start"
     },
     "dependencies": {
+        "@stripe/react-stripe-js": "^1.0.3",
+        "@stripe/stripe-js": "^1.0.3",
         "@zeit/next-css": "^1.0.1",
         "@zeit/next-sass": "^1.0.1",
+        "axios": "^0.19.2",
         "bootstrap": "^4.4.1",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
@@ -23,6 +26,7 @@
         "react-dom": "^16.12.0",
         "react-feather": "^2.0.3",
         "react-select": "^3.0.8",
+        "react-stripe-checkout": "^2.6.3",
         "styled-components": "^5.0.1",
         "yup": "^0.28.1"
     },
