@@ -12,7 +12,6 @@
 
 
 import {loadDB} from '../../lib/db';
-import {Cookies} from 'js-cookie';
 import "firebase/auth";
 
 let firebase = loadDB();
@@ -43,6 +42,12 @@ export default function placeBid (auctionEventId, productId, bidAmount) {
         */
         try {
             let currentTimestamp = Date.now();
+
+            // Make sure amount can be parsed and stored as a number
+            bidAmount = Number.parseFloat(bidAmout);
+            if (NaN(bidAmount)) {
+                throw "The value provided for bid amount could not be interpreted as a number.";
+            }
         
             firebase
                 .firestore()
@@ -50,9 +55,7 @@ export default function placeBid (auctionEventId, productId, bidAmount) {
                 .get()
                 .then ( (eventSnapshot) => {
 
-                    //let beginEventTime = eventSnapshot.data().timeStart.seconds * 1000 + eventSnapshot.data().timeStart.nanoseconds;
                     let beginEventTime = new Date(eventSnapshot.timeStart.toDate()).getTime();
-                    //let endEventTime = eventSnapshot.data().timeEnd.seconds * 1000 + eventSnapshot.data().timeEnd.nanoseconds;
                     let endEventTime = new Date(eventSnapshot.timeEnd.toDate()).getTime();
 
                     if (beginEventTime > currentTimestamp || endEventTime < currentTimestamp)
@@ -70,8 +73,14 @@ export default function placeBid (auctionEventId, productId, bidAmount) {
                     .get()
                     .then( (productSnapshot) => {
 
-                        let productMinBid = productSnapshot.data().bid;
+                        let productMinBid = Number.parseFloat(productSnapshot.data().bid);
+                        if (isNaN(productMinBid)) {
+                            throw "The value retrieved for minumum bid could not be interpreted as a number.";
+                        }
                         let productBuyout = productSnapshot.data().buyoutPrice
+                        if (isNaN(productBuyout)) {
+                            throw "The value retrieved for buyout price could not be interpreted as a number.";
+                        }
 
     // !!! Need rules for tracking buyout !!! //
     // Does meeting buyout price prevent further bidding, or disables buyout and enables further bidding?

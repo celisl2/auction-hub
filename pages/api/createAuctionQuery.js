@@ -18,15 +18,14 @@ export default (auctionEventData) => {
 
         //let eventName = req.params.title;
         
-        //CONVERT DATE & TIME INTO TIMESTAMP
+        
         try {
-            //let timestampStart = Date.parse(req.params.dateStart + " " + req.params.timeStart);
+            //CONVERT DATE & TIME INTO TIMESTAMP
             auctionEventData.timestampStart = Date.parse(auctionEventData.timestampStart);
             if (isNaN(auctionEventData.timestampStart)) {
                 throw "starting date and time fields could not be interpreted!"
             }
 
-            //let timestampEnd = Date.parse(req.params.dateEnd + " " + req.params.timeEnd);
             auctionEventData.timestampEnd = Date.parse(auctionEventData.timestampEnd);
             if (isNaN(auctionEventData.timestampEnd)) {
                 throw "ending date and time fields could not be interpreted!"
@@ -38,7 +37,6 @@ export default (auctionEventData) => {
             .add(auctionEventData)
             .then( (results) => {
                 console.log("Auction event creation successful: Auction ID " + results.id)
-    
                 return true;
             })
             .catch( (error) => {
@@ -51,7 +49,6 @@ export default (auctionEventData) => {
             console.error("createAuctionQuery.js: Error: ", err)
             return false;
         }
-        let startTime = Date.parse(req.params.timeStart + " " + req.params.dateStart)
  
     }
     else {
@@ -59,6 +56,3 @@ export default (auctionEventData) => {
         // Return to front end for login
     }
 }
-
-
-export default createAuctionEvent;

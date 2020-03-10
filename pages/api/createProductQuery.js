@@ -10,11 +10,10 @@
 import {loadDB} from '../../lib/db';
 let firebase = loadDB();
 
-function createAuctionProduct (auctionEventID, productData) {
+export default (auctionEventID, productData) => {
     
     // To Do: Add an authentication check to assure user has privelleges to create auction product listings.
     
-
     if(firebase.auth().currentUser !== null) {
 
 
@@ -29,18 +28,6 @@ function createAuctionProduct (auctionEventID, productData) {
             if (NaN(productData.maxBid)) {
                 throw "The value provided for maximum bid could bot be interpreted as a number."
             }
-            
-            /*
-            let productData = {
-                productName: req.params.productName,
-                productDescription: req.params.productDescription,
-                productImageURL: req.params.imageURL,
-                productPickUpInfo: req.params.productPickUpInfo,
-                maxBid: maximumBid,
-                minBid: minimumBid
-            }
-            */
-
 
             firebase
             .firestore()
@@ -67,13 +54,5 @@ function createAuctionProduct (auctionEventID, productData) {
         console.error("You are not authorized to view this page!");
         // Return to front end for login
     }
-
-
-
-
-
     
 }
-
-
-export default createAuctionProduct;
