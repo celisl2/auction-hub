@@ -155,7 +155,6 @@ export default function placeBid (auctionEventId, productId, bidAmount) {
 
                 }) .catch ( (eventError) => {
                     let errorMessage = "In submitting the bid, there was an error in obtaining and processing product data: " + JSON.stringify(eventError);
-                    //Cookies.set('errorMesssage', errorMessage);
                     console.error(errorMessage);
                     return false;
             })
@@ -167,6 +166,7 @@ export default function placeBid (auctionEventId, productId, bidAmount) {
 
     }
     else {
-
+        console.error("You are not authorized to view this page!");
+        // Return to front end for login
     }
 }
