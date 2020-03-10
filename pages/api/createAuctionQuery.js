@@ -12,7 +12,7 @@
 import {loadDB} from '../../lib/db';
 
 //export default (req, res) => {
-export default (auctionEventData)
+export default (auctionEventData) => {
 
     if(firebase.auth().currentUser !== null) {
 
@@ -31,23 +31,6 @@ export default (auctionEventData)
             if (isNaN(auctionEventData.timestampEnd)) {
                 throw "ending date and time fields could not be interpreted!"
             }
-
-            /*
-            let eventData = {
-                title: req.params.title,
-                timeStart: timestampStart,
-                timeEnd: timestampEnd,
-                description: req.params.description,
-                imageURL: req.params.imageURL,
-                location: req.params.location,
-                paymentLimitTime: req.params.paymentLimitTime,
-                pickupInformation: req.params.pickupInformation
-            }
-            */
-    
-            //EventData = {};
-
-
     
             loadDB()
             .firestore()
@@ -63,17 +46,13 @@ export default (auctionEventData)
                 return false;
             })
 
-
-
         } 
         catch (err) {
             console.error("createAuctionQuery.js: Error: ", err)
             return false;
         }
         let startTime = Date.parse(req.params.timeStart + " " + req.params.dateStart)
-
-
-        
+ 
     }
     else {
         console.error("You are not authorized to view this page!");
