@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import React from 'react';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
+import fetch from 'isomorphic-unfetch';
 
 let firebase = loadDB();
 
