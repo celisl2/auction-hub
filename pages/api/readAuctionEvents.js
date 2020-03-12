@@ -7,17 +7,15 @@
 //    Updated:    6 March 2020 - Robert Ashley :: Combined both onSnapshot (listener) and get (single time) options.
 //
 // /////////////////////////////////////////////////////////
-
-
-
 import {loadDB} from '../../lib/db';
-    let firebase = loadDB();
-import { useState, useEffect } from 'react';
 
+
+let firebase = loadDB();
 
 
 export default (req, res) => {
-// this code is frome the function getAllAuctionEventsOnSnapshot()
+
+    
     try {
         firebase
         .firestore()

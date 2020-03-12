@@ -1,16 +1,14 @@
 import {getCode} from '../utils/helperFunctions';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-function parseTime(time) {
-
-}
 
 const CurrentAuction = (prop) => {
-
-    console.log(prop.data.data.auctionEvent)
+    console.log(prop);
+    
     return (
         <div id="currentAuction">
                 <h2 className="global-title">Current Auction</h2>
+
                 <div className="auction-image">
                     {/* image here */}
                 </div>
@@ -20,7 +18,7 @@ const CurrentAuction = (prop) => {
                     <h3>Aucton Name</h3>
                     <div className="time_home">
                         <div className="grid-item">
-                            <h4>HH{getCode(58) + " " + prop.data.data.auctionEvent[0].time}</h4>
+                            <h4>HH{getCode(58)}</h4>
                         </div>
                         <div className="grid-item"><h4>MM{getCode(58)}</h4></div>
                         <div className="grid-item"><h4>SS</h4></div>

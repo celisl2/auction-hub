@@ -235,7 +235,7 @@ const CreateAuctionForm = () => {
                         {formik.touched.paymentLimitTime && formik.errors.paymentLimitTime ? (
                         <div>{formik.errors.paymentLimitTime}</div>) : null}
                          */}
-                         <InfoPopOver />
+                        <InfoPopOver />
                         <Form.Control as="select" name="paymentLimitTime" {...formik.getFieldProps('paymentLimitTime')}>
                             <option></option>
                             <option value="24">24 Hours</option>
