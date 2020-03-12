@@ -15,7 +15,8 @@ class Home extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            user: 'loading'
+            user: 'loading',
+            role: null
         }
     }
 
@@ -49,6 +50,23 @@ class Home extends React.Component {
                 user.getIdToken().then(function (token) {
                     Cookies.set('ssid', token);
                 })
+
+                firebase.firestore()
+                    .collection("/Users")
+                    .doc(user.uid)
+                    .get()
+                    .then((querySnapshot) => {
+                        if(querySnapshot.data().isAdmin == "true") {
+                            this.setState({
+                                role: "admin"
+                            });
+                        }
+                        else {
+                            this.setState({
+                                role: "user"
+                            });
+                        };
+                    })
             }
             else {
                 if(this._isMounted)
@@ -80,6 +98,10 @@ class Home extends React.Component {
                     <HomeForbidden />
                 </Container>
             );
+        }
+        else if (this.state.role == "admin") {
+            Router.push('/admin_home');
+            return null;
         }
         else {
             return  (

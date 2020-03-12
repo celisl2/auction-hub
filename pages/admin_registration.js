@@ -31,15 +31,16 @@ const AdminRegistrationForm = (props) => {
                 })}
                 onSubmit={ async (values, {setSubmitting}) => {
                     setSubmitting(true)
-                    const email = values.email
-                    const pssw = values.password
+                    const email = values.email;
+                    const pssw = values.password;
+                    const fName = values.firstName;
+                    const lName = values.lastName;
 
-                    //! The code in this try catch should be changed 
                     try {
                         const response = await fetch('api/registration', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: email, password: pssw })
+                            body: JSON.stringify({ email: email, password: pssw, firstName: fName, lastName: lName, isAdmin: "true" })
                         });
 
                         if(response.ok) {

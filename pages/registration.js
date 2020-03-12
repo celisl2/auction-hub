@@ -126,29 +126,25 @@ const AdminRegistration = (props) => {
                 })}
                 onSubmit={ async (values, {setSubmitting}) => {
                     setSubmitting(true)
-                    const email = values.email
-                    const pssw = values.password
+                    const email = values.email;
+                    const pssw = values.password;
+                    const fName = values.firstName;
+                    const lName = values.lastName;
+                    const phone = values.phone;
 
                     try {
                         const response = await fetch('api/registration', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: email, password: pssw })
+                            body: JSON.stringify({ email: email, password: pssw, firstName: fName, lastName: lName, phone: phone, isAdmin: "false" })
                         });
 
                         if(response.ok) {
-                            //redirect user to login page
-                            /*
                             const {token} = await response.json();
                             console.log('token from front end being called. Here is info from back end -- ' + token);
-                            */
-                            if(Cookies.get('ssid') !== undefined) {
-
-                            }
                         }
                         else {
-                            //display errors here
-                            console.log("response not ok");
+                            console.log( response + "response not ok");
                         }
                     } catch(error) {
                         console.error('yout code sucks');

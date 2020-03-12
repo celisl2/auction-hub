@@ -1,7 +1,8 @@
 import {loadDB} from '../../lib/db';
 let firebase = loadDB();
 import "firebase/auth";
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
+import createUser from './createUser';
 
 export default (req, res) => {
 
@@ -19,19 +20,27 @@ export default (req, res) => {
             //make sure token exists
             cred.user.getIdToken().then(idToken => {
                 //this returns token -> when signed in
-                console.log('**** TOKEN HERE ****' + idToken);
+
+                createUser(cred.user.uid, {
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
+                    emailVerified: false,
+                    isAdmin: req.body.isAdmin
+                });
+
                 if(idToken) {
-                   Cookies.set('ssid', Date.now());
-              }
+                    Cookies.set('ssid', Date.now());
+                }
             });
         });
 
-        firebase.auth().onAuthStateChanged(function(user) {
-              if (user) {
-            user.sendEmailVerification();
-            console.log("Sent Email Verification.");
-        }
 
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                user.sendEmailVerification();
+                console.log("Sent Email Verification.");
+            }
         });
 
         res.statusCode = 200;

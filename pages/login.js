@@ -104,7 +104,7 @@ let Login = () =>
                 <Link href="/registration">
                     <a className="card">Register</a>
                 </Link>
-                <Link href="/registration">
+                <Link href="/admin_registration">
                     <a className="card">Administrator Registration</a>
                 </Link>
             </div>
