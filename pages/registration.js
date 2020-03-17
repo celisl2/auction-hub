@@ -30,12 +30,15 @@ const CustomerRegistration = () => {
                     setSubmitting(true)
                     const email = values.email;
                     const pssw = values.password;
+                    const fName = values.firstName;
+                    const lName = values.lastName;
+                    const phone = values.phone;
 
                     try {
                         const response = await fetch('api/registration', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: email, password: pssw })
+                            body: JSON.stringify({ email: email, password: pssw, firstName: fName, lastName: lName, phone: phone, isAdmin: "false" })
                         });
 
                         if(response.ok) {
@@ -128,7 +131,7 @@ const AdminRegistration = (props) => {
                     setSubmitting(true)
                     const email = values.email;
                     const pssw = values.password;
-                    const fName = values.firstName;
+                    //const fName = values.firstName;
                     const lName = values.lastName;
                     const phone = values.phone;
 
