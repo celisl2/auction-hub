@@ -6,7 +6,7 @@
     },
     "dependencies": {
         "@stripe/react-stripe-js": "^1.0.3",
-        "@stripe/stripe-js": "^1.0.3",
+        "@stripe/stripe-js": "^1.1.0",
         "@zeit/next-css": "^1.0.1",
         "@zeit/next-sass": "^1.0.1",
         "axios": "^0.19.2",
@@ -26,6 +26,7 @@
         "react-dom": "^16.12.0",
         "react-feather": "^2.0.3",
         "react-stripe-checkout": "^2.6.3",
+        "stripe": "^8.32.0",
         "styled-components": "^5.0.1",
         "swr": "^0.1.18",
         "yup": "^0.28.1"
@@ -36,6 +37,8 @@
     },
     "license": "UNLICENSED",
     "devDependencies": {
+        "@babel/preset-react": "^7.8.3",
+        "babel-cli": "^6.26.0",
         "babel-plugin-styled-components": "^1.10.7"
     }
 }

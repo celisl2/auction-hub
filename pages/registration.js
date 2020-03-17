@@ -46,6 +46,7 @@ const CustomerRegistration = () => {
                             const {token} = await response.json();
                             console.log('token from front end being called. Here is info from back end -- ' + token);
                                 console.log('Email verification has been sent.');
+                                Router.push('/login');
                                 }
 
                         else {

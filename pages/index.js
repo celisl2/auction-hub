@@ -20,16 +20,6 @@ class Home extends React.Component {
         }
     }
 
-    static async getInitialProps(ctx) {
-         //get auction from api
-        const res = await fetch('http://localhost:3000/api/readAuctionEvents');
-        const json = await res.json();
-        return {
-            apiData: {
-                auctionEvent: json
-            }
-        }
-    }
     componentDidMount() {
         this._isMounted = true;
 
