@@ -6,11 +6,12 @@ import Container from 'react-bootstrap/Container';
 import {getCode} from '../utils/helperFunctions';
 
 const HomeAuth = (apiData) => {
+   
     return (
         <div className="home-body">
             <Navigation />
             <Container>
-                <CurrentAuction data={apiData}/>
+                <CurrentAuction data={apiData.data}/>
                 <HomeProducts />
             </Container>
             <Footer />
