@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
+import Footer from '../components/Footer';
 
 import createAuctionProduct from './api/createProductQuery';
 
@@ -132,10 +133,12 @@ const CreateProduct = () =>
     <div className="create-product-body">
         <AdminNav />
         <Container>
-            <h2>Create Auction Product</h2>
+            <h2 className="text-center mx-auto space text-header">Create Auction Product</h2>
             <CreateProductForm />
         </Container>
-        
+        <div className="footer-space"></div>
+        <Footer />
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>
 
 export default CreateProduct;

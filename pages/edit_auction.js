@@ -13,6 +13,7 @@ import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {HelpCircle} from 'react-feather';
 import {getCode} from '../utils/helperFunctions';
+import Footer from '../components/Footer';
 
 const popover = (
     <Popover id="popover-basic">
@@ -313,12 +314,13 @@ const SampleAuction = () => {
 
 let EditAuction = () =>
     <div className="edit-auction-body">
-    <AdminNav />
-    <Container>
-        <h2>Edit Auction Event</h2>
-        <SampleAuction />
-    </Container>
-        
+        <AdminNav />
+        <Container>
+            <h2 className="text-center mx-auto space text-header">Edit Auction Event</h2>
+            <SampleAuction />
+        </Container>
+        <Footer/>
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>;
 
 export default EditAuction;

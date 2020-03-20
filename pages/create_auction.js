@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {HelpCircle} from 'react-feather';
+import Footer from '../components/Footer';
 
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
@@ -265,9 +266,10 @@ let CreateAuction = () =>
     <div className="auction-creation-body">
         <AdminNav />
         <Container>
-            <h2>Create Auction Event</h2>
+            <h2 className="text-center mx-auto space text-header">Create Auction Event</h2>
             <CreateAuctionForm />
         </Container>
-        
+        <Footer />
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>;
 export default CreateAuction;

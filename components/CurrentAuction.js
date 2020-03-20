@@ -117,7 +117,7 @@ const CurrentAuction = () => {
                                             </div>
                                            <Row>
                                                <Col><h5>Location</h5></Col>
-                                               <Col><h5>Prodcts Pick Up Information</h5></Col>
+                                               <Col><h5>Product Pick Up Information</h5></Col>
                                            </Row>
                                            <Row>
                                                <Col className="reset">

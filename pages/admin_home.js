@@ -6,12 +6,14 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import AdminNav from '../components/AdminNav';
 import {ArrowRight} from 'react-feather';
+import {getCode} from '../utils/helperFunctions';
+import Footer from '../components/Footer';
 
 const AdminHome = () =>
     <div className="admin-home-body">
         <AdminNav />
         <Container>
-        <h2>Administrator Home</h2>
+        <h2 className="text-center mx-auto space text-header">Administrator Home</h2>
             <CardDeck className="card-format">
             <Link href="/create_auction">
                 <Card bg="dark" text="white" className="next-link">
@@ -89,6 +91,8 @@ const AdminHome = () =>
                 </Link>
             </CardDeck>
         </Container>
+        <Footer />
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>;
 
 export default AdminHome;

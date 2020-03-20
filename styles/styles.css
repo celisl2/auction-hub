@@ -345,6 +345,24 @@ img.reset-image-size {
 .bold-text {
     font-weight: bold;
 }
+.footer-space {
+    width: 100%;
+    padding-bottom: 15%;
+}
+a.brand {
+    font-family: 'Oswald', Verdana, sans-serif;
+    background-color: #5F4E9C;
+    padding: 1%;
+    padding-left: 3%;
+    padding-right: 1.5%;
+    margin-left: -2%;
+    color: #FCFCFC !important;
+    letter-spacing: 1.5px;
+    font-weight: 200;
+}
+.special-font {
+    color: #22282B !important;
+}
 
 @media (min-width: 768px) {
     .login-form {

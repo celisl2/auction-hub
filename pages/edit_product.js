@@ -12,6 +12,7 @@ import Container from 'react-bootstrap/Container';
 import React, { useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Footer from '../components/Footer';
 
 const SampleProduct = () =>
     <div>
@@ -161,12 +162,13 @@ let EditProducts = () =>
     <div className="edit-auction-body">
         <AdminNav />
         <Container>
-            <h2>Edit Auction Products</h2>
+            <h2 className="text-center mx-auto space text-header">Edit Auction Products</h2>
             <EditProductsCards />
             <h3>*** this button will go in the dynamic pages created ***</h3>
             <EditProductModal />
         </Container>
-        
+        <Footer/>
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>;
 
 export default EditProducts;

@@ -1,8 +1,9 @@
 import {getCode} from '../utils/helperFunctions';
 import Link from 'next/link';
 
+
 export default () =>
-    <footer>
+    <footer className="footer">
         <div className='footer-left'>
             <h6>Auction Hub | All Thing Possible</h6>
             <p>Aution Hub is an online bidding system made by Winthrop University students for All Things Possible{getCode(46)}</p>
