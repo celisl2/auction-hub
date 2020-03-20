@@ -23,7 +23,7 @@ h3 {
     font-weight: 400;
 }
 
-h4 {
+h4, h5 {
     font-family: 'Oswald', Verdana, sans-serif;
 }
 
@@ -213,12 +213,92 @@ h2.global-title {
     border: 0 solid;
     border-radius: 50%;
 }
+h3.flag-title {
+    margin: 2%;
+    margin-left: 0;
+    padding-left: 2%;
+    border-bottom: 2px solid #333366;
+    display: inline-block;
+    color: #5F4E9C;
+}
+img.reset-image-size {
+    margin-left: 1%;
+    width: 100%;
+}
 
+.timer {
+    text-align: center;
+}
+.timer h3 {
+    border-bottom: 2px solid #B69638;
+    margin-bottom: 0;
+    background-color: #B69638;
+    color: #fff;
+    padding: 2%;
+}
+.timer-box {
+    background-color: #ECEAE3;
+    padding: 2%;
+    padding-bottom: 3%;
+}
+.makeGold {
+    color: #B69638;
+}
+.makeLight {
+    font-weight: 300;
+}
+.overlap {
+    position: relative;
+    top: -5%;
+    background-color: #22282B;
+    color: #fff;
+    font-family: 'Merriweather', Georgia, serif;
+    padding: 1%;
+    width: 80%;
+    margin: auto;
+    border-radius: 50px;
+}
+.current-auction-body {
+    margin-top: 2%;
+}
+.smallToggle {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    padding: 0 !important;
+    font-weight: 300;
+    margin-top: 2%;
+    border: none;
+    background-color: #4D4D99 !important;
+}
+.toggle-special .card{
+    border: none !important;
+}
+.reset .card {
+    border: none;
+    margin: auto;
+}
+.smallToggle h5 {
+    color: #fff;
+    font-weight: 300;
+}
+.smallToggle h5:hover, .smallToggle h5:active{
+    border-bottom: 1px solid #fff;
+}
+.reset p {
+    margin: 0;
+}
+.cardBorder {
+    border-bottom: 1px solid #6C757D;
+    border-right: 1px solid #6C757D;
+    border-left: 1px solid #6C757D;
+}
 
 @media (min-width: 768px) {
     .login-form {
         max-width: 50%;
     }
+    
 }
 
 @media (max-width: 575.98px) {
@@ -246,5 +326,16 @@ h2.global-title {
         font-weight: normal;
         padding: 1.5%;
         width: 60%;
+    }
+    .timer h3 {
+        padding: 2%;
+        background-color: #B69638;
+        color: #fff;
+    }
+    img.reset-image-size {
+        margin-left: 0;
+    }
+    .current-auction-body {
+        margin-top: 2%;
     }
 }
