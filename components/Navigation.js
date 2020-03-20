@@ -8,8 +8,8 @@ export default () =>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className='mr-auto'>
-                <Nav.Link href="#currentAuction">Current Auction</Nav.Link>
-                <Nav.Link href="/products">Products</Nav.Link>
+                <Nav.Link href="/">Current Auction</Nav.Link>
+                <Nav.Link href="#products">Products</Nav.Link>
             </Nav>
             <SignOut />
         </Navbar.Collapse>

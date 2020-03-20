@@ -15,7 +15,7 @@ const HomeAuth = (apiData) => {
             </Container>
             <h3 className="flag-title">Auction Products</h3>
             <Container>
-                <HomeProducts />
+                <HomeProducts/>
             </Container>
             <Footer />
             <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>

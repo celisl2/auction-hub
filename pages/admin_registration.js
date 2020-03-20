@@ -1,7 +1,10 @@
 import ImageHeader from '../components/ImageHeader';
+import {getCode} from '../utils/helperFunctions';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Footer from '../components/Footer';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import Link from 'next/link';
 
 const AdminRegistrationForm = (props) => {
     return (
@@ -66,34 +69,37 @@ const AdminRegistrationForm = (props) => {
             }}
         >
         {formik => (
-            <form onSubmit={formik.handleSubmit}>
-                <label htmlFor="firstName">First Name</label>
-                <input name="firstName" {...formik.getFieldProps('firstName')} />
-                {formik.touched.firstName && formik.errors.firstName ? (
-                    <div>{formik.errors.firstName}</div>) : null}
-                <label htmlFor="lastName">Last Name</label>
-                <input name="lastName" {...formik.getFieldProps('lastName')} />
-                {formik.touched.lastName && formik.errors.lastName ? (
-                    <div>{formik.errors.lastName}</div>) : null}
-                <label htmlFor="email">Email Address</label>
-                <input name="email" {...formik.getFieldProps('email')} />
-                {formik.touched.email && formik.errors.email ? (
-                    <div>{formik.errors.email}</div>) : null}
-                <label htmlFor="password">Password</label>
-                <input name="password" {...formik.getFieldProps('password')} />
-                <label htmlFor="passwordConfirm">Confirm Password</label>
-                <input
-                    id="passwordConfirm"
-                    name="passwordConfirm"
-                    type="password"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.passwordConfirm}
-                />
-                {formik.touched.passwordConfirm && formik.errors.passwordConfirm ? (
-                    <div>{formik.errors.passwordConfirm}</div>) : null}
-                <button type="submit">Register</button>
-            </form>
+            <Form onSubmit={formik.handleSubmit}>
+                <Form.Group>
+                    <Form.Label htmlFor="firstName">First Name</Form.Label>
+                    <Form.Control name="firstName" {...formik.getFieldProps('firstName')} />
+                    {formik.touched.firstName && formik.errors.firstName ? (
+                        <div>{formik.errors.firstName}</div>) : null}
+                    <Form.Label htmlFor="lastName">Last Name</Form.Label>
+                    <Form.Control name="lastName" {...formik.getFieldProps('lastName')} />
+                    {formik.touched.lastName && formik.errors.lastName ? (
+                        <div>{formik.errors.lastName}</div>) : null}
+                    <Form.Label htmlFor="email">Email Address</Form.Label>
+                    <Form.Control name="email" {...formik.getFieldProps('email')} />
+                    {formik.touched.email && formik.errors.email ? (
+                        <div>{formik.errors.email}</div>) : null}
+                    <Form.Label htmlFor="password">Password</Form.Label>
+                    <Form.Control name="password" {...formik.getFieldProps('password')} />
+                    <Form.Label htmlFor="passwordConfirm">Confirm Password</Form.Label>
+                    <Form.Control
+                        id="passwordConfirm"
+                        name="passwordConfirm"
+                        type="password"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.passwordConfirm}
+                    />
+                    {formik.touched.passwordConfirm && formik.errors.passwordConfirm ? (
+                        <div>{formik.errors.passwordConfirm}</div>) : null}
+                    <button className="btn space customer-button" type="submit">Register</button>
+                </Form.Group>
+                
+            </Form>
         )}
 
         </Formik>
@@ -103,7 +109,11 @@ const AdminRegistrationForm = (props) => {
 const AdminRegistration = () =>
     <div className="admin-registration-body">
         <ImageHeader />
-        <h2>Administrator Registration</h2>
-        <AdminRegistrationForm />
+        <Container>
+            <h2 className="text-center mx-auto text-header">Administrator Registration</h2>
+            <AdminRegistrationForm />
+        </Container>
+        <Footer/>
+        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
     </div>;
 export default AdminRegistration;
