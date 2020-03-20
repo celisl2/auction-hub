@@ -288,10 +288,62 @@ img.reset-image-size {
 .reset p {
     margin: 0;
 }
+.admin-card-header {
+    background-color: #18b0b0 !important;
+}
+
+.edit {
+    background-color: #116979 !important;
+}
+
+.view{
+    background-color: #de7119 !important;
+}
 .cardBorder {
     border-bottom: 1px solid #6C757D;
     border-right: 1px solid #6C757D;
     border-left: 1px solid #6C757D;
+}
+.customer-button {
+    background-color: #5F4E9C !important;
+    color: #FCFCFC !important;
+}
+
+.space {
+    margin: 2%;
+}
+.text-header {
+    width: 100%;
+    background-color: #ECEAE3;
+    margin-bottom: 3%;
+    padding: 1%;
+    color: #333366;
+}
+.md-width {
+    width: 55%;
+    margin: auto;
+}
+.icon-center {
+    width: 100%;
+    margin: 2.5% auto;
+}
+.link-group a {
+    display: block;
+    border: 1px solid #FCFCFC;
+    border-radius: 5px;
+    width: 50%;
+    margin: 2% auto;
+    background-color: #DEE3E2;
+    color: #000;
+    padding: 1%;
+}
+.link-group a:hover, .link-group a:active, .link-group a:focus {
+    border-bottom: 1px solid #B69638;
+    text-decoration: none;
+    color: #5f4e9c;
+}
+.bold-text {
+    font-weight: bold;
 }
 
 @media (min-width: 768px) {
@@ -337,5 +389,21 @@ img.reset-image-size {
     }
     .current-auction-body {
         margin-top: 2%;
+    }
+    .link-group a {
+        width: 70%;
+        font-size: medium;
+    }
+    .smallScreen {
+        margin: 10%;
+    }
+    .link-group {
+        margin-bottom: 10%;
+    }
+    .border-reset {
+        margin-top: 5%;
+    }
+    .md-width {
+        width: 100%;
     }
 }
