@@ -8,11 +8,17 @@ import Container from 'react-bootstrap/Container';
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
 import Footer from '../components/Footer';
+import {loadDB} from '../lib/db';
+import React, { useState, useEffect } from 'react';
+
+let firebase = loadDB();
 
 import createAuctionProduct from './api/createProductQuery';
+let success = null;
 
 const CreateProductForm = () => {
     return (
+        <div>
         <Formik
             initialValues={{
                 productName: '',
@@ -34,40 +40,31 @@ const CreateProductForm = () => {
 
 
             onSubmit={(values, { setSubmitting }) => {
-            
-                alert(JSON.stringify(values, null, 2));
-
-                createAuctionEvent(values)
-                    .then( (results) => {
-                        alert("INDEX.JS: Auction event created successfully!");
-                    })
-                    .catch( (error) => {
-                        alert("INDEX.JS: There was a problem creating an auction event:\n\t" +
-                        error.code + " : " + error.message + "\n");
-                    })
-
-                setSubmitting(false);
-                
-            }}
-            //    onSubmit={(values) => {
-            onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-
-                //createAuctionProduct(values)
-                createAuctionProduct("vOwsw3o6VFijgeOEDKXM", values)
                 /*
-                    .then( (results) => {
-                        alert("INDEX.JS: Auction event created successfully!");
-                    })
-                    .catch( (error) => {
-                        alert("INDEX.JS: There was a problem creating an auction event:\n\t" +
-                        error.code + " : " + error.message + "\n")
-                    })
-                */
+                let db = firebase.database();
 
-                setSubmitting(false);
-                }, 400);
+                db.ref('AuctionProducts/').set({
+                    productName: values.productName,
+                    productDescription: values.productDescription,
+                    productImageURL: values.productImageURL,
+                    minBid: values.minBid,
+                    maxBid: values.maxBid,
+                    productPickUpInfo: values.productPickUpInfo,
+                })
+                */
+                //todo get reference of auction instead of hardcoding it
+                let creationSuccess = createAuctionProduct("Wko55XKmmKJnzfhjLJp3", values);
+                console.log(creationSuccess + "*** in pages")
+                // To do: properly await function completion in order to properly report to user.
+                /*
+                console.log("Doc ID: " + creationSuccess.toString());
+                if(creationSuccess) {
+                    console.log("Success!");
+                }
+                else {
+                    console.log("Unsuccessful!");
+                }
+                */
             }}
         >
 
@@ -122,8 +119,8 @@ const CreateProductForm = () => {
             <Button variant="success" type="submit">Save</Button>
         </Form>
         )}
-
-        </Formik>
+        {}
+        </Formik></div>
     );
 }
 
@@ -135,6 +132,7 @@ const CreateProduct = () =>
         <Container>
             <h2 className="text-center mx-auto space text-header">Create Auction Product</h2>
             <CreateProductForm />
+            
         </Container>
         <div className="footer-space"></div>
         <Footer />

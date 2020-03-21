@@ -49,13 +49,13 @@ const AdminHome = () =>
                     <Card bg="dark" text="white" className="next-link">
                     <Card.Header className="admin-card-header edit">
                         <Row>
-                            <Col>Edit</Col>
+                            <Col>View and Edit</Col>
                             <Col xs={2} sm={2} md={2}><ArrowRight size='20' color="white" /></Col>
                         </Row>
                     </Card.Header>
                         <Card.Body>
-                            <Card.Title>Edit Auction</Card.Title>
-                            <Card.Text>This allows you to edit an auction event. Users will not be notified of this change automatically.</Card.Text>
+                            <Card.Title>View {getCode(38)} Edit Auction</Card.Title>
+                            <Card.Text>This allows you to view and edit an auction event. Users will not be notified of this change automatically.</Card.Text>
                         </Card.Body>
                     </Card>
                 </Link>
@@ -63,13 +63,13 @@ const AdminHome = () =>
                     <Card bg="dark" text="white" className="next-link">
                     <Card.Header className="admin-card-header edit">
                         <Row>
-                            <Col>Edit</Col>
+                            <Col>View and Edit</Col>
                             <Col xs={2} sm={2} md={2}><ArrowRight size='20' color="white" /></Col>
                         </Row>
                     </Card.Header>
                         <Card.Body>
-                            <Card.Title>Edit Product</Card.Title>
-                            <Card.Text>This allows you to edit products listed for the active auction event. Users will not be notified of this change automatically.</Card.Text>
+                            <Card.Title>View {getCode(38)} Edit Product</Card.Title>
+                            <Card.Text>This allows you to view and edit products listed for the active auction event. Users will not be notified of this change automatically.</Card.Text>
                         </Card.Body>
                     </Card>
                 </Link>

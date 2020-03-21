@@ -4,8 +4,17 @@ import HomeProducts from './HomeProducts';
 import Footer from './Footer';
 import Container from 'react-bootstrap/Container';
 import {getCode} from '../utils/helperFunctions';
+import React, { useState, useEffect } from 'react';
 
 const HomeAuth = (apiData) => {
+    const [auctionId, setAuctionId] = useEffect(null);
+
+    /*
+    useEffect(() => {
+
+    });
+    */
+
     return (
         <div className="home-body">
             <Navigation />
