@@ -1,3 +1,5 @@
+// To do: properly await function completion in order to properly report to user.
+
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Button from 'react-bootstrap/Button';
@@ -10,6 +12,7 @@ import AdminNav from '../components/AdminNav';
 import Footer from '../components/Footer';
 
 import createAuctionProduct from './api/createProductQuery';
+
 
 const CreateProductForm = () => {
     return (
@@ -50,20 +53,21 @@ const CreateProductForm = () => {
                 
             }}
             //    onSubmit={(values) => {
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit= {(values, { setSubmitting }) => {
                 setTimeout(() => {
                 alert(JSON.stringify(values, null, 2));
 
                 //createAuctionProduct(values)
-                createAuctionProduct("vOwsw3o6VFijgeOEDKXM", values)
+                let creationSuccess = createAuctionProduct("Wko55XKmmKJnzfhjLJp3", values);
+                // To do: properly await function completion in order to properly report to user.
                 /*
-                    .then( (results) => {
-                        alert("INDEX.JS: Auction event created successfully!");
-                    })
-                    .catch( (error) => {
-                        alert("INDEX.JS: There was a problem creating an auction event:\n\t" +
-                        error.code + " : " + error.message + "\n")
-                    })
+                console.log("Doc ID: " + creationSuccess.toString());
+                if(creationSuccess) {
+                    console.log("Success!");
+                }
+                else {
+                    console.log("Unsuccessful!");
+                }
                 */
 
                 setSubmitting(false);
