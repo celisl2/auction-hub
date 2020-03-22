@@ -6,8 +6,8 @@ import Container from 'react-bootstrap/Container';
 import {getCode} from '../utils/helperFunctions';
 import React, { useState, useEffect } from 'react';
 
-const HomeAuth = (apiData) => {
-    const [auctionId, setAuctionId] = useEffect(null);
+const HomeAuth = () => {
+    //const [auctionId, setAuctionId] = useEffect(null);
 
     /*
     useEffect(() => {
@@ -20,7 +20,7 @@ const HomeAuth = (apiData) => {
             <Navigation />
             <h3 className="flag-title">Current Auction</h3>
             <Container>
-                <CurrentAuction data={apiData.data}/>
+                <CurrentAuction/>
             </Container>
             <h3 className="flag-title">Auction Products</h3>
             <Container>
