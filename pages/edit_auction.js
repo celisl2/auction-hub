@@ -1,7 +1,7 @@
 import AdminNav from '../components/AdminNav';
 import { Formik} from 'formik';
 import * as Yup from 'yup';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -14,6 +14,16 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {HelpCircle} from 'react-feather';
 import {getCode} from '../utils/helperFunctions';
 import Footer from '../components/Footer';
+import {loadDB} from './../lib/db';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Acordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import Accordion from 'react-bootstrap/Accordion';
+import getActiveEvent from './api/getActiveEvent';
+
+let db = loadDB();
+
+
 
 const popover = (
     <Popover id="popover-basic">
@@ -30,34 +40,34 @@ const InfoPopOver = () => (
     </OverlayTrigger>
 );
 
-const EditForm = () => {
+const EditForm = (props) => {
     return(
         <Formik
             initialValues={{
-                title: '',
+                title: props.data.title,
                 startDate: {
-                    day: '',
-                    month: '',
-                    year: ''
+                    day: props.data.startDate.day,
+                    month: props.data.startDate.month,
+                    year: props.data.startDate.year
                 },
                 endDate: {
-                    day: '',
-                    month: '',
-                    year: ''
+                    day: props.data.endDate.day,
+                    month: props.data.endDate.month,
+                    year: props.data.endDate.year
                 },
-                startTime: '',
-                endTime: '',
-                description: '',
-                imageURL: '',
+                startTime: props.data.startTime,
+                endTime: props.data.endTime,
+                description: props.data.description,
+                imageURL: props.data.imageURL,
                 location: {
-                    addressLine1: '',
-                    addressLine2: '',
-                    city: '',
-                    state: '',
-                    zip: ''
+                    addressLine1: props.data.location.addressLine1,
+                    addressLine2: props.data.location.addressLine2,
+                    city: props.data.location.city,
+                    state: props.data.location.state,
+                    zip: props.data.location.zip
                 },
-                paymentLimitTime: '',
-                pickUpInformation: ''
+                paymentLimitTime: props.data.paymentLimitTime,
+                pickUpInformation: props.data.pickUpInformation
             }}
             validationSchema={
                 Yup.object({
@@ -265,59 +275,157 @@ const EditForm = () => {
     );
 }
 
-const SampleAuction = () => {
+const Auction = (props) => {
 
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    console.log(props)
     return(
         <div>
-            <h3>Title</h3>
-            <Row>
-                <Col><Image src="https://miro.medium.com/max/2834/0*f81bU2qWpP51WWWC.jpg" fluid/></Col>
-                <Col>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vestibulum odio non sapien maximus rutrum. Nullam libero sem, condimentum a est eu, maximus dapibus felis. Phasellus sed dictum arcu. Morbi pharetra eros at neque consequat, malesuada rhoncus ligula auctor. Sed dapibus eget dui eget fringilla. Ut posuere eget nulla et gravida. Phasellus ultrices quis lectus sed efficitur. Etiam mollis turpis at porta mattis. Sed lectus lorem, mollis ac placerat id, luctus nec velit. Phasellus auctor vel neque at molestie.</p>
-                    <p>3:00</p>
-                    <p>01/20/2030</p>
+            <Row className="space">
+                <Col sm={9}>
+                    <h3><span className="bold-text makeGold">Title{getCode(58)}</span> {props.data.title}</h3>
+                </Col>
+                <Col sm={3}>
+                    <Button onClick={handleShow}>Edit Auction</Button>
+                    <Modal show={show} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Edit Auction Event</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <EditForm data={props.data}/>
+                        </Modal.Body>
+                    </Modal>
                 </Col>
             </Row>
             <Row>
-                <Col>
-                    <p>123 Main Street</p>
-                    <p>Rock Hill</p>
-                </Col>
-                <Col>
-                    <p>SC</p>
-                    <p>29733</p>
+                <Col xs={12} sm={6}><Image src={props.data.imageURL} fluid/></Col>
+                <Col xs={12} sm={6}>
+                    <p><span className="bold-text makeGold">Description{getCode(58)}</span> {props.data.description}</p>
                 </Col>
             </Row>
             <Row>
-                <Col><p>Time limit -> 48 hours</p></Col>
-                <Col><p>Pick up -> at 6pm behind the bathroom</p></Col>
+                <Col xs={12} sm={6}>
+                    <p><span className="bold-text makeGold">Start Time{getCode(58)}</span> {props.data.startTime}</p>
+                    <p><span className="bold-text makeGold">Start Date{getCode(58)}</span> {props.data.startDate.month + "/" + props.data.startDate.day + "/" + props.data.startDate.year}</p>
+                </Col>
+                <Col xs={12} sm={6}>
+                    <p><span className="bold-text makeGold">End Time{getCode(58)}</span> {props.data.endTime}</p>
+                    <p><span className="bold-text makeGold">Start Date{getCode(58)}</span> {props.data.endDate.month + "/" + props.data.endDate.day + "/" + props.data.endDate.year}</p>
+                </Col>
             </Row>
-            <Button onClick={handleShow}>Edit</Button>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit Auction Event</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <EditForm />
-                </Modal.Body>
-
-            </Modal>
+            <Row>
+                <Col xs={12} sm={6}>
+                    <p><span className="bold-text makeGold">Location{getCode(58)}</span> </p>
+                    <p>{props.data.location.addressLine1}</p>
+                    {props.data.location.addressLine2 ? <p>{props.data.location.addressLine2}</p> : ""}
+                    <p>{props.data.location.city + ", " + props.data.location.state}</p>
+                    <p>{props.data.location.zip}</p>
+                </Col>
+                <Col xs={12} sm={6}>
+                    <p><span className="bold-text makeGold">Time Limit{getCode(58)}</span> {props.data.paymentLimitTime} hours</p>
+                    <p><span className="bold-text makeGold">Pick Up Information{getCode(58)}</span> {props.data.pickUpInformation}</p>
+                </Col>
+            </Row>
+            
         </div>
     );
 };
 
+const ActiveAuctionButton = (props) => {
+    return  (
+        <Button variant="warning" active onClick={ 
+            /*function () {
+            let eventRef = db.firestore().collection("AuctionEvent").doc(props.data);
+
+            return eventRef.update({
+                isActive: true,
+            }).then(()=> {
+                console.log("** doc updated successfully");
+            }).catch((error) => {
+                console.error("!!!!!! Error updating doc " + error)
+            })}
+            */
+           () => { getActiveEvent(props.data)}
+
+        }>
+            Activate Event
+        </Button>
+    )
+}
+
+const RTCurrentAuction = () => {
+    const [auctionEventData, setAuctionEventData] = useState([]);
+
+    useEffect( () => {
+        console.log("Attempt Update");
+        const unsubscribe = db
+            .firestore()
+            .collection('/AuctionEvent')
+            .onSnapshot( (snapshot) => {
+                if (snapshot.size) {
+                    let arrAuctionData = [];
+                    snapshot.forEach( (doc) => {
+                        arrAuctionData.push({id: doc.id, ...doc.data()});
+                    });
+                    setAuctionEventData(arrAuctionData);
+                }
+            });
+            return () => { unsubscribe() };
+    }, [db] ); 
+
+    if (auctionEventData && auctionEventData.length) {
+        return (
+            <div>
+                    {auctionEventData.map(function (event) {
+                        { /*console.log("Event " + event.id + " => " + JSON.stringify(event, null, 4)) console.log("has data prop");*/}
+                            return (
+                                <ListGroup as="ul" key={event.id}>
+                                    {console.log(event.data)}
+                                    <ListGroup.Item>
+                                        <h3>Auction: {event.values['title']}</h3>
+                                        <Acordion defaultActiveKey="0">
+                                            <Card>
+                                                <Card.Header>
+                                                    <Accordion.Toggle as={Button} variant="link" eventKey={event.id}>
+                                                        See {getCode(38)} Edit Auction Details
+                                                        
+                                                    </Accordion.Toggle>
+                                                    <ActiveAuctionButton data={event.id}/>
+                                                </Card.Header>
+                                                <Accordion.Collapse eventKey={event.id}>
+                                                    <Card.Body>
+                                                        <Auction data={event.values}/>
+                                                    </Card.Body>
+                                                </Accordion.Collapse>
+                                            </Card>
+                                        </Acordion>
+                                    </ListGroup.Item>
+                                </ListGroup>
+                            )
+                        
+                    })}
+            </div>
+        )
+    }
+    else {
+        return (
+            <div>
+                <h1>Loading Auction Data For You...</h1>
+            </div>
+        )
+    }
+};
 
 let EditAuction = () =>
     <div className="edit-auction-body">
         <AdminNav />
-        <Container>
-            <h2 className="text-center mx-auto space text-header">Edit Auction Event</h2>
-            <SampleAuction />
+        <Container fluid>
+            <h2 className="text-center mx-auto space text-header">Auction Events</h2>
+            <RTCurrentAuction />
         </Container>
         <Footer/>
         <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
