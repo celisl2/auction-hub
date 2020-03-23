@@ -13,39 +13,43 @@ export default (req, res) => {
         const password = req.body.password;
         let token = null;
         //do something
-
-        //create account to firebase
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(cred => {
-            console.log(cred.user);
-            //make sure token exists
-            cred.user.getIdToken().then(idToken => {
-                //this returns token -> when signed in
-
-                createUser(cred.user.uid, {
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    email: req.body.email,
-                    emailVerified: false,
-                    isAdmin: req.body.isAdmin
-                });
-
-                if(idToken) {
-                    Cookies.set('ssid', Date.now());
-                }
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(cred => {
+          cred.user.getIdToken().then(idToken => {
+              createUser(cred.user.uid, {
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              email: req.body.email,
+              emailVerified: false,
+              isAdmin: req.body.isAdmin
             });
-        });
 
-
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                user.sendEmailVerification();
-                console.log("Sent Email Verification.");
+            if(idToken) {
+              Cookies.set('ssid', Date.now());
             }
-        });
 
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify({ token: "user added"}));
+            this.setState({
+              response: 'Account Created!'
+            })
+        })
+      })
+
+      .catch((error)=> {
+        console.log(error.code);
+        console.log(error.message);
+      });
+
+
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          user.sendEmailVerification();
+          console.log("Sent Email Verification.");
+          }
+      });
+
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ token: "user added"}));
 
     } else {
         console.log(res);
