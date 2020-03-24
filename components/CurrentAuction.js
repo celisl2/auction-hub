@@ -82,7 +82,7 @@ const CurrentAuction = () => {
     
     // Note as of 18 March 2020, not all events are showing as they are nested in another "data layer"
     if (auctionEventData && auctionEventData.length) {
-        let auctionEvent = parseData(auctionEventData[6]);
+        let auctionEvent = parseData(auctionEventData[4]);
         console.log(auctionEvent)
         let dates = parseDates(auctionEvent.startDate, auctionEvent.startTime, auctionEvent.endDate, auctionEvent.endTime);
         return (

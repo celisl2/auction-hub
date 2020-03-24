@@ -380,34 +380,34 @@ const RTCurrentAuction = () => {
     if (auctionEventData && auctionEventData.length) {
         return (
             <div>
-                    {auctionEventData.map(function (event) {
-                        { /*console.log("Event " + event.id + " => " + JSON.stringify(event, null, 4)) console.log("has data prop");*/}
-                            return (
-                                <ListGroup as="ul" key={event.id}>
-                                    {console.log(event.data)}
-                                    <ListGroup.Item>
-                                        <h3>Auction: {event.values['title']}</h3>
-                                        <Acordion defaultActiveKey="0">
-                                            <Card>
-                                                <Card.Header>
-                                                    <Accordion.Toggle as={Button} variant="link" eventKey={event.id}>
-                                                        See {getCode(38)} Edit Auction Details
-                                                        
-                                                    </Accordion.Toggle>
-                                                    <ActiveAuctionButton data={event.id}/>
-                                                </Card.Header>
-                                                <Accordion.Collapse eventKey={event.id}>
-                                                    <Card.Body>
-                                                        <Auction data={event.values}/>
-                                                    </Card.Body>
-                                                </Accordion.Collapse>
-                                            </Card>
-                                        </Acordion>
-                                    </ListGroup.Item>
-                                </ListGroup>
-                            )
-                        
-                    })}
+                {auctionEventData.map(function (event) {
+                    { /*console.log("Event " + event.id + " => " + JSON.stringify(event, null, 4)) console.log("has data prop");*/}
+                    return (
+                        <ListGroup as="ul" key={event.id}>
+                            {console.log(event.data)}
+                            <ListGroup.Item>
+                                <h3>Auction: {event.values['title']}</h3>
+                                <Acordion defaultActiveKey="0">
+                                    <Card>
+                                        <Card.Header>
+                                            <Accordion.Toggle as={Button} variant="link" eventKey={event.id}>
+                                                See {getCode(38)} Edit Auction Details
+                                                
+                                            </Accordion.Toggle>
+                                            <ActiveAuctionButton data={event.id}/>
+                                        </Card.Header>
+                                        <Accordion.Collapse eventKey={event.id}>
+                                            <Card.Body>
+                                                <Auction data={event.values}/>
+                                            </Card.Body>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Acordion>
+                            </ListGroup.Item>
+                        </ListGroup>
+                    )
+                    
+                })}
             </div>
         )
     }
