@@ -66,22 +66,24 @@ const CurrentAuction = () => {
         const unsubscribe = db
             .firestore()
             .collection('/AuctionEvent')
+            .where('isActive', '==', true)
             .onSnapshot( (snapshot) => {
                 if (snapshot.size) {
+                    console.log("DEBUG: Active Event Snapshot Size: " + snapshot.size);
                     let arrAuctionData = [];
                     snapshot.forEach( (doc) => {
                         arrAuctionData.push({id: doc.id, ...doc.data()});
                     });
                     setAuctionEventData(arrAuctionData);
                 }
+                else {
+                    console.log("No currrent auction event acquired. The DB may still be transferring data.");
+                }
             });
             return () => { unsubscribe() };
     }, [db] );  // Prevents unnecessary updates by waiting until firebase reports a change to update.
-        // For testing, display all auction event id's and titles.
-    
-    // Note as of 18 March 2020, not all events are showing as they are nested in another "data layer"
     if (auctionEventData && auctionEventData.length) {
-        let auctionEvent = parseData(auctionEventData[4]);
+        let auctionEvent = parseData(auctionEventData[0]);
         console.log(auctionEvent)
         let dates = parseDates(auctionEvent.startDate, auctionEvent.startTime, auctionEvent.endDate, auctionEvent.endTime);
         return (
