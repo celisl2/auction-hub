@@ -12,8 +12,6 @@ module.exports = {
         FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
         FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
         FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
-        PUSHER_KEY: process.env.PUSHER_KEY,
-        PUSHER_CLUSTER: process.env.PUSHER_CLUSTER
     },
 };
 
