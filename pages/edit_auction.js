@@ -1,7 +1,7 @@
 import AdminNav from '../components/AdminNav';
 import { Formik} from 'formik';
 import * as Yup from 'yup';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -20,7 +20,6 @@ import Acordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Accordion from 'react-bootstrap/Accordion';
 import {deActivateEvent, activateEvent} from '../lib/activeEvent';
-import Cookies from 'js-cookie';
 
 let db = loadDB();
 
@@ -339,6 +338,28 @@ const Auction = (props) => {
 //props = id of current event
 const ActiveAuctionButton = (props) => {
     const [adminMessage, setAdminMessage] = useState(null);
+    const [activeID, setActiveID] = useState(null);
+
+    useEffect(() => {
+        const unsubscribe = db
+        .firestore()
+        .collection('/AuctionEvent').doc(props.data)
+        .onSnapshot( (snapshot) => {
+            if(snapshot.get('isActive')) {
+                setActiveID(props.data);
+                setAdminMessage('Auction event active');
+            }
+                
+        });
+        return () => { unsubscribe() };
+    }, [db] ); 
+
+    const showActiveMessage = (id) => {
+        if(id == props.data) {
+            return <p>{adminMessage}</p>
+        }
+    };
+
     return  (
         <div>
             <Button variant="warning" active onClick={ () => {
@@ -349,13 +370,7 @@ const ActiveAuctionButton = (props) => {
                     //no auction events are active
                     if(querySnapshot.empty) {
                         //set current auction event as active
-                        let x = activateEvent(props.data);
-                        console.log(x);
-                        //inform of success/failure
-                        if(Cookies.get('adminMessage'))
-                            setAdminMessage('Auction event active');
-                        else
-                            setAdminMessage('An error occured. try again');
+                        activateEvent(props.data);
                     }
                     //at least one auction event is active
                     else {
@@ -369,11 +384,6 @@ const ActiveAuctionButton = (props) => {
                                 //unset old event and set new event as active
                                 deActivateEvent(querySnapshot.docs[0].id);
                                 activateEvent(props.data);
-                                //inform of success/failure
-                                if(Cookies.get('adminMessage'))
-                                    setAdminMessage('Auction event active');
-                                else
-                                    setAdminMessage('An error occured. try again');
                             }
                         }
                         //more than one event is active
@@ -384,11 +394,6 @@ const ActiveAuctionButton = (props) => {
                             });
                             //activate event wanted to be active
                             activateEvent(props.data);
-                            //inform admin of success
-                            if(Cookies.get('adminMessage'))
-                                setAdminMessage('Auction event active');
-                            else
-                                setAdminMessage('An error occured. try again');
                         }
                     }
                 })
@@ -398,8 +403,7 @@ const ActiveAuctionButton = (props) => {
             }}>
                 Activate Event
             </Button>
-            
-            <p>{adminMessage}</p>
+            {showActiveMessage(activeID)}
         </div>
         
     )
@@ -420,6 +424,7 @@ const RTCurrentAuction = () => {
                         arrAuctionData.push({id: doc.id, ...doc.data()});
                     });
                     setAuctionEventData(arrAuctionData);
+                
                 }
             });
             return () => { unsubscribe() };
@@ -454,7 +459,6 @@ const RTCurrentAuction = () => {
                             </ListGroup.Item>
                         </ListGroup>
                     )
-                    
                 })}
             </div>
         )
