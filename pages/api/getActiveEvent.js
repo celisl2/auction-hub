@@ -1,41 +1,38 @@
-// updateActiveEvent
+// getActiveEvent
 // Robert Ashley
 // Mar 22, 2020
-// Clears all events of 'isActive' properties and sets the desired property as 'active', all
-// in one transaction.
-import {loadDB} from '../../lib/db';
-let db = loadDB().firestore();
+// Updates:
+//    - Mar 23, 2020 (Robert Ashley) : Revised strategy for tracking active event by posting
+//                                     the data to a seperate document.
+// Searches AuctionEvent database collection for auction event set as 'active'
 
-export default (ref) => {
-    let aucEventRef = db.collection('/AuctionEvent/').doc(ref);
-    
-    db.runTransaction(trans => {
-        return trans.get(aucEventRef)
-        .then( auctionEvents => {
-            // Update all auctions with an isActive field
-            console.log(trans)
-            let removeActiveBatch = trans.batch();
-            auctionEvents.docs.forEach( (doc) => {
-                batch.update( '/AuctionEvent/' + doc.id, {isActive: false}); // or isActive: FieldValue.delete()
-            });
-            return removeActiveBatch.commit().then( (updResults) => {
-                // Make sure the auction that the user wants to set active still exists
-                trans.get('/AuctionEvent/' + auctionHubID).then( (newActiveEventDoc) => {
-                    // Make sure the event still exists before we update it
-                    if (newActiveEventDoc.exists) {
-                        // Perform the update to the field and exit successfully.
-                        trans.update('/AuctionEvent/' + newActiveEventDoc, {isActive: true});
-                        Promise.resolve('Updating active event was successful');
-                    }
-                    else {
-                        Promise.reject('Could not find event ' + auctionEventID);
-                    }
-                })
-            })
-        })
-    }).then( results => {
-        console.log('Transaction success: ', results);
-    }).catch( (err) => {
-        console.log('Transaction failure:', err);
+import {loadDB} from '../../lib/db';
+
+let db = loadDB();
+export default function getActiveEvent (param) {
+    db
+    .firestore().collection("GlobalSettings")
+    .doc('Settings')
+    .get()
+    .then((auctionSettings) => {
+        if (auctionSettings.exists) {
+            if (!auctionSettings.data().activeAuctionEventID || auctionSettings.data().activeAuctionEventID === "") {
+                console.error("Auction Hub settings has no active event configured.");
+                return false;
+            }
+            else {
+                const dt = auctionSettings.data().activeAuctionEventID;
+                console.log("getActiveEvent: active event id is: " + dt);
+                return dt;
+            }
+        }
+        else {
+            console.error("The Auction Hub configuration settings document cannot be found.");
+            return false;
+        }
     })
-};
+    .catch( (getError) => {
+        console.error("Error getting active event: " + getError)
+        return false;
+    })
+}

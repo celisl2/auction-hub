@@ -19,7 +19,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Acordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Accordion from 'react-bootstrap/Accordion';
-import getActiveEvent from './api/getActiveEvent';
+import {deActivateEvent, activateEvent} from '../lib/activeEvent';
+import Cookies from 'js-cookie';
 
 let db = loadDB();
 
@@ -335,25 +336,72 @@ const Auction = (props) => {
     );
 };
 
+//props = id of current event
 const ActiveAuctionButton = (props) => {
+    const [adminMessage, setAdminMessage] = useState(null);
     return  (
-        <Button variant="warning" active onClick={ 
-            /*function () {
-            let eventRef = db.firestore().collection("AuctionEvent").doc(props.data);
-
-            return eventRef.update({
-                isActive: true,
-            }).then(()=> {
-                console.log("** doc updated successfully");
-            }).catch((error) => {
-                console.error("!!!!!! Error updating doc " + error)
-            })}
-            */
-           () => { getActiveEvent(props.data)}
-
-        }>
-            Activate Event
-        </Button>
+        <div>
+            <Button variant="warning" active onClick={ () => {
+            //check if any auction event is already active
+            db.firestore().collection('AuctionEvent').where('isActive', '==', true)
+                .get()
+                .then(function(querySnapshot) {
+                    //no auction events are active
+                    if(querySnapshot.empty) {
+                        //set current auction event as active
+                        let x = activateEvent(props.data);
+                        console.log(x);
+                        //inform of success/failure
+                        if(Cookies.get('adminMessage'))
+                            setAdminMessage('Auction event active');
+                        else
+                            setAdminMessage('An error occured. try again');
+                    }
+                    //at least one auction event is active
+                    else {
+                        //one event is active
+                        if(querySnapshot.size) {
+                            console.log("one doc found " + querySnapshot.docs[0].id);
+                            //the already active event is the one the admin is trying to activate
+                            if(querySnapshot.docs[0].id == props.data) {
+                                setAdminMessage('Auction event is already active!');
+                            } else {
+                                //unset old event and set new event as active
+                                deActivateEvent(querySnapshot.docs[0].id);
+                                activateEvent(props.data);
+                                //inform of success/failure
+                                if(Cookies.get('adminMessage'))
+                                    setAdminMessage('Auction event active');
+                                else
+                                    setAdminMessage('An error occured. try again');
+                            }
+                        }
+                        //more than one event is active
+                        else {
+                            //deactivate all active events
+                            querySnapshot.forEach((doc) => {
+                                deActivateEvent(doc.id);
+                            });
+                            //activate event wanted to be active
+                            activateEvent(props.data);
+                            //inform admin of success
+                            if(Cookies.get('adminMessage'))
+                                setAdminMessage('Auction event active');
+                            else
+                                setAdminMessage('An error occured. try again');
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.log('error in getting documents: ' + error)
+                })
+            }}>
+                Activate Event
+            </Button>
+            
+            <p>{adminMessage}</p>
+        </div>
+        
     )
 }
 

@@ -7,20 +7,14 @@ import {getCode} from '../utils/helperFunctions';
 import React, { useState, useEffect } from 'react';
 
 const HomeAuth = () => {
-    //const [auctionId, setAuctionId] = useEffect(null);
-
-    /*
-    useEffect(() => {
-
-    });
-    */
 
     return (
         <div className="home-body">
             <Navigation />
             <h3 className="flag-title">Current Auction</h3>
             <Container>
-                <CurrentAuction/>
+            <CurrentAuction />
+                
             </Container>
             <h3 className="flag-title">Auction Products</h3>
             <Container>

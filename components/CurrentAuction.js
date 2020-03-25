@@ -16,7 +16,6 @@ import Accordion from 'react-bootstrap/Accordion';
 let db = loadDB();
 
 function parseDates(startD, startT, endD, endT) {
-    console.log("***" + startD)
     if(!startD) return null;
     let startDateWithTime = startD.year + " " + startD.month + " " + startD.day + " " + startT + " EST";
     let endDateWithTime = endD.year + " " + endD.month + " " + endD.day + " " + endT + " EST";
