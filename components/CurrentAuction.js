@@ -1,4 +1,3 @@
-import {getCode} from '../utils/helperFunctions';
 import CountdownTimer from '../components/Timer';
 import React, { useState, useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
@@ -59,7 +58,7 @@ function parseData(dt) {
         })
     }
 }
-const CurrentAuction = () => {
+const CurrentAuction = (props) => {
     const [auctionEventData, setAuctionEventData] = useState([]);
     useEffect( () => {
         console.log("Attempt Update");
@@ -92,7 +91,6 @@ const CurrentAuction = () => {
                     <Row>
                         <Col>
                             <Image className="reset-image-size" src={auctionEvent.imageURL} fluid/>
-                            
                         </Col>
                         <Col sm={true} className="timer">
                             <h3>{auctionEvent.title} Auction</h3>
@@ -102,7 +100,6 @@ const CurrentAuction = () => {
                         </Col>
                     </Row>
                     <Row className="space">
-                        
                         <Col className="toggle-special">
                             <Acordion className="divide">
                                 <Card>
@@ -116,12 +113,12 @@ const CurrentAuction = () => {
                                                 <h5>Description</h5>
                                                 <p>{auctionEvent.description}</p>
                                             </div>
-                                           <Row>
-                                               <Col><h5>Location</h5></Col>
-                                               <Col><h5>Product Pick Up Information</h5></Col>
-                                           </Row>
-                                           <Row>
-                                               <Col className="reset">
+                                            <Row>
+                                                <Col><h5>Location</h5></Col>
+                                                <Col><h5>Product Pick Up Information</h5></Col>
+                                            </Row>
+                                            <Row>
+                                                <Col className="reset">
                                                     <p>{auctionEvent.location.addressLine1}</p>
                                                     <p>{auctionEvent.location.addressLine2 ? auctionEvent.location.addressLine2: ""}</p>
                                                     <p>{auctionEvent.location.city}</p>
@@ -131,12 +128,10 @@ const CurrentAuction = () => {
                                                 <Col>
                                                     <p>{auctionEvent.pickUpInformation}</p>
                                                 </Col>
-                                           </Row>
+                                            </Row>
                                         </Card.Body>
-                                        
                                     </Accordion.Collapse>
                                 </Card>
-                                
                             </Acordion>
                         </Col>
                     </Row>

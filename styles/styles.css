@@ -364,6 +364,42 @@ a.brand {
     color: #22282B !important;
 }
 
+.productCell {
+    border: 1px solid #6C757D;
+    padding: 3%;
+    border-radius: 15px;
+    height: max-content;
+    margin-bottom: 3%;
+}
+.productHead {
+    margin: 5%;
+}
+.productImg {
+    width: 55%;
+    margin: auto;
+    display: block;
+}
+
+.overlapProduct {
+    position: relative;
+    top: -15px;
+    background-color: #204592;
+    border-radius: 15px;
+    color: #FCFCFC;
+    text-align: center;
+    width: 50%;
+    margin: 0 auto;
+}
+.padding {
+    padding: 3%;
+}
+.lightBlue {
+    background-color: #3A66C3;
+    padding: 2%;
+    border-radius: 8px;
+    margin-bottom: 1%;
+}
+
 @media (min-width: 768px) {
     .login-form {
         max-width: 50%;

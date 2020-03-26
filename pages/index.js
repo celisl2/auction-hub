@@ -94,7 +94,7 @@ class Home extends React.Component {
         }
         else {
             return  (
-                <HomeAuth data={this.props.apiData}/>
+                <HomeAuth />
             );
         }
     }
