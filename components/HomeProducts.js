@@ -9,8 +9,11 @@
 // - prodData: object in JSON format that has all information on the product displayed: obtained via
 //   a query on Firestore and passed into here.
 
-import {loadDB} from './../lib/db';
 import React, { useState, useEffect } from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Link from 'next/link';
+import {ArrowRightCircle} from 'react-feather';
 
 
 export default (props) => {
@@ -26,16 +29,24 @@ export default (props) => {
         // on this specific product.
         return (
             <div className="productCell">
-                <h4 className="productHead">{prodData.productName}</h4>
-                <div className="productImgBckg">
-                    <img className="productImg" src={(prodData.productImageURL)} alt="product image" />
-                </div>
                 
-
-                <div className="overlapProduct">
-                    <p className="lightBlue">Buy Now Price</p>
-                    <p className="padding">${prodData.maxBid}</p>
-                </div>
+                <Row>
+                    <Col xs={12} md={6}><h4 className="productHead">{prodData.productName}</h4></Col>
+                    <Col className="responsive" xs={12} md={6}><Link href="#"><a className="clickBid">Click to Bid <ArrowRightCircle className="blackBkg" size='20' color='#fff'/></a></Link></Col>
+                </Row>
+                <Row>
+                    <Col xs={12} md={6}>
+                        <img className="productImg" src={(prodData.productImageURL)} alt="product image" />
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <p className="responsive">{prodData.productDescription}</p>
+                        <div className="resSpace">
+                            <p className="lightBlue">Buy Now Price</p>
+                            <p className="padding">${prodData.maxBid}</p>
+                        </div>
+                        
+                    </Col>
+                </Row>
 
             </div>
         );

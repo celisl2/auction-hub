@@ -7,8 +7,6 @@ import React, { useState, useEffect } from 'react';
 import {loadDB} from './../lib/db';
 import HomeProducts from './HomeProducts';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import {splitRows} from '../utils/helperFunctions';
 
 let db = loadDB();
@@ -54,19 +52,9 @@ const ProductsList = (props) => {
         return (
             <div className="space">
                <Container fluid>
-                {
-                    getRows().map((cols) => (
-                        
-                        <Row className="fixMargin">
-                            {cols.map((product) => (
-                                <Col>
-                                    <HomeProducts props={{auctionEventID: auctionID, productData: product}} />
-                                </Col>
-                            ))}
-                        </Row>
-                        
-                    ))
-                }
+                {productsList.map((product) => (
+                        <HomeProducts props={{auctionEventID: auctionID, productData: product}} />
+                ))}
                 </Container>
             </div>
         );
