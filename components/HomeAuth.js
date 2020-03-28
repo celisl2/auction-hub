@@ -2,7 +2,6 @@ import Navigation from './Navigation';
 import CurrentAuction from './CurrentAuction';
 import ProductsList from './ProductsList';
 import Footer from './Footer';
-import HomeProducts from './HomeProducts';
 import Container from 'react-bootstrap/Container';
 import {getCode} from '../utils/helperFunctions';
 import {loadDB} from './../lib/db';

@@ -41,7 +41,6 @@ export default(props) => {
 
         return (
             <div className="productCell">
-
                 <Row>
                     <Col xs={12} md={6}>
                         <h4 className="productHead">{prodData.productName}</h4>
@@ -53,34 +52,22 @@ export default(props) => {
                             className="productImg"
                             src={(prodData.productImageURL)}
                             alt="product image"/>
-                        <p className="clickBid spaceMax" onClick={handleShow}>Click to Bid
-                            <PlusCircle className="blackBkg" size='20' color='#fff'/></p>
                     </Col>
                     <Col xs={12} md={6}>
+                        <h5>Description{':'}</h5>
                         <p className="responsive">{prodData.productDescription}</p>
-                        <div className="resSpace">
-                            <p className="lightBlue">Click to Buy Now</p>
-                            <p className="padding">${prodData.maxBid}</p>
-                        </div>
-                        <h6 className="double">OR</h6>
-                        <CurrentBid data={prodData.minBid}/>
                     </Col>
                 </Row>
-
-            <DataContext.Provider value={[bidData, setBidData]}>
-                <Modal show={show} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Place Bid For{": " + prodData.productName}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <Bid/>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>Close</Button>
-                    </Modal.Footer>
-                </Modal>
-            </DataContext.Provider>
-                
+                <Row>
+                    <Col>
+                        <h5>Min Bid{':'}</h5>
+                        <p>{prodData.minBid}</p>
+                    </Col>
+                    <Col>
+                        <h5>Max Bid{':'}</h5>
+                        <p>{prodData.maxBid}</p>
+                    </Col>
+                </Row>
             </div>
         );
     } else {

@@ -9,21 +9,14 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Footer from '../components/Footer';
+import {loadDB} from '../lib/db';
+import ProductsList from '../components/ProductsList';
 
-const SampleProduct = () =>
-    <div>
-        <h3>Title</h3>
-        <Image src="https://miro.medium.com/max/2834/0*f81bU2qWpP51WWWC.jpg"  fluid/>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vestibulum odio non sapien maximus rutrum. Nullam libero sem, condimentum a est eu, maximus dapibus felis. Phasellus sed dictum arcu. Morbi pharetra eros at neque consequat, malesuada rhoncus ligula auctor. Sed dapibus eget dui eget fringilla. Ut posuere eget nulla et gravida. Phasellus ultrices quis lectus sed efficitur. Etiam mollis turpis at porta mattis. Sed lectus lorem, mollis ac placerat id, luctus nec velit. Phasellus auctor vel neque at molestie.</p>
-        <strong>$300</strong>
-        <p>Min bid-> 2</p>
-        <p>Max bid -> 4</p>
-        <p>Pick up info -> tomorrow in digs</p>
-    </div>;
+let db = loadDB();
 
 const EditProductsCards = () => {
     return (
@@ -158,17 +151,52 @@ const EditProductModal = () => {
     );
 };
 
-let EditProducts = () =>
-    <div className="edit-auction-body">
-        <AdminNav />
-        <Container>
-            <h2 className="text-center mx-auto space text-header">Edit Auction Products</h2>
-            <EditProductsCards />
-            <h3>*** this button will go in the dynamic pages created ***</h3>
-            <EditProductModal />
-        </Container>
-        <Footer/>
-        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-    </div>;
+let EditProducts = () => {
+    const [auctionID, setAuctionId] = useState(null);
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    useEffect( () => {
+        const unsubscribe = db
+            .firestore()
+            .collection('AuctionEvent')
+            .where('isActive', '==', true)
+            .onSnapshot( (snapshot) => {
+                console.log(snapshot)
+                setAuctionId(snapshot.docs[0].id);
+            });
+            return () => { unsubscribe() };
+    }, [db] ); 
+
+
+    return (
+        <div className="edit-auction-body">
+            <AdminNav />
+            <Container>
+                <h2 className="text-center mx-auto space text-header">Edit Auction Products</h2>
+            </Container>
+            <Row>
+                <Col><h3 className="flag-title">Products for Active Auction</h3></Col>
+                <Col><Button onClick={handleShow}>Expand</Button></Col>
+            </Row>
+                {show ? (
+                    <>
+{auctionID ? <ProductsList user="admin" props={auctionID}/> : <p>loading</p>}
+</>
+                ): (
+                    <>
+                        <p></p>
+                    </>
+                )}
+                
+            
+            <Footer/>
+            <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
+        </div>
+    );
+}
+    
 
 export default EditProducts;

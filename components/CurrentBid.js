@@ -10,5 +10,5 @@ const CurrentBid = (props) => {
         </div>
     )
 };
- export default CurrentBid;
+export default CurrentBid;
     

@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import {loadDB} from './../lib/db';
 import HomeProducts from './HomeProducts';
 import Container from 'react-bootstrap/Container';
-import {splitRows} from '../utils/helperFunctions';
+import AdminProducts from './AdminProducts';
 
 let db = loadDB();
 
@@ -38,10 +38,6 @@ const ProductsList = (props) => {
             });
             return () => { unsubscribe() };
     }, [db] );
-
-    const getRows = () => {
-        return splitRows(productsList)
-    };
     
     if (!auctionID || auctionID === "") {
         console.log("Auction ID not provided to obtain products list");
@@ -53,6 +49,7 @@ const ProductsList = (props) => {
             <div className="space">
                <Container fluid>
                 {productsList.map((product) => (
+                        props.user == 'admin' ? <AdminProducts props={{auctionEventID: auctionID, productData: product}}/>:
                         <HomeProducts props={{auctionEventID: auctionID, productData: product}} />
                 ))}
                 </Container>
