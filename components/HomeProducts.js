@@ -13,7 +13,8 @@ import React, { useState, useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Link from 'next/link';
-import {ArrowRightCircle} from 'react-feather';
+import {PlusCircle} from 'react-feather';
+import CurrentBid from './CurrentBid';
 
 
 export default (props) => {
@@ -32,21 +33,23 @@ export default (props) => {
                 
                 <Row>
                     <Col xs={12} md={6}><h4 className="productHead">{prodData.productName}</h4></Col>
-                    <Col className="responsive" xs={12} md={6}><Link href="#"><a className="clickBid">Click to Bid <ArrowRightCircle className="blackBkg" size='20' color='#fff'/></a></Link></Col>
                 </Row>
                 <Row>
                     <Col xs={12} md={6}>
                         <img className="productImg" src={(prodData.productImageURL)} alt="product image" />
+                        <p className="clickBid spaceMax">Click to Bid <PlusCircle className="blackBkg" size='20' color='#fff'/></p>
                     </Col>
                     <Col xs={12} md={6}>
                         <p className="responsive">{prodData.productDescription}</p>
                         <div className="resSpace">
-                            <p className="lightBlue">Buy Now Price</p>
+                            <p className="lightBlue">Buy Now</p>
                             <p className="padding">${prodData.maxBid}</p>
                         </div>
-                        
+                        <h6 className="double">OR</h6>
+                        <CurrentBid data={prodData.minBid}/>
                     </Col>
                 </Row>
+               
 
             </div>
         );
