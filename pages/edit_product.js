@@ -183,8 +183,8 @@ let EditProducts = () => {
             </Row>
                 {show ? (
                     <>
-{auctionID ? <ProductsList user="admin" props={auctionID}/> : <p>loading</p>}
-</>
+                    {auctionID ? <ProductsList user="admin" props={auctionID}/> : <p>loading</p>}
+                    </>
                 ): (
                     <>
                         <p></p>

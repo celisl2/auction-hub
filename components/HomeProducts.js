@@ -18,23 +18,26 @@ import Bid from './Bid';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import DataContext from '../lib/bidDataContext';
+import HighestBidContext from '../lib/highestBidContext';
 
 
-export default(props) => {
-    const [show,
-        setShow] = useState(false);
-    const [bidData, setBidData] = useState([]);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+const HomeProducts = (props, {highestBid}) => {
 
     let aucID = props.props['auctionEventID'];
     let prodData = props.props['productData'];
 
+    const [show,
+        setShow] = useState(false);
+    const [bidData, setBidData] = useState([]);
+    //const [highestBid, setHighestBid] = useState(0);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    
     useEffect(() => {
         if(props)
             setBidData(props)
-    })
+    }, [bidData])
 
     if (aucID && aucID !== "" && prodData && prodData !== {}) {
         //console.log(JSON.stringify(prodData, null, 4));
@@ -63,7 +66,10 @@ export default(props) => {
                             <p className="padding">${prodData.maxBid}</p>
                         </div>
                         <h6 className="double">OR</h6>
-                        <CurrentBid data={prodData.minBid}/>
+                        { /* <HighestBidContext.Provider value={[highestBid, setHighestBid]}> */}
+                            <CurrentBid data={{ minBid: prodData.minBid, productID: prodData.id, auctionID: aucID}}/>
+                        {/* </HighestBidContext.Provider></HighestBidContext.Provider> */}
+                        
                     </Col>
                 </Row>
 
@@ -89,5 +95,6 @@ export default(props) => {
             <div>Product Loading...</div>
         );
     }
-
 };
+
+export default HomeProducts;
