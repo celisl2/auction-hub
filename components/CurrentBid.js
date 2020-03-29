@@ -7,12 +7,14 @@ import readHighestBid from '../pages/api/readHighestBid';
 const CurrentBid = (props) => {
     const [bid, setBid] = useState();
     const [highestBid, setHighestBid] = useState(0);
-    //console.log(x);
 
+   
     return (
         <div>
             <p className="lightBlue">{bid ? "Current Bid" : "Starting Bid"}</p>
-            <p className="padding">{"$" + JSON.stringify(readHighestBid(props.data.auctionID, props.data.productID, 0))}</p>
+           
+            {readHighestBid(props.data.auctionID, props.data.productID) ? <p className="padding">{'$' + readHighestBid(props.data.auctionID, props.data.productID).amount}</p>  : <p className="padding">{'$' + props.data.minBid}</p>}
+            
         </div>
     )
 };

@@ -1,35 +1,33 @@
-import AdminNav from '../components/AdminNav';
-import {getCode} from '../utils/helperFunctions';
-import Image from 'react-bootstrap/Image';
-import Card from 'react-bootstrap/Card';
-import CardDeck from 'react-bootstrap/CardDeck';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import React, { useState, useEffect } from 'react';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import Footer from '../components/Footer';
+import Alert from 'react-bootstrap/Alert';
+import {getCode} from '../utils/helperFunctions';
+import Button from 'react-bootstrap/Button';
 import {loadDB} from '../lib/db';
-import ProductsList from '../components/ProductsList';
+import {useState} from 'react';
 
-let db = loadDB();
+let firebase = loadDB();
 
+const EditProductForm = (props) => {
+    //console.log(props)
+    const [adminMessage, setAdminMessage] = useState(null);
+    const [color, setColor] = useState(null);
 
-
-const EditProductForm = () => {
     return (
+        <div>
+         
+        {adminMessage ? <Alert variant={color}>{adminMessage}</Alert> : ''}
         <Formik
         initialValues={{
-            productName: '',
-            productDescription: '',
-            productImageURL: '',
-            minBid: '',
-            maxBid: '',
-            productPickUpInfo: ''
+            productName: props.data.data.productName,
+            productDescription: props.data.data.productDescription,
+            productImageURL: props.data.data.productImageURL,
+            minBid: props.data.data.minBid,
+            maxBid: props.data.data.maxBid,
+            productPickUpInfo: props.data.data.productPickUpInfo
         }}
         validationSchema={
             Yup.object({
@@ -43,10 +41,27 @@ const EditProductForm = () => {
 
 
         onSubmit={(values, { setSubmitting }) => {
-        
-            /**
-                Add logic of what to do when they submit
-             */
+            //props.data.auction
+            let ref = firebase.firestore()
+            .collection('AuctionEvent/' + props.data.auction + '/AuctionProduct/').doc(props.data.data.id);
+
+            return ref.update({
+                productName: values.productName,
+                productDescription: values.productDescription,
+                productImageURL: values.productImageURL,
+                minBid: values.minBid,
+                maxBid: values.maxBid,
+                productPickUpInfo: values.productPickUpInfo
+            
+            }).then(() => {
+                setAdminMessage('Product successfully updated');
+                setColor('success');
+            }).catch(function(error) {
+                // The document probably doesn't exist.
+                setAdminMessage('Could not update product. Please try again');
+                setColor('danger');
+                console.error("Error updating document: ", error);
+            });
             
         }}
     >
@@ -103,58 +118,8 @@ const EditProductForm = () => {
         </Form>
     )}
     </Formik>
+    </div>
     );
 };
 
-let EditProducts = () => {
-    const [auctionID, setAuctionId] = useState(null);
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    useEffect( () => {
-        const unsubscribe = db
-            .firestore()
-            .collection('AuctionEvent')
-            .where('isActive', '==', true)
-            .onSnapshot( (snapshot) => {
-                console.log(snapshot)
-                setAuctionId(snapshot.docs[0].id);
-            });
-            return () => { unsubscribe() };
-    }, [db] ); 
-
-
-    return (
-        <div className="edit-auction-body">
-            <AdminNav />
-            <Container>
-                <h2 className="text-center mx-auto space text-header">Edit Auction Products</h2>
-            </Container>
-            <Row>
-                <Col><h3 className="flag-title">Products for Active Auction</h3></Col>
-                <Col md={3}>
-                {show ? <Button variant='secondary' onClick={handleClose}>Close</Button> : <Button variant='info' onClick={handleShow}>Expand</Button>}
-                
-                </Col>
-            </Row>
-                {show ? (
-                    <>
-                    {auctionID ? <ProductsList user="admin" props={auctionID}/> : <p>loading</p>}
-                    </>
-                ): (
-                    <>
-                        <p></p>
-                    </>
-                )}
-                
-            
-            <Footer/>
-            <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-        </div>
-    );
-}
-    
-
-export default EditProducts;
+export default EditProductForm;

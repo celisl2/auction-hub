@@ -20,7 +20,7 @@ let db = loadDB();
 // Returns the [index] bid for the given auction/product as a Promise.
 // handle the data with .then( (snap) => {}) and .catch( (err) => {}).
 export default async function readHighestBid (auctionEventID, productID, index=0) {
-    return await db
+    let bid = await db
     .firestore()
     .collection('/AuctionEvent/' + auctionEventID + 
         '/AuctionProduct/' + productID + 
@@ -49,4 +49,5 @@ export default async function readHighestBid (auctionEventID, productID, index=0
         //resolve(null);
         return null;
     })
+    return bid;
 }

@@ -18,7 +18,33 @@ import Bid from './Bid';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import DataContext from '../lib/bidDataContext';
+import EditProductForm from './EditProductForm';
+import {getCode} from '../utils/helperFunctions';
 
+
+
+const EditProductModal = (props) => {
+    //when you call the dynamic created pages change this useState below to true
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    //console.log(props)
+    return (
+        <div>
+            <Button onClick={handleShow}>Edit</Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit -product name here-</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <EditProductForm data={props}/>
+                </Modal.Body>
+            </Modal>
+        </div>
+
+    );
+};
 
 export default(props) => {
     const [show,
@@ -56,16 +82,15 @@ export default(props) => {
                     <Col xs={12} md={6}>
                         <h5>Description{':'}</h5>
                         <p className="responsive">{prodData.productDescription}</p>
+                        <h5>Min Bid{':'}</h5>
+                        <p>{prodData.minBid}</p>
+                        <h5>Max Bid{':'}</h5>
+                        <p>{prodData.maxBid}</p>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <h5>Min Bid{':'}</h5>
-                        <p>{prodData.minBid}</p>
-                    </Col>
-                    <Col>
-                        <h5>Max Bid{':'}</h5>
-                        <p>{prodData.maxBid}</p>
+                        <EditProductModal data={prodData} auction={aucID}/>
                     </Col>
                 </Row>
             </div>
