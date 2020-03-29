@@ -35,15 +35,18 @@ export default async function readHighestBid (auctionEventID, productID, index=0
             };
             console.log("DEBUG: [getHighestBid] :> Highest bid (index " + index + ") is: " + JSON.stringify(highestBid, null, 4));
             return highestBid;
+            
         }
         else {
             // No bids. If you need a min value to place bids, use product.minBid.
             console.log("DEBUG: [getHighestBid] :>  No highest bid given parameters.");
+            //resolve(null);
             return null;
         }
     })
     .catch( (err) => {
         console.error("ERROR: [getHighestBid] :>  Error: " + err);
+        //resolve(null);
         return null;
     })
 }
