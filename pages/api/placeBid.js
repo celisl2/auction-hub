@@ -23,8 +23,8 @@ let db = loadDB();
 //              for bids.
 // OUTPUT
 // Returns a boolean true on successful bid placement, 
-export default async function placeBid (auctionEventID, productID, bidAmount, isBuyout=false) {
-    return await doPlaceBid(auctionEventID, productID, bidAmount);
+export default async function placeBid (auctionEventID, productID, bidAmount, isBuyout=false, highestBidData) {
+    return await doPlaceBid(auctionEventID, productID, bidAmount, highestBidData);
 }
 function executePlaceBid(auctionEventID, productID, bidAmount, userAccountID, isBuyout) {
     let bidData = {
@@ -76,8 +76,7 @@ function doPlaceBid (auctionEventID, productID, bidAmount, isBuyout) {
                         }
                         // Finally, need to get the data for highest current bid, if any, so that we know if
                         // the user's bid is valid.
-                        readHighestBid(auctionEventID, productID, 0)
-                        .then( (highestBidData) => {
+                       
                             // If there are previous bids, we need to know our bidder's proposal
                             // is higher than those bids already offered.
                             if ( typeof highestBidData !== "undefined" && highestBidData.hasOwnProperty('amount') ) {
@@ -106,10 +105,7 @@ function doPlaceBid (auctionEventID, productID, bidAmount, isBuyout) {
                                     return false;
                                 }
                             }
-                        })
-                        .catch( (highBidError) => {
-                            console.error("[placeBid] Error: " + highBidError);
-                        })
+                        
                     }
                     else {
                         console.error("Product data or the necessary properties could not be found.");

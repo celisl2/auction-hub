@@ -1,5 +1,4 @@
 import {useState, useContext, useEffect} from 'react';
-import HighestBidContext from '../lib/highestBidContext';
 import {loadDB} from '../lib/db';
 let db = loadDB();
 
