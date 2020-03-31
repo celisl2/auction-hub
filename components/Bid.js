@@ -9,8 +9,6 @@ import {loadDB} from '../lib/db';
 
 let db = loadDB();
 
-
-
 const BidForm = (props) => {
     const [bidData, setBidData] = useContext(DataContext);
     const [userMessage, setUserMessage] = useState(null);
@@ -45,6 +43,7 @@ const BidForm = (props) => {
             }
         });
     });
+
     useEffect(() => {
         const unsubscribe = db
         .firestore()
@@ -61,6 +60,7 @@ const BidForm = (props) => {
 
         return () => { unsubscribe() };
     }, [db]);
+
     return (
         <div>
             {userMessage ? <Alert variant={alertColor}>{userMessage}</Alert> : ""}
@@ -121,8 +121,6 @@ const BidForm = (props) => {
                         setUserMessage('Bid must be less than or equal to $' + maxBid);
                         setSubmitting(false);
                     }
-                    
-                    
                 }}
             >
             { formik => (
@@ -158,7 +156,6 @@ const Bid = (props) => {
                 let highBidDataInitial = snapshot.docs[0].data().amount;
                 return highBidDataInitial;
             }
-            
             else {
                 return null;
             }
@@ -168,8 +165,6 @@ const Bid = (props) => {
     let minBid = bidData.props.productData.minBid;
     let prodID = bidData.props.productData.id;
     let aucID = bidData.props.auctionEventID;
-
-    
 
     useEffect(() => {
         const unsubscribe = db
