@@ -94,6 +94,10 @@ const BidForm = (props) => {
                                         setUserMessage('You have placed the highest bid. You will recieve an email with instructions on how to pay and recieve your product.');
                                         console.log('bid placed for ' + docRef.id);
                                     })
+
+                                    db.firestore().collection('AuctionEvent/' + auctionId + '/AuctionProduct').doc(productId).update({
+                                        highestBidPlaced: true
+                                    })
                                 }
                             } //user is placing bid less than maxBid
                             else {
@@ -127,7 +131,7 @@ const BidForm = (props) => {
                 <Form onSubmit={formik.handleSubmit}>
                 <Form.Label htmlFor="userBid">Select Bid Amount</Form.Label>
                 <Form.Control as="select" name="userBid" {...formik.getFieldProps('userBid')}>
-                        <option></option>
+                        <option>Click to select</option>
                         <option value={Number(lowerLimit) + Number(5)}>{`(+5) Total Bid: $${ Number(lowerLimit) + Number(5)}`}</option>
                         <option value={Number(lowerLimit) + Number(10)}>{`(+10) Total Bid: $${ Number(lowerLimit) + Number(10)}`}</option>
                         <option value={Number(lowerLimit) + Number(15)}>{`(+15) Total Bid: $${ Number(lowerLimit) + Number(15)}`}</option>

@@ -45,12 +45,13 @@ const ProductsList = (props) => {
     }
     if (productsList && productsList !== []) {
         // We have data to display 
+        let count = 0;
         return (
             <div className="space">
-               <Container fluid>
-                {productsList.map((product) => (
-                        props.user == 'admin' ? <AdminProducts props={{auctionEventID: auctionID, productData: product}}/>:
-                        <HomeProducts props={{auctionEventID: auctionID, productData: product}} />
+                <Container fluid>
+                {productsList.map((product, i) => (
+                        props.user == 'admin' ? <AdminProducts props={{auctionEventID: auctionID, productData: product}} key={i}/>:
+                        <HomeProducts props={{auctionEventID: auctionID, productData: product}} key={i}/>
                 ))}
                 </Container>
             </div>

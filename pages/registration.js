@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Router from 'next/router';
+import Alert from 'react-bootstrap/Alert';
 
 const CustomerRegistration = () => {
     return (
@@ -68,22 +69,22 @@ const CustomerRegistration = () => {
                     <Form.Label htmlFor="firstName">First Name</Form.Label>
                     <Form.Control name="firstName" {...formik.getFieldProps('firstName')} />
                     {formik.touched.firstName && formik.errors.firstName ? (
-                        <div>{formik.errors.firstName}</div>) : null}
+                        <Alert variant='danger'>{formik.errors.firstName}</Alert>) : null}
 
                     <Form.Label htmlFor="lastName">Last Name</Form.Label>
                     <Form.Control name="lastName" {...formik.getFieldProps('lastName')} />
                     {formik.touched.lastName && formik.errors.lastName ? (
-                        <div>{formik.errors.lastName}</div>) : null}
+                        <Alert variant='danger'>{formik.errors.lastName}</Alert>) : null}
 
                     <Form.Label htmlFor="email">Email Address</Form.Label>
                     <Form.Control name="email" {...formik.getFieldProps('email')} />
                     {formik.touched.email && formik.errors.email ? (
-                        <div>{formik.errors.email}</div>) : null}
+                        <Alert variant='danger'>{formik.errors.email}</Alert>) : null}
 
                     <Form.Label htmlFor="phone">Phone</Form.Label>
                     <Form.Control name="phone" {...formik.getFieldProps('phone')} />
                     {formik.touched.phone && formik.errors.phone ? (
-                        <div>{formik.errors.phone}</div>) : null}
+                        <Alert variant='danger'>{formik.errors.phone}</Alert>) : null}
 
                     <Form.Label htmlFor="password">Password</Form.Label>
                     <Form.Control name="password" {...formik.getFieldProps('password')} />
@@ -97,7 +98,7 @@ const CustomerRegistration = () => {
                         value={formik.values.passwordConfirm}
                     />
                     {formik.touched.passwordConfirm && formik.errors.passwordConfirm ? (
-                        <div>{formik.errors.passwordConfirm}</div>) : null}
+                        <Alert variant='danger'>{formik.errors.passwordConfirm}</Alert>) : null}
                         <div className="text-center space">
                            <button className="btn customer-button" type="submit">Register</button>  
                         </div>

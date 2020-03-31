@@ -39,13 +39,15 @@ const CurrentBid = (props) => {
         .onSnapshot( (snapshot) => {
             if (snapshot.size) {
                 let highBid = snapshot.docs[0].data().amount;
+                //console.log(highBid)
                 setHighBidData(highBid);
             }
         });
 
         return () => { unsubscribe() };
-    }, [db]);
+    }, [highBidData]);
 
+    
     return (
         <div>
             {highBidData ? 

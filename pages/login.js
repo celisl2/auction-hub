@@ -12,6 +12,7 @@ import Link from 'next/link'
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Footer from '../components/Footer';
+import Alert from 'react-bootstrap/Alert';
 
 const LogInForm = () => {
     return (
@@ -68,11 +69,11 @@ const LogInForm = () => {
                     <Form.Label htmlFor="email">Email</Form.Label>
                     <Form.Control className="login-input" type="email" placeholder="Enter email" name="email" {...formik.getFieldProps('email')} />
                         {formik.touched.email && formik.errors.email ? (
-                            <div>{formik.errors.email}</div>) : null}
+                            <Alert variant="danger">{formik.errors.email}</Alert>) : null}
                     <Form.Label htmlFor="password">Password</Form.Label>
                     <Form.Control className="login-input" type="password" placeholder="Password" name="password" autoComplete="off" {...formik.getFieldProps('password')} />
                         {formik.touched.password && formik.errors.password ? (
-                            <div>{formik.errors.password}</div>) : null}
+                            <Alert variant="danger">{formik.errors.password}</Alert>) : null}
                     <button className="btn btn-primary login-button" type="submit">Log In</button>
                 </Form.Group>
             </Form>

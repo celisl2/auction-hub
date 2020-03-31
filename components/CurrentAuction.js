@@ -83,7 +83,7 @@ const CurrentAuction = (props) => {
     }, [db] );  // Prevents unnecessary updates by waiting until firebase reports a change to update.
     if (auctionEventData && auctionEventData.length) {
         let auctionEvent = parseData(auctionEventData[0]);
-        console.log(auctionEvent)
+        //console.log(auctionEvent)
         let dates = parseDates(auctionEvent.startDate, auctionEvent.startTime, auctionEvent.endDate, auctionEvent.endTime);
         return (
             <div className="current-auction-body">
@@ -95,7 +95,7 @@ const CurrentAuction = (props) => {
                         <Col sm={true} className="timer">
                             <h3>{auctionEvent.title} Auction</h3>
                             <CountdownTimer date={dates}/> 
-                            <p className="overlap">Time Left to Bid</p>
+                            
                             
                         </Col>
                     </Row>

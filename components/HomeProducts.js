@@ -11,17 +11,15 @@
 import React, {useState, useEffect} from 'react';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Link from 'next/link';
 import {PlusCircle} from 'react-feather';
 import CurrentBid from './CurrentBid';
 import Bid from './Bid';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import DataContext from '../lib/bidDataContext';
-import HighestBidContext from '../lib/highestBidContext';
 
 
-const HomeProducts = (props, {highestBid}) => {
+const HomeProducts = (props) => {
 
     let aucID = props.props['auctionEventID'];
     let prodData = props.props['productData'];
@@ -41,7 +39,7 @@ const HomeProducts = (props, {highestBid}) => {
 
     if (aucID && aucID !== "" && prodData && prodData !== {}) {
         //console.log(JSON.stringify(prodData, null, 4));
-
+        //console.log(prodData.highestBidPlaced);
         return (
             <div className="productCell">
 
@@ -56,20 +54,33 @@ const HomeProducts = (props, {highestBid}) => {
                             className="productImg"
                             src={(prodData.productImageURL)}
                             alt="product image"/>
-                        <p className="clickBid spaceMax" onClick={handleShow}>Click to Bid
+                        {prodData.highestBidPlaced ?
+                            <>
+                            <p className="padding spaceMax">Product No Longer Available!</p>
+                            </> :
+                            <>
+                            <p className="clickBid spaceMax" onClick={handleShow}>Click to Bid
                             <PlusCircle className="blackBkg" size='20' color='#fff'/></p>
+                            </>}
                     </Col>
                     <Col xs={12} md={6}>
                         <p className="responsive">{prodData.productDescription}</p>
-                        <div className="resSpace">
-                            <p className="lightBlue">Click to Buy Now</p>
-                            <p className="padding">${prodData.maxBid}</p>
-                        </div>
-                        <h6 className="double">OR</h6>
-                        { /* <HighestBidContext.Provider value={[highestBid, setHighestBid]}> */}
+                        {prodData.highestBidPlaced ?
+                            <>
+                            <div className="resSpace">
+                                <p className="lightBlue">Product Bought For</p>
+                                <p className="padding">${prodData.maxBid}</p>
+                            </div>
+                            </> :
+                            <>
+                            <div className="resSpace">
+                                <p className="lightBlue">Click to Buy Now</p>
+                                <p className="padding">${prodData.maxBid}</p>
+                            </div>
+                            <h6 className="double">OR</h6>
                             <CurrentBid data={{ minBid: prodData.minBid, productID: prodData.id, auctionID: aucID}}/>
-                        {/* </HighestBidContext.Provider></HighestBidContext.Provider> */}
-                        
+                            </>
+                        }
                     </Col>
                 </Row>
 
