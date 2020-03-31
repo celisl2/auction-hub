@@ -1,11 +1,9 @@
 import React, {useState, useContext, useEffect} from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import placeBid from '../pages/api/placeBid';
 import DataContext from '../lib/bidDataContext';
 import {loadDB} from '../lib/db';
 
@@ -16,13 +14,14 @@ let db = loadDB();
 const BidForm = (props) => {
     const [bidData, setBidData] = useContext(DataContext);
     const [userMessage, setUserMessage] = useState(null);
+    const [alertColor, setAlertColor] = useState(null);
 
     let productId = bidData.props.productData.id;
     let auctionId = bidData.props.auctionEventID;
     let minBid = bidData.props.productData.minBid;
     let maxBid = bidData.props.productData.maxBid;
 
-    const [limit, setLitmit] = useState(() => {
+    const [lowerLimit, setLowerLitmit] = useState(() => {
         if(highBidData)
             return highBidData;
         else
@@ -46,9 +45,6 @@ const BidForm = (props) => {
             }
         });
     });
-
-    
-
     useEffect(() => {
         const unsubscribe = db
         .firestore()
@@ -59,15 +55,15 @@ const BidForm = (props) => {
             if (snapshot.size) {
                 let highBid = snapshot.docs[0].data().amount;
                 setHighBidData(highBid);
-                setLitmit(highBid);
+                setLowerLitmit(highBid);
             }
         });
 
         return () => { unsubscribe() };
     }, [db]);
-
     return (
-        
+        <div>
+            {userMessage ? <Alert variant={alertColor}>{userMessage}</Alert> : ""}
         <Formik
                 initialValues={{
                     userBid: ''
@@ -79,38 +75,65 @@ const BidForm = (props) => {
                     })
                 }
                 onSubmit={ (values, {setSubmitting}) => {
-                    let buyOut = false;
-
-                    console.log(values);
-
-                    if(values == maxBid)
-                        buyOut = true;
-
-                    if(values.userBid <= maxBid) {
-                        console.log(limit)
-                        if(values.userBid > limit) {
-                            placeBid(auctionId, productId, values, buyOut, highBidData);
+                    let bidAmount = values.userBid;
+                    if(bidAmount <= maxBid) {
+                        //user is allowed to place bid
+                        if(bidAmount >= lowerLimit) {
+                            //user is placing buyout bid
+                            if(bidAmount == maxBid) {
+                                let user = db.auth().currentUser;
+                                if(user) {
+                                    console.log(user.uid);
+                                    db.firestore()
+                                    .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory').add({
+                                        amount: Number(bidAmount),
+                                        timestamp: db.firestore.FieldValue.serverTimestamp(),
+                                        productWinner: user.uid,
+                                    }).then(docRef => {
+                                        setAlertColor('success');
+                                        setUserMessage('You have placed the highest bid. You will recieve an email with instructions on how to pay and recieve your product.');
+                                        console.log('bid placed for ' + docRef.id);
+                                    })
+                                }
+                            } //user is placing bid less than maxBid
+                            else {
+                                db.firestore()
+                                .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory').add({
+                                    amount: Number(bidAmount),
+                                    timestamp: db.firestore.FieldValue.serverTimestamp(),
+                                })
+                                .then(docRef => {
+                                    setAlertColor('success');
+                                    setUserMessage('Bid was placed successfully');
+                                    console.log('bid placed for ' + docRef.id);
+                                })
+                            }
                             setSubmitting(true);
+                        } else {
+                            console.log(bidAmount);
+                            setAlertColor('danger');
+                            setUserMessage('Bid must be greater or equal to $' + minBid);
+                            setSubmitting(false);
                         }
-                        
                     } else {
-                        setUserMessage('Your bid amount is not in range.');
+                        console.log(bidAmount);
+                        setAlertColor('danger');
+                        setUserMessage('Bid must be less than or equal to $' + maxBid);
                         setSubmitting(false);
                     }
+                    
                     
                 }}
             >
             { formik => (
                 <Form onSubmit={formik.handleSubmit}>
-                <p>{userMessage}</p>
                 <Form.Label htmlFor="userBid">Select Bid Amount</Form.Label>
                 <Form.Control as="select" name="userBid" {...formik.getFieldProps('userBid')}>
                         <option></option>
-                        <option value={limit + 5}>{'+'}5</option>
-                        <option value={limit + 10}>{'+'}10</option>
-                        <option value={limit + 15}>{'+'}15</option>
-                        <option value={limit + 20}>{'+'}20</option>
-                        
+                        <option value={Number(lowerLimit) + Number(5)}>{`(+5) Total Bid: $${ Number(lowerLimit) + Number(5)}`}</option>
+                        <option value={Number(lowerLimit) + Number(10)}>{`(+10) Total Bid: $${ Number(lowerLimit) + Number(10)}`}</option>
+                        <option value={Number(lowerLimit) + Number(15)}>{`(+15) Total Bid: $${ Number(lowerLimit) + Number(15)}`}</option>
+                        <option value={Number(lowerLimit) + Number(20)}>{`(+20) Total Bid: $${ Number(lowerLimit) + Number(20)}`}</option>
                     </Form.Control>
                     {formik.touched.userBid && formik.errors.userBid ? (
                     <div>{formik.errors.userBid}</div>) : null}
@@ -118,6 +141,7 @@ const BidForm = (props) => {
                 </Form>
             )}
         </Formik>
+        </div>
     )
 }
 
