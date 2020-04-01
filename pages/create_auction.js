@@ -9,7 +9,7 @@ import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {HelpCircle} from 'react-feather';
 import Footer from '../components/Footer';
-
+import Alert from 'react-bootstrap/Alert';
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
 
@@ -122,13 +122,13 @@ const CreateAuctionForm = () => {
                         <Form.Label htmlFor="title">Title</Form.Label>
                         <Form.Control name="title" {...formik.getFieldProps('title')} />
                         {formik.touched.title && formik.errors.title ? (
-                            <div>{formik.errors.title}</div>) : null}
+                            <Alert variant="danger">{formik.errors.title}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="imageURL">Image URL</Form.Label>
                         <Form.Control name="imageURL" {...formik.getFieldProps('imageURL')} />
                         {formik.touched.imageURL && formik.errors.imageURL ? (
-                        <div>{formik.errors.imageURL}</div>) : null}
+                        <Alert variant="danger">{formik.errors.imageURL}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -136,7 +136,7 @@ const CreateAuctionForm = () => {
                         <Form.Label htmlFor="description">Description</Form.Label>
                         <Form.Control name="description" as="textarea" rows="3" {...formik.getFieldProps('description')} />
                             {formik.touched.description && formik.errors.description ? (
-                                <div>{formik.errors.description}</div>) : null}
+                                <Alert variant="danger">{formik.errors.description}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -149,19 +149,19 @@ const CreateAuctionForm = () => {
                         <Form.Label htmlFor="startDate.day">Day</Form.Label>
                         <Form.Control name="startDate.day" {...formik.getFieldProps('startDate.day')} />
                         {formik.touched.startDate && formik.errors.startDate ? (
-                            <div>{formik.errors.startDate.day}</div>) : null}
+                            <Alert variant="danger">{formik.errors.startDate.day}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="startDate.month">Month</Form.Label>
                         <Form.Control name="startDate.month" {...formik.getFieldProps('startDate.month')} />
                         {formik.touched.startDate && formik.errors.startDate ? (
-                            <div>{formik.errors.startDate.month}</div>) : null}
+                            <Alert variant="danger">{formik.errors.startDate.month}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="startDate.year">Year</Form.Label>
                         <Form.Control name="startDate.year" {...formik.getFieldProps('startDate.year')} />
                         {formik.touched.startDate && formik.errors.startDate ? (
-                            <div>{formik.errors.startDate.year}</div>) : null}
+                            <Alert variant="danger">{formik.errors.startDate.year}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -174,19 +174,19 @@ const CreateAuctionForm = () => {
                         <Form.Label htmlFor="endDate.day">Day</Form.Label>
                         <Form.Control name="endDate.day" {...formik.getFieldProps('endDate.day')} />
                         {formik.touched.endDate && formik.errors.endDate ? (
-                            <div>{formik.errors.endDate.day}</div>) : null}
+                            <Alert variant="danger">{formik.errors.endDate.day}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="endDate.month">Month</Form.Label>
                         <Form.Control name="endDate.month" {...formik.getFieldProps('endDate.month')} />
                         {formik.touched.endDate && formik.errors.startDate ? (
-                            <div>{formik.errors.endDate.month}</div>) : null}
+                            <Alert variant="danger">{formik.errors.endDate.month}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="endDate.year">Year</Form.Label>
                         <Form.Control name="endDate.year" {...formik.getFieldProps('endDate.year')} />
                         {formik.touched.endDate && formik.errors.endDate ? (
-                            <div>{formik.errors.endDate.year}</div>) : null}
+                            <Alert variant="danger">{formik.errors.endDate.year}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -194,13 +194,13 @@ const CreateAuctionForm = () => {
                         <Form.Label htmlFor="startTime">Start Time</Form.Label>
                         <Form.Control name="startTime" {...formik.getFieldProps('startTime')} type="time"/>
                         {formik.touched.startTime && formik.errors.startTime ? (
-                        <div>{formik.errors.startTime}</div>) : null}
+                        <Alert variant="danger">{formik.errors.startTime}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="endTime">End Time</Form.Label>
                         <Form.Control name="endTime" {...formik.getFieldProps('endTime')} type="time"/>
                         {formik.touched.endTime && formik.errors.endTime ? (
-                        <div>{formik.errors.endTime}</div>) : null}
+                        <Alert variant="danger">{formik.errors.endTime}</Alert>) : null}
                     </Col>
                 </Row>
 
@@ -208,34 +208,29 @@ const CreateAuctionForm = () => {
                 <Form.Label htmlFor="location.addressLine1">Address</Form.Label>
                 <Form.Control name="location.addressLine1" {...formik.getFieldProps('location.addressLine1')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.addressLine1}</div>) : null}
+                        <Alert variant="danger">{formik.errors.location.addressLine1}</Alert>) : null}
 
                 <Form.Label htmlFor="location.addressLine2">Appartment{getCode(44)} suite{getCode(44)} etc{getCode(46)}</Form.Label>
                 <Form.Control name="location.addressLine2" {...formik.getFieldProps('location.addressLine2')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.addressLine2}</div>) : null}
+                        <Alert variant="danger">{formik.errors.location.addressLine2}</Alert>) : null}
 
                 <Form.Label htmlFor="location.city">City</Form.Label>
                 <Form.Control name="location.city" {...formik.getFieldProps('location.city')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.city}</div>) : null}
+                        <Alert variant="danger">{formik.errors.location.city}</Alert>) : null}
                 
                 <Form.Label htmlFor="location.state">State</Form.Label>
                 <Form.Control name="location.state" {...formik.getFieldProps('location.state')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.state}</div>) : null}
+                        <Alert variant="danger">{formik.errors.location.state}</Alert>) : null}
                 <Form.Label htmlFor="location.zip">Zip Code</Form.Label>
                 <Form.Control name="location.zip" {...formik.getFieldProps('location.zip')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.zip}</div>) : null}
+                        <Alert variant="danger">{formik.errors.location.zip}</Alert>) : null}
                 <Row>
                     <Col>
                         <Form.Label htmlFor="paymentLimitTime">Payment Time Limit</Form.Label>
-                        {/**
-                        <Form.Control name="paymentLimitTime" {...formik.getFieldProps('paymentLimitTime')} />
-                        {formik.touched.paymentLimitTime && formik.errors.paymentLimitTime ? (
-                        <div>{formik.errors.paymentLimitTime}</div>) : null}
-                         */}
                         <InfoPopOver />
                         <Form.Control as="select" name="paymentLimitTime" {...formik.getFieldProps('paymentLimitTime')}>
                             <option></option>
@@ -244,13 +239,13 @@ const CreateAuctionForm = () => {
                             <option value="72">72 Hours</option>
                         </Form.Control>
                         {formik.touched.paymentLimitTime && formik.errors.paymentLimitTime ? (
-                        <div>{formik.errors.paymentLimitTime}</div>) : null}
+                        <Alert variant="danger">{formik.errors.paymentLimitTime}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="pickUpInformation">Pick Up Information</Form.Label>
                         <Form.Control name="pickUpInformation" {...formik.getFieldProps('pickUpInformation')} />
                         {formik.touched.pickUpInformation && formik.errors.pickUpInformation ? (
-                        <div>{formik.errors.pickUpInformation}</div>) : null}
+                        <Alert variant="danger">{formik.errors.pickUpInformation}</Alert>) : null}
                     </Col>
                 </Row>
             </Form.Group>
@@ -267,6 +262,9 @@ let CreateAuction = () =>
         <AdminNav />
         <Container>
             <h2 className="text-center mx-auto space text-header">Create Auction Event</h2>
+            <Alert variant="primary">
+                Creating an auction event will not make it visible to customers. To make an event active please visit the <Alert.Link href="/edit_auction"> edit auction page</Alert.Link>
+            </Alert>
             <CreateAuctionForm />
         </Container>
         <Footer />
