@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Footer from '../components/Footer';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Router from 'next/router';
 
 const AdminRegistrationForm = (props) => {
     return (
@@ -53,8 +54,9 @@ const AdminRegistrationForm = (props) => {
                             console.log('token from front end being called. Here is info from back end -- ' + token);
                             */
                             if(Cookies.get('ssid') !== undefined) {
-
                             }
+                            Router.push('/confirmregister');
+
                         }
                         else {
                             //display errors here
@@ -98,7 +100,7 @@ const AdminRegistrationForm = (props) => {
                         <div>{formik.errors.passwordConfirm}</div>) : null}
                     <button className="btn space customer-button" type="submit">Register</button>
                 </Form.Group>
-                
+
             </Form>
         )}
 
