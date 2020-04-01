@@ -43,11 +43,12 @@ const EditProductForm = () => {
 
 
         onSubmit={(values, { setSubmitting }) => {
-        
+
+
             /**
                 Add logic of what to do when they submit
              */
-            
+
         }}
     >
 
@@ -123,7 +124,7 @@ let EditProducts = () => {
                 setAuctionId(snapshot.docs[0].id);
             });
             return () => { unsubscribe() };
-    }, [db] ); 
+    }, [db] );
 
 
     return (
@@ -136,7 +137,7 @@ let EditProducts = () => {
                 <Col><h3 className="flag-title">Products for Active Auction</h3></Col>
                 <Col md={3}>
                 {show ? <Button variant='secondary' onClick={handleClose}>Close</Button> : <Button variant='info' onClick={handleShow}>Expand</Button>}
-                
+
                 </Col>
             </Row>
                 {show ? (
@@ -148,13 +149,13 @@ let EditProducts = () => {
                         <p></p>
                     </>
                 )}
-                
-            
+
+
             <Footer/>
             <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
         </div>
     );
 }
-    
+
 
 export default EditProducts;

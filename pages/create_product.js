@@ -11,7 +11,7 @@ import Footer from '../components/Footer';
 import {loadDB} from '../lib/db';
 import React, { useState, useEffect } from 'react';
 
-let firebase = loadDB();
+const db = loadDB();
 
 import createAuctionProduct from './api/createProductQuery';
 let success = null;
@@ -40,31 +40,35 @@ const CreateProductForm = () => {
 
 
             onSubmit={(values, { setSubmitting }) => {
-                /*
-                let db = firebase.database();
 
-                db.ref('AuctionProducts/').set({
-                    productName: values.productName,
-                    productDescription: values.productDescription,
-                    productImageURL: values.productImageURL,
-                    minBid: values.minBid,
-                    maxBid: values.maxBid,
-                    productPickUpInfo: values.productPickUpInfo,
-                })
-                */
-                //todo get reference of auction instead of hardcoding it
-                let creationSuccess = createAuctionProduct("Wko55XKmmKJnzfhjLJp3", values);
-                console.log(creationSuccess + "*** in pages")
-                // To do: properly await function completion in order to properly report to user.
-                /*
-                console.log("Doc ID: " + creationSuccess.toString());
-                if(creationSuccess) {
-                    console.log("Success!");
-                }
-                else {
-                    console.log("Unsuccessful!");
-                }
-                */
+              db.firestore().collection('AuctionEvent')
+              .where('isActive', '==', true)
+                  .get()
+                  .then(function(querySnapshot) {
+                      //If no events are active
+                      if(querySnapshot.empty) {
+                          //Alert user to activate an event.
+                          console.log("Please Activate an event before Creating a product.");
+                      }
+                      //at least one auction event is active
+                      else {
+
+                          //one event is active
+                          if(querySnapshot.size) {
+                              console.log("one doc found " + querySnapshot.docs[0].id);
+
+                              //Create event based on the currently active event.
+                                let creationSuccess = createAuctionProduct(querySnapshot.docs[0].id, values);
+                                console.log(creationSuccess + "*** in pages")
+                               } else {
+                                  //query snapshot will appear as undefined due to object parameters
+
+
+                          }
+                          //more than one event is active
+                      }
+                  })
+
             }}
         >
 
@@ -126,13 +130,13 @@ const CreateProductForm = () => {
 
 //TODO: create another button for adding another product
 
-const CreateProduct = () => 
+const CreateProduct = () =>
     <div className="create-product-body">
         <AdminNav />
         <Container>
             <h2 className="text-center mx-auto space text-header">Create Auction Product</h2>
             <CreateProductForm />
-            
+
         </Container>
         <div className="footer-space"></div>
         <Footer />
