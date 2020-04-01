@@ -12,6 +12,10 @@ import Footer from '../components/Footer';
 import Alert from 'react-bootstrap/Alert';
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
+import React, { useState, useEffect } from 'react';
+import HomeForbidden from '../components/HomeForbidden';
+import { loadDB } from '../lib/db';
+let firebase = loadDB();
 
 const popover = (
     <Popover id="popover-basic">
@@ -204,7 +208,7 @@ const CreateAuctionForm = () => {
                     </Col>
                 </Row>
 
-                
+
                 <Form.Label htmlFor="location.addressLine1">Address</Form.Label>
                 <Form.Control name="location.addressLine1" {...formik.getFieldProps('location.addressLine1')} />
                 {formik.touched.location && formik.errors.location ? (
@@ -219,7 +223,7 @@ const CreateAuctionForm = () => {
                 <Form.Control name="location.city" {...formik.getFieldProps('location.city')} />
                 {formik.touched.location && formik.errors.location ? (
                         <Alert variant="danger">{formik.errors.location.city}</Alert>) : null}
-                
+
                 <Form.Label htmlFor="location.state">State</Form.Label>
                 <Form.Control name="location.state" {...formik.getFieldProps('location.state')} />
                 {formik.touched.location && formik.errors.location ? (
@@ -250,24 +254,50 @@ const CreateAuctionForm = () => {
                 </Row>
             </Form.Group>
             <Button variant="success" type="submit">Save</Button>
-            
+
             </Form>
             )}
         </Formik>
     );
 };
 
-let CreateAuction = () =>
-    <div className="auction-creation-body">
-        <AdminNav />
-        <Container>
-            <h2 className="text-center mx-auto space text-header">Create Auction Event</h2>
-            <Alert variant="primary">
-                Creating an auction event will not make it visible to customers. To make an event active please visit the <Alert.Link href="/edit_auction"> edit auction page</Alert.Link>
-            </Alert>
-            <CreateAuctionForm />
-        </Container>
-        <Footer />
-        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-    </div>;
+let CreateAuction = () => {
+    const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState([]);
+    useEffect( () => {
+        firebase.auth().onAuthStateChanged((user) => {
+            const unsubscribe = firebase
+                .firestore()
+                .collection("/Users")
+                .doc(user.uid)
+                .get()
+                .then((querySnapshot) => {
+                    setCurrentUserIsAdmin(querySnapshot.data().isAdmin);
+               });
+        });
+    }, [firebase] );
+
+    if(currentUserIsAdmin == "true") {
+        return (
+            <div className="auction-creation-body">
+                <AdminNav />
+                <Container>
+                    <h2 className="text-center mx-auto space text-header">Create Auction Event</h2>
+                    <Alert variant="primary">
+                        Creating an auction event will not make it visible to customers. To make an event active please visit the <Alert.Link href="/edit_auction"> edit auction page</Alert.Link>
+                    </Alert>
+                    <CreateAuctionForm />
+                </Container>
+                <Footer />
+                <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
+            </div>
+        );
+    } else if(currentUserIsAdmin == "false") {
+        return (
+            <HomeForbidden />
+        );
+    } else {
+        return null;
+    }
+
+}
 export default CreateAuction;

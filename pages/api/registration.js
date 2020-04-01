@@ -22,7 +22,6 @@ export default (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        emailVerified: false,
         isAdmin: req.body.isAdmin
       });
 

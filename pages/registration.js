@@ -31,7 +31,6 @@ const CustomerRegistration = () => {
                         .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
                 onSubmit={ async (values, {setSubmitting}) => {
-                    setSubmitting(true)
                     const email = values.email;
                     const pssw = values.password;
                     const fName = values.firstName;
@@ -100,11 +99,11 @@ const CustomerRegistration = () => {
                     {formik.touched.passwordConfirm && formik.errors.passwordConfirm ? (
                         <Alert variant='danger'>{formik.errors.passwordConfirm}</Alert>) : null}
                         <div className="text-center space">
-                           <button className="btn customer-button" type="submit">Register</button>  
+                           <button className="btn customer-button" type="submit">Register</button>
                         </div>
-                   
+
                 </Form.Group>
-                
+
             </Form>
         )}
 

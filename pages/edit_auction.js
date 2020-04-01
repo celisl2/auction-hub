@@ -217,7 +217,7 @@ const EditForm = (props) => {
                     </Col>
                 </Row>
 
-                
+
                 <Form.Label htmlFor="location.addressLine1">Address</Form.Label>
                 <Form.Control name="location.addressLine1" {...formik.getFieldProps('location.addressLine1')} />
                 {formik.touched.location && formik.errors.location ? (
@@ -232,7 +232,7 @@ const EditForm = (props) => {
                 <Form.Control name="location.city" {...formik.getFieldProps('location.city')} />
                 {formik.touched.location && formik.errors.location ? (
                         <div>{formik.errors.location.city}</div>) : null}
-                
+
                 <Form.Label htmlFor="location.state">State</Form.Label>
                 <Form.Control name="location.state" {...formik.getFieldProps('location.state')} />
                 {formik.touched.location && formik.errors.location ? (
@@ -268,7 +268,7 @@ const EditForm = (props) => {
                 </Row>
             </Form.Group>
             <Button variant="success" type="submit">Save</Button>
-            
+
             </Form>
             )}
         </Formik>
@@ -330,7 +330,7 @@ const Auction = (props) => {
                     <p><span className="bold-text makeGold">Pick Up Information{getCode(58)}</span> {props.data.pickUpInformation}</p>
                 </Col>
             </Row>
-            
+
         </div>
     );
 };
@@ -349,10 +349,10 @@ const ActiveAuctionButton = (props) => {
                 setActiveID(props.data);
                 setAdminMessage('Auction event active');
             }
-                
+
         });
         return () => { unsubscribe() };
-    }, [db] ); 
+    }, [db] );
 
     const showActiveMessage = (id) => {
         if(id == props.data) {
@@ -405,7 +405,7 @@ const ActiveAuctionButton = (props) => {
             </Button>
             {showActiveMessage(activeID)}
         </div>
-        
+
     )
 }
 
@@ -424,11 +424,11 @@ const RTCurrentAuction = () => {
                         arrAuctionData.push({id: doc.id, ...doc.data()});
                     });
                     setAuctionEventData(arrAuctionData);
-                
+
                 }
             });
             return () => { unsubscribe() };
-    }, [db] ); 
+    }, [db] );
 
     if (auctionEventData && auctionEventData.length) {
         return (
@@ -445,7 +445,7 @@ const RTCurrentAuction = () => {
                                         <Card.Header>
                                             <Accordion.Toggle as={Button} variant="link" eventKey={event.id}>
                                                 See {getCode(38)} Edit Auction Details
-                                                
+
                                             </Accordion.Toggle>
                                             <ActiveAuctionButton data={event.id}/>
                                         </Card.Header>
@@ -472,15 +472,40 @@ const RTCurrentAuction = () => {
     }
 };
 
-let EditAuction = () =>
-    <div className="edit-auction-body">
-        <AdminNav />
-        <Container fluid>
-            <h2 className="text-center mx-auto space text-header">Auction Events</h2>
-            <RTCurrentAuction />
-        </Container>
-        <Footer/>
-        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-    </div>;
+let EditAuction = () => {
+    const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState([]);
+    useEffect( () => {
+        db.auth().onAuthStateChanged((user) => {
+            const unsubscribe = db
+                .firestore()
+                .collection("/Users")
+                .doc(user.uid)
+                .get()
+                .then((querySnapshot) => {
+                    setCurrentUserIsAdmin(querySnapshot.data().isAdmin);
+               });
+        });
+    }, [db] );
+
+    if(currentUserIsAdmin == "true") {
+        return (
+            <div className="edit-auction-body">
+                <AdminNav />
+                <Container fluid>
+                    <h2 className="text-center mx-auto space text-header">Auction Events</h2>
+                    <RTCurrentAuction />
+                </Container>
+                <Footer/>
+                <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
+            </div>
+        );
+    } else if (currentUserIsAdmin == "false") {
+        return (
+            <HomeForbidden />
+        );
+    } else {
+        return null;
+    }
+}
 
 export default EditAuction;

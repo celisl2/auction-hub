@@ -10,6 +10,7 @@ import AdminNav from '../components/AdminNav';
 import Footer from '../components/Footer';
 import {loadDB} from '../lib/db';
 import React, { useState, useEffect } from 'react';
+import HomeForbidden from '../components/HomeForbidden';
 
 const db = loadDB();
 
@@ -130,17 +131,43 @@ const CreateProductForm = () => {
 
 //TODO: create another button for adding another product
 
-const CreateProduct = () =>
-    <div className="create-product-body">
-        <AdminNav />
-        <Container>
-            <h2 className="text-center mx-auto space text-header">Create Auction Product</h2>
-            <CreateProductForm />
+const CreateProduct = () => {
+    const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState([]);
+    useEffect( () => {
+        db.auth().onAuthStateChanged((user) => {
+            const unsubscribe = db
+                .firestore()
+                .collection("/Users")
+                .doc(user.uid)
+                .get()
+                .then((querySnapshot) => {
+                    setCurrentUserIsAdmin(querySnapshot.data().isAdmin);
+               });
+        });
+    }, [db] );
 
-        </Container>
-        <div className="footer-space"></div>
-        <Footer />
-        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-    </div>
+    if(currentUserIsAdmin == "true")
+    {
+        return (
+            <div className="create-product-body">
+                <AdminNav />
+                <Container>
+                    <h2 className="text-center mx-auto space text-header">Create Auction Product</h2>
+                    <CreateProductForm />
+
+                </Container>
+                <div className="footer-space"></div>
+                <Footer />
+                <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
+            </div>
+        );
+    } else if (currentUserIsAdmin == "false") {
+        return (
+            <HomeForbidden />
+        );
+    } else {
+        return null;
+    }
+}
 
 export default CreateProduct;

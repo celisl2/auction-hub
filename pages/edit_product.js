@@ -110,6 +110,7 @@ const EditProductForm = () => {
 let EditProducts = () => {
     const [auctionID, setAuctionId] = useState(null);
     const [show, setShow] = useState(false);
+    const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState([]);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -126,35 +127,55 @@ let EditProducts = () => {
             return () => { unsubscribe() };
     }, [db] );
 
+    useEffect( () => {
+        db.auth().onAuthStateChanged((user) => {
+            const unsubscribe = db
+                .firestore()
+                .collection("/Users")
+                .doc(user.uid)
+                .get()
+                .then((querySnapshot) => {
+                    setCurrentUserIsAdmin(querySnapshot.data().isAdmin);
+               });
+        });
+    }, [db] );
 
-    return (
-        <div className="edit-auction-body">
-            <AdminNav />
-            <Container>
-                <h2 className="text-center mx-auto space text-header">Edit Auction Products</h2>
-            </Container>
-            <Row>
-                <Col><h3 className="flag-title">Products for Active Auction</h3></Col>
-                <Col md={3}>
-                {show ? <Button variant='secondary' onClick={handleClose}>Close</Button> : <Button variant='info' onClick={handleShow}>Expand</Button>}
+    if(currentUserIsAdmin == "true") {
+        return (
+            <div className="edit-auction-body">
+                <AdminNav />
+                <Container>
+                    <h2 className="text-center mx-auto space text-header">Edit Auction Products</h2>
+                </Container>
+                <Row>
+                    <Col><h3 className="flag-title">Products for Active Auction</h3></Col>
+                    <Col md={3}>
+                    {show ? <Button variant='secondary' onClick={handleClose}>Close</Button> : <Button variant='info' onClick={handleShow}>Expand</Button>}
 
-                </Col>
-            </Row>
-                {show ? (
-                    <>
-                    {auctionID ? <ProductsList user="admin" props={auctionID}/> : <p>loading</p>}
-                    </>
-                ): (
-                    <>
-                        <p></p>
-                    </>
-                )}
+                    </Col>
+                </Row>
+                    {show ? (
+                        <>
+                        {auctionID ? <ProductsList user="admin" props={auctionID}/> : <p>loading</p>}
+                        </>
+                    ): (
+                        <>
+                            <p></p>
+                        </>
+                    )}
 
 
-            <Footer/>
-            <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-        </div>
-    );
+                <Footer/>
+                <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
+            </div>
+        );
+    } else if (currentUserIsAdmin == "false") {
+        return (
+            <HomeForbidden />
+        );
+    } else {
+        return null;
+    }
 }
 
 

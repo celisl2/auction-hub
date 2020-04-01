@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import React from 'react';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
+import AdminHome from '../components/AdminHome';
 
 let firebase = loadDB();
 
@@ -89,13 +90,17 @@ class Home extends React.Component {
             );
         }
         else if (this.state.role == "admin") {
-            Router.push('/admin_home');
-            return null;
+            return  (
+                <AdminHome />
+            );
         }
-        else {
+        else if (this.state.role == "user"){
             return  (
                 <HomeAuth />
             );
+        }
+        else {
+            return null;
         }
     }
 };
