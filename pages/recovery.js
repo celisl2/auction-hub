@@ -1,5 +1,7 @@
 import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
+import Container from 'react-bootstrap/Container';
+import Footer from '../components/Footer';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {loadDB} from '../lib/db';
@@ -62,7 +64,8 @@ const LogInForm = () => {
                         <div>{formik.errors.email}</div>) : null}
                     {formik.touched.password && formik.errors.password ? (
                         <div>{formik.errors.password}</div>) : null}
-                <button type="submit">Recover Account</button>
+                        <div className="text-center space"></div>
+                        <button className="btn customer-button" type="submit">Submit</button>
             </form>
         )}
         </Formik>
@@ -70,28 +73,31 @@ const LogInForm = () => {
 };
 
 let Recovery = () =>
-    <div className="login-body">
-        <Head>
-            <title>Auction Hub</title>
-            <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-            <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700|Open+Sans:300,400|Oswald:300,400&display=swap" rel="stylesheet"></link>
+<div className="login-body">
+    <Head>
+        <title>Log In | Auction Hub</title>
+    </Head>
 
-        </Head>
         <ImageHeader />
-        <div className="login-form">
+        <Container>
+            <h3 className="text-center mx-auto login-header">Recover Password</h3>
+        <div className="mx-auto login-form">
+        <h5>Enter your email address below to send a recovery email to your specified address.</h5>
             <LogInForm />
         </div>
-        <div className="login-register">
-            <p>Enter your Email to have a recovery email sent.{getCode(63)}</p>
+        <div className="login-register-recovery">
+            <p className="login-special">Not registered yet{getCode(63)}</p>
+            <div className='line'></div>
             {/** need on click for the buttons below */}
             <Link href="/registration">
-            <a className="card">
-            <h3>Register&rarr;</h3>
-            </a></Link>
-            <Link href="/registration">
-            <a className="card">
-            <h3>Admin Registration&rarr;</h3>
-            </a></Link>
+                <a className="card">Register</a>
+            </Link>
+            <Link href="/admin_registration">
+                <a className="card">Administrator Registration</a>
+            </Link>
         </div>
-    </div>;
+    </Container>
+    <Footer />
+    <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
+</div>;
 export default Recovery;
