@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Router from 'next/router';
+import Cookies from 'js-cookie';
 
 const AdminRegistrationForm = (props) => {
     return (
