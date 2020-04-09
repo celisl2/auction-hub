@@ -1,3 +1,6 @@
+// Updated 9 April 2020 by RTA -- Fixed user.
+
+
 import React, {useState, useContext, useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
@@ -19,7 +22,7 @@ const BidForm = (props) => {
     let minBid = bidData.props.productData.minBid;
     let maxBid = bidData.props.productData.maxBid;
 
-    const [lowerLimit, setLowerLitmit] = useState(() => {
+    const [lowerLimit, setLowerLimit] = useState(() => {
         if(highBidData)
             return highBidData;
         else
@@ -54,7 +57,7 @@ const BidForm = (props) => {
             if (snapshot.size) {
                 let highBid = snapshot.docs[0].data().amount;
                 setHighBidData(highBid);
-                setLowerLitmit(highBid);
+                setLowerLimit(highBid);
             }
         });
 
@@ -75,56 +78,82 @@ const BidForm = (props) => {
                     })
                 }
                 onSubmit={ (values, {setSubmitting}) => {
-                    let bidAmount = values.userBid;
-                    if(bidAmount <= maxBid) {
-                        //user is allowed to place bid
-                        if(bidAmount >= lowerLimit) {
-                            //user is placing buyout bid
-                            if(bidAmount == maxBid) {
-                                let user = db.auth().currentUser;
-                                if(user) {
-                                    console.log(user.uid);
-                                    db.firestore()
-                                    .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory').add({
-                                        amount: Number(bidAmount),
-                                        timestamp: db.firestore.FieldValue.serverTimestamp(),
-                                        productWinner: user.uid,
-                                    }).then(docRef => {
-                                        setAlertColor('success');
-                                        setUserMessage('You have placed the highest bid. You will recieve an email with instructions on how to pay and recieve your product.');
-                                        console.log('bid placed for ' + docRef.id);
-                                    })
-
-                                    db.firestore().collection('AuctionEvent/' + auctionId + '/AuctionProduct').doc(productId).update({
-                                        highestBidPlaced: true
-                                    })
+                    
+                    try {
+                        let bidAmount = values.userBid;
+                        let user = db.auth().currentUser.uid;
+                        if (!!user) {
+                            if(bidAmount <= maxBid) {
+                                //user is allowed to place bid
+                                if(bidAmount >= lowerLimit) {
+                                    //user is placing buyout bid
+                                    if(bidAmount == maxBid) {
+                                    
+                                            db.firestore()
+                                            .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory')
+                                            .add({
+                                                amount: Number(bidAmount),
+                                                timestamp: db.firestore.FieldValue.serverTimestamp(),
+                                                bidderID: user,
+                                                productWinner: user,
+                                            }).then(docRef => {
+                                                setAlertColor('success');
+                                                setUserMessage('You have placed the highest bid. You will recieve an email with instructions on how to pay and recieve your product.');
+                                                console.log('bid placed for ' + docRef.id);
+                                            })
+                                            .catch( (err) => {
+                                                console.error("A problem occurred trying to place a buyout on product " + productId + ": " + err);
+                                            })
+        
+                                            db.firestore().collection('AuctionEvent/' + auctionId + '/AuctionProduct').doc(productId).update({
+                                                highestBidPlaced: true
+                                            })
+                                       //}
+                                    } //user is placing bid less than maxBid
+                                    else {
+                                            
+                                            db.firestore()
+                                            .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory').add({
+                                                amount: Number(bidAmount),
+                                                timestamp: db.firestore.FieldValue.serverTimestamp(),
+                                                bidderID: user,
+                                            })
+                                            .then(docRef => {
+                                                setAlertColor('success');
+                                                setUserMessage('Bid was placed successfully');
+                                                console.log('bid placed for ' + docRef.id);
+                                            })
+                                            .catch( (err) => {
+                                                console.error("A problem occurred trying to place a bid on product " + productId + ": " + err);
+                                            })  
+                                        //}
+        
+                                    }
+                                    setSubmitting(true);
+                                } 
+                                else {
+                                    console.log(bidAmount);
+                                    setAlertColor('danger');
+                                    setUserMessage('Bid must be greater or equal to $' + minBid);
+                                    setSubmitting(false);
                                 }
-                            } //user is placing bid less than maxBid
+                            } 
                             else {
-                                db.firestore()
-                                .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory').add({
-                                    amount: Number(bidAmount),
-                                    timestamp: db.firestore.FieldValue.serverTimestamp(),
-                                })
-                                .then(docRef => {
-                                    setAlertColor('success');
-                                    setUserMessage('Bid was placed successfully');
-                                    console.log('bid placed for ' + docRef.id);
-                                })
+                                console.log(bidAmount);
+                                setAlertColor('danger');
+                                setUserMessage('Bid must be less than or equal to $' + maxBid);
+                                setSubmitting(false);
                             }
-                            setSubmitting(true);
-                        } else {
-                            console.log(bidAmount);
-                            setAlertColor('danger');
-                            setUserMessage('Bid must be greater or equal to $' + minBid);
-                            setSubmitting(false);
                         }
-                    } else {
-                        console.log(bidAmount);
-                        setAlertColor('danger');
-                        setUserMessage('Bid must be less than or equal to $' + maxBid);
-                        setSubmitting(false);
+                        else {
+                            throw ("User is not logged-in for bidding!");
+                        }
                     }
+                    catch (err) {
+                        console.error("DEBUG: Caught Error: " + err);
+                    }
+                    
+                    
                 }}
             >
             { formik => (
