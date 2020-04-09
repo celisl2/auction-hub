@@ -11,11 +11,11 @@ import Footer from '../components/Footer';
 import {loadDB} from '../lib/db';
 import React, { useState, useEffect } from 'react';
 import HomeForbidden from '../components/HomeForbidden';
+import Required from '../components/Required';
 
 const db = loadDB();
 
 import createAuctionProduct from './api/createProductQuery';
-let success = null;
 
 const CreateProductForm = () => {
     return (
@@ -66,7 +66,7 @@ const CreateProductForm = () => {
                           }
                       }
                   })
-                  Router.push('/auctionconfirm');
+                  Router.push('/productconfirm');
 
             }}
         >
@@ -76,13 +76,13 @@ const CreateProductForm = () => {
             <Form.Group>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="productName">Product Name</Form.Label>
+                        <Form.Label htmlFor="productName">Product Name<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="productName" {...formik.getFieldProps('productName')} />
                         {formik.touched.productName && formik.errors.productName ? (
                             <div>{formik.errors.productName}</div>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="productImageURL">Image URL</Form.Label>
+                        <Form.Label htmlFor="productImageURL">Image URL<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="productImageURL" {...formik.getFieldProps('productImageURL')} />
                         {formik.touched.productImageURL && formik.errors.productImageURL ? (
                             <div>{formik.errors.productImageURL}</div>) : null}
@@ -90,7 +90,7 @@ const CreateProductForm = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="productDescription">Product Description</Form.Label>
+                        <Form.Label htmlFor="productDescription">Product Description<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="productDescription" as="textarea" rows="2" {...formik.getFieldProps('productDescription')} />
                         {formik.touched.productDescription && formik.errors.productDescription ? (
                             <div>{formik.errors.productDescription}</div>) : null}
@@ -98,13 +98,13 @@ const CreateProductForm = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="minBid">Min Bid</Form.Label>
+                        <Form.Label htmlFor="minBid">Min Bid<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="minBid" {...formik.getFieldProps('minBid')} />
                         {formik.touched.minBid && formik.errors.minBid ? (
                             <div>{formik.errors.minBid}</div>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="maxBid">Max Bid</Form.Label>
+                        <Form.Label htmlFor="maxBid">Max Bid<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="maxBid" {...formik.getFieldProps('maxBid')} />
                         {formik.touched.maxBid && formik.errors.maxBid ? (
                             <div>{formik.errors.maxBid}</div>) : null}
@@ -114,15 +114,12 @@ const CreateProductForm = () => {
                     <Col>
                         <Form.Label htmlFor="productPickUpInfo">Product Pick Up Information <span>{getCode(40)}optional{getCode(41)}</span></Form.Label>
                         <Form.Control name="productPickUpInfo" {...formik.getFieldProps('productPickUpInfo')} />
-                        {formik.touched.productPickUpInfo && formik.errors.productPickUpInfo ? (
-                            <div>{formik.errors.productPickUpInfo}</div>) : null}
                     </Col>
                 </Row>
             </Form.Group>
             <Button variant="success" type="submit">Save</Button>
         </Form>
         )}
-        {}
         </Formik></div>
     );
 }
@@ -151,8 +148,8 @@ const CreateProduct = () => {
                 <AdminNav />
                 <Container>
                     <h2 className="text-center mx-auto space text-header">Create Auction Product</h2>
+                    <Required />
                     <CreateProductForm />
-
                 </Container>
                 <div className="footer-space"></div>
                 <Footer />

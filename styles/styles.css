@@ -423,6 +423,23 @@ a.brand {
 .spaceMax {
     margin-top: 10%;
 }
+.req {
+    color: #DA2C38;
+}
+.makeWhite {
+    color: #fff;
+}
+.center-btn {
+    display: flex; justify-content: center;
+    margin: 0 auto;
+}
+.center-btn a:focus, .center-btn a:active, .center-btn a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+.centerAxis {
+    margin-top: 5%;
+}
 
 @media (min-width: 768px) {
     .login-form {

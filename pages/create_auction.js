@@ -15,6 +15,9 @@ import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
 import React, { useState, useEffect } from 'react';
 import HomeForbidden from '../components/HomeForbidden';
+import daysArr from '../utils/daySelect';
+import months from '../utils/monthSelect';
+import Required from '../components/Required';
 import { loadDB } from '../lib/db';
 let firebase = loadDB();
 
@@ -34,6 +37,7 @@ const InfoPopOver = () => (
 );
 
 const CreateAuctionForm = () => {
+
     return(
         <Formik
             initialValues={{
@@ -67,13 +71,13 @@ const CreateAuctionForm = () => {
                     title: Yup.string()
                         .required('Please enter auction title'),
                     startDate: Yup.object().shape({
-                        day: Yup.number().typeError('Day must be a number between 1 and 31').min(1).max(31).required("Please enter a valid day"),
-                        month: Yup.number().typeError('Month must be a number between 1 and 12').min(1).max(12).required("Please enter a valid month number"),
+                        day: Yup.string().required("Please select a day"),
+                        month: Yup.string().required("Please select a month"),
                         year: Yup.number().typeError('Year must be a number greater than or equal to the current year').min(new Date().getFullYear()).required("Please enter a valid year")
                     }),
                     endDate: Yup.object().shape({
-                        day: Yup.number().typeError('Day must be a number between 1 and 31').min(1).max(31).required("Please enter a valid day"),
-                        month: Yup.number().typeError('Month must be a number between 1 and 12').min(1).max(12).required("Please enter a valid month number"),
+                        day: Yup.string().required("Please select a day"),
+                        month: Yup.string().required("Please select a month"),
                         year: Yup.number().typeError('Year must be a number greater than or equal to the current year').min(new Date().getFullYear()).required("Please enter a valid year")
                     }),
                     startTime: Yup.string()
@@ -126,13 +130,13 @@ const CreateAuctionForm = () => {
             <Form.Group>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="title">Title</Form.Label>
+                        <Form.Label htmlFor="title">Title<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="title" {...formik.getFieldProps('title')} />
                         {formik.touched.title && formik.errors.title ? (
                             <Alert variant="danger">{formik.errors.title}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="imageURL">Image URL</Form.Label>
+                        <Form.Label htmlFor="imageURL">Image URL<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="imageURL" {...formik.getFieldProps('imageURL')} />
                         {formik.touched.imageURL && formik.errors.imageURL ? (
                         <Alert variant="danger">{formik.errors.imageURL}</Alert>) : null}
@@ -140,7 +144,7 @@ const CreateAuctionForm = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="description">Description</Form.Label>
+                        <Form.Label htmlFor="description">Description<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="description" as="textarea" rows="3" {...formik.getFieldProps('description')} />
                             {formik.touched.description && formik.errors.description ? (
                                 <Alert variant="danger">{formik.errors.description}</Alert>) : null}
@@ -148,24 +152,32 @@ const CreateAuctionForm = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="startDate">Start Date</Form.Label>
+                        <Form.Label htmlFor="startDate">Start Date<span className="req">{'*'}</span></Form.Label>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="startDate.day">Day</Form.Label>
-                        <Form.Control name="startDate.day" {...formik.getFieldProps('startDate.day')} />
+                        <Form.Label htmlFor="startDate.day">Day<span className="req">{'*'}</span></Form.Label>
+                        <Form.Control as="select" name="startDate.day" {...formik.getFieldProps('startDate.day')}>
+                            {daysArr.map((num) =>
+                                <option key={num.label.toString()} value={num.label.toString()}>{num.value}</option>
+                            )}
+                        </Form.Control>
                         {formik.touched.startDate && formik.errors.startDate ? (
                             <Alert variant="danger">{formik.errors.startDate.day}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="startDate.month">Month</Form.Label>
-                        <Form.Control name="startDate.month" {...formik.getFieldProps('startDate.month')} />
+                        <Form.Label htmlFor="startDate.month">Month<span className="req">{'*'}</span></Form.Label>
+                        <Form.Control as="select" name="startDate.month" {...formik.getFieldProps('startDate.month')}>
+                            {months.map((val) =>
+                                <option key={val.label.toString()} value={val.label.toString()}>{val.value}</option>
+                            )}
+                        </Form.Control>
                         {formik.touched.startDate && formik.errors.startDate ? (
                             <Alert variant="danger">{formik.errors.startDate.month}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="startDate.year">Year</Form.Label>
+                        <Form.Label htmlFor="startDate.year">Year<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="startDate.year" {...formik.getFieldProps('startDate.year')} />
                         {formik.touched.startDate && formik.errors.startDate ? (
                             <Alert variant="danger">{formik.errors.startDate.year}</Alert>) : null}
@@ -173,24 +185,35 @@ const CreateAuctionForm = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="startDate">End Date</Form.Label>
+                        <Alert variant="info" className="space">
+                            Please enter an end date or end time to be greater than the start date and start time.
+                        </Alert>
+                        <Form.Label htmlFor="startDate">End Date<span className="req">{'*'}</span></Form.Label>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="endDate.day">Day</Form.Label>
-                        <Form.Control name="endDate.day" {...formik.getFieldProps('endDate.day')} />
+                        <Form.Label htmlFor="endDate.day">Day<span className="req">{'*'}</span></Form.Label>
+                        <Form.Control as="select" name="endDate.day" {...formik.getFieldProps('endDate.day')} >
+                            {daysArr.map((num) =>
+                                <option key={num.label.toString()} value={num.label.toString()}>{num.value}</option>
+                            )}
+                        </Form.Control>
                         {formik.touched.endDate && formik.errors.endDate ? (
                             <Alert variant="danger">{formik.errors.endDate.day}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="endDate.month">Month</Form.Label>
-                        <Form.Control name="endDate.month" {...formik.getFieldProps('endDate.month')} />
+                        <Form.Label htmlFor="endDate.month">Month<span className="req">{'*'}</span></Form.Label>
+                        <Form.Control as="select" name="endDate.month" {...formik.getFieldProps('endDate.month')}>
+                            {months.map((val) =>
+                                <option key={val.label.toString()} value={val.label.toString()}>{val.value}</option>
+                            )}
+                        </Form.Control>
                         {formik.touched.endDate && formik.errors.startDate ? (
                             <Alert variant="danger">{formik.errors.endDate.month}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="endDate.year">Year</Form.Label>
+                        <Form.Label htmlFor="endDate.year">Year<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="endDate.year" {...formik.getFieldProps('endDate.year')} />
                         {formik.touched.endDate && formik.errors.endDate ? (
                             <Alert variant="danger">{formik.errors.endDate.year}</Alert>) : null}
@@ -198,13 +221,13 @@ const CreateAuctionForm = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="startTime">Start Time</Form.Label>
+                        <Form.Label htmlFor="startTime">Start Time<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="startTime" {...formik.getFieldProps('startTime')} type="time"/>
                         {formik.touched.startTime && formik.errors.startTime ? (
                         <Alert variant="danger">{formik.errors.startTime}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="endTime">End Time</Form.Label>
+                        <Form.Label htmlFor="endTime">End Time<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="endTime" {...formik.getFieldProps('endTime')} type="time"/>
                         {formik.touched.endTime && formik.errors.endTime ? (
                         <Alert variant="danger">{formik.errors.endTime}</Alert>) : null}
@@ -212,32 +235,31 @@ const CreateAuctionForm = () => {
                 </Row>
 
 
-                <Form.Label htmlFor="location.addressLine1">Address</Form.Label>
+                <Form.Label htmlFor="location.addressLine1">Address<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.addressLine1" {...formik.getFieldProps('location.addressLine1')} />
                 {formik.touched.location && formik.errors.location ? (
                         <Alert variant="danger">{formik.errors.location.addressLine1}</Alert>) : null}
 
                 <Form.Label htmlFor="location.addressLine2">Appartment{getCode(44)} suite{getCode(44)} etc{getCode(46)}</Form.Label>
                 <Form.Control name="location.addressLine2" {...formik.getFieldProps('location.addressLine2')} />
-                {formik.touched.location && formik.errors.location ? (
-                        <Alert variant="danger">{formik.errors.location.addressLine2}</Alert>) : null}
+               
 
-                <Form.Label htmlFor="location.city">City</Form.Label>
+                <Form.Label htmlFor="location.city">City<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.city" {...formik.getFieldProps('location.city')} />
                 {formik.touched.location && formik.errors.location ? (
                         <Alert variant="danger">{formik.errors.location.city}</Alert>) : null}
 
-                <Form.Label htmlFor="location.state">State</Form.Label>
+                <Form.Label htmlFor="location.state">State<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.state" {...formik.getFieldProps('location.state')} />
                 {formik.touched.location && formik.errors.location ? (
                         <Alert variant="danger">{formik.errors.location.state}</Alert>) : null}
-                <Form.Label htmlFor="location.zip">Zip Code</Form.Label>
+                <Form.Label htmlFor="location.zip">Zip Code<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.zip" {...formik.getFieldProps('location.zip')} />
                 {formik.touched.location && formik.errors.location ? (
                         <Alert variant="danger">{formik.errors.location.zip}</Alert>) : null}
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="paymentLimitTime">Payment Time Limit</Form.Label>
+                        <Form.Label htmlFor="paymentLimitTime">Payment Time Limit<span className="req">{'*'}</span></Form.Label>
                         <InfoPopOver />
                         <Form.Control as="select" name="paymentLimitTime" {...formik.getFieldProps('paymentLimitTime')}>
                             <option></option>
@@ -249,7 +271,7 @@ const CreateAuctionForm = () => {
                         <Alert variant="danger">{formik.errors.paymentLimitTime}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="pickUpInformation">Pick Up Information</Form.Label>
+                        <Form.Label htmlFor="pickUpInformation">Pick Up Information<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="pickUpInformation" {...formik.getFieldProps('pickUpInformation')} />
                         {formik.touched.pickUpInformation && formik.errors.pickUpInformation ? (
                         <Alert variant="danger">{formik.errors.pickUpInformation}</Alert>) : null}
@@ -288,6 +310,7 @@ let CreateAuction = () => {
                     <Alert variant="primary">
                         Creating an auction event will not make it visible to customers. To make an event active please visit the <Alert.Link href="/edit_auction"> edit auction page</Alert.Link>
                     </Alert>
+                    <Required />
                     <CreateAuctionForm />
                 </Container>
                 <Footer />
