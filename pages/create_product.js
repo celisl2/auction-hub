@@ -63,12 +63,10 @@ const CreateProductForm = () => {
                                 console.log(creationSuccess + "*** in pages")
                                } else {
                                   //query snapshot will appear as undefined due to object parameters
-
-
                           }
-                          //more than one event is active
                       }
                   })
+                  Router.push('/auctionconfirm');
 
             }}
         >

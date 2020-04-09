@@ -1,3 +1,9 @@
+/*
+File Name: edit_product.js
+Purpose: Displays all current products and allows them to be edited.
+Document Created By: Team 1
+*/
+
 import AdminNav from '../components/AdminNav';
 import {getCode} from '../utils/helperFunctions';
 import Image from 'react-bootstrap/Image';

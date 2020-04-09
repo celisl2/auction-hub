@@ -1,3 +1,9 @@
+/*
+File Name: index.js
+Purpose: Home Page for the Application and prevents users who are not logged in.
+Document Created By: Team 1
+*/
+
 import HomeAuth from '../components/HomeAuth';
 import HomeForbidden from '../components/HomeForbidden';
 import Loading from '../components/Loading';
@@ -23,24 +29,28 @@ class Home extends React.Component {
     componentDidMount() {
         this._isMounted = true;
 
+//Performs a check to determine whether or not a user is verified
         firebase.auth().onAuthStateChanged((user) => {
             if(user) {
                 if (user.emailVerified) {
                     console.log('Email is verified');
+                    //User stays on index page
                 }
                 else {
                     console.log('Email is not verified');
+                    //Redirected to verify page if not verified
                     Router.push('/verify');
                 }
 
                 if(this._isMounted){
                     this.setState({ user });
                 }
-
+//Pulls the token from Firebase by using the User ID.
                 user.getIdToken().then(function (token) {
                     Cookies.set('ssid', token);
                 })
 
+//Uses firestore to determine if a user is an admin or a regular user
                 firebase.firestore()
                     .collection("/Users")
                     .doc(user.uid)

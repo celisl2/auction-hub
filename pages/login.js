@@ -1,3 +1,9 @@
+/*
+File Name: logins.js
+Purpose: Creates a Log In form for users and admins to log in with.
+Document Created By: Team 1
+*/
+
 import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
 import { Formik } from 'formik';
@@ -77,7 +83,7 @@ const LogInForm = () => {
                     <button className="btn btn-primary login-button" type="submit">Log In</button>
                 </Form.Group>
             </Form>
-            
+
         )}
         </Formik>
     );
@@ -88,7 +94,7 @@ let Login = () =>
         <Head>
             <title>Log In | Auction Hub</title>
         </Head>
-        
+
             <ImageHeader />
             <Container>
                 <h3 className="text-center mx-auto login-header">Log In</h3>
