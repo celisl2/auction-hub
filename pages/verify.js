@@ -1,3 +1,9 @@
+/*
+File Name: verify.js
+Purpose: Sent to the user when they are not verified.
+Document Created By: Team 1
+*/
+
 import "firebase/auth";
 import Head from 'next/head';
 import Router from 'next/router';
@@ -59,7 +65,7 @@ const VerifyForm = () => {
                             <div>{formik.errors.password}</div>) : null}
                     <button className="btn space smallScreen customer-button" type="submit">Submit</button>
                 </Form.Group>
-               
+
             </Form>
         )}
         </Formik>
@@ -81,7 +87,7 @@ let Recovery = () =>
             <ChevronDown className="icon-center" size='30' color="#5F4E9C"/>
             <VerifyForm/>
             <MoreHorizontal className="icon-center" size='30' color="#5F4E9C"/>
-            
+
             <div className="text-center link-group">
                 <p className="bold-text">Useful Links</p>
                 <Link href="/login">
@@ -97,6 +103,6 @@ let Recovery = () =>
         </Container>
         <Footer />
         <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-        
+
     </div>;
 export default Recovery;

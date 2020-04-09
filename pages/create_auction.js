@@ -10,6 +10,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import {HelpCircle} from 'react-feather';
 import Footer from '../components/Footer';
 import Alert from 'react-bootstrap/Alert';
+import Router from 'next/router';
 import {getCode} from '../utils/helperFunctions';
 import AdminNav from '../components/AdminNav';
 import React, { useState, useEffect } from 'react';
@@ -116,6 +117,8 @@ const CreateAuctionForm = () => {
                         console.error('Your code sucks');
                         throw new Error(error);
                     }
+                    Router.push('/auctionconfirm');
+
             }}
         >
             {formik => (

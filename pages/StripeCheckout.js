@@ -1,3 +1,9 @@
+/*
+File Name: StripeCheckout.js
+Purpose: A work-in-progress of the checkout system for the auction.
+Document Created By: Team 1
+*/
+
 import React from 'react'
 import StripeCheckout from 'react-stripe-checkout';
 
@@ -25,7 +31,7 @@ export default class TakeMoney extends React.Component {
         stripeKey="pk_test_Sbcpj3uG2YdtrQwmsTmgpb0000nTUbeXXd"
         name="All Things Possible" // the pop-in header title
         description="Auction Payment" // the pop-in header subtitle
-        amount={500} // cents 
+        amount={500} // cents
         currency="USD"
       />
     )
