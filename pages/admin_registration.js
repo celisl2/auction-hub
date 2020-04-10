@@ -87,7 +87,12 @@ const AdminRegistrationForm = (props) => {
                     {formik.touched.email && formik.errors.email ? (
                         <div>{formik.errors.email}</div>) : null}
                     <Form.Label htmlFor="password">Password</Form.Label>
-                    <Form.Control name="password" {...formik.getFieldProps('password')} />
+                    {/*<Form.Control name="password" {...formik.getFieldProps('password')} />*/}
+                    <Form.Control 
+                        id="password" 
+                        name="password" {...formik.getFieldProps('password')}
+                        type="password"
+                    />
                     <Form.Label htmlFor="passwordConfirm">Confirm Password</Form.Label>
                     <Form.Control
                         id="passwordConfirm"

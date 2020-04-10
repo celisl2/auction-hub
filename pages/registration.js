@@ -86,7 +86,11 @@ const CustomerRegistration = () => {
                         <Alert variant='danger'>{formik.errors.phone}</Alert>) : null}
 
                     <Form.Label htmlFor="password">Password</Form.Label>
-                    <Form.Control name="password" {...formik.getFieldProps('password')} />
+                    {/*<Form.Control name="password" {...formik.getFieldProps('password')} />*/}
+                    <Form.Control 
+                        name="password" {...formik.getFieldProps('password')}
+                        type="password"
+                    />
                     <Form.Label htmlFor="passwordConfirm">Confirm Password</Form.Label>
                     <Form.Control
                         id="passwordConfirm"
