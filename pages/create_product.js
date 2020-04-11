@@ -12,6 +12,7 @@ import {loadDB} from '../lib/db';
 import React, { useState, useEffect } from 'react';
 import HomeForbidden from '../components/HomeForbidden';
 import Required from '../components/Required';
+import Router from 'next/router'
 
 const db = loadDB();
 
