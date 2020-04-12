@@ -12,15 +12,18 @@ import {loadDB} from '../lib/db';
 import React, { useState, useEffect } from 'react';
 import HomeForbidden from '../components/HomeForbidden';
 import Required from '../components/Required';
-import Router from 'next/router'
+import Router from 'next/router';
+import Alert from 'react-bootstrap/Alert';
 
 const db = loadDB();
 
 import createAuctionProduct from './api/createProductQuery';
 
 const CreateProductForm = () => {
+    const [userMessage, setUserMessage] = useState(null);
     return (
         <div>
+            {userMessage ? <Alert variant='danger'>{userMessage}</Alert> : ''}
         <Formik
             initialValues={{
                 productName: '',
@@ -35,40 +38,43 @@ const CreateProductForm = () => {
                     productName: Yup.string().required('Please enter product name'),
                     productDescription: Yup.string().notRequired(),
                     productImageURL: Yup.string().required('Please enter the product\'s image URL'),
-                    minBid: Yup.number().required('Please enter minimum bid'),
-                    maxBid: Yup.number().required('Please enter max bid'),
+                    minBid: Yup.number().typeError('Min bid must be a number').positive('Number must be positive').integer('Minimum bid must be an integer').required('Please enter minimum bid'),
+                    maxBid: Yup.number().typeError('Max bid must be a number').positive('Number must be positive').integer('Minimum bid must be an integer').required('Please enter max bid'),
                     productPickUpInfo: Yup.string().notRequired()
                 })}
 
 
             onSubmit={(values, { setSubmitting }) => {
+                if(values.minBid >= values.maxBid) {
+                    setUserMessage('Max bid must be greater than min bid. Please try again.');
+                }
+                else {
+                    db.firestore().collection('AuctionEvent')
+                    .where('isActive', '==', true)
+                        .get()
+                        .then(function(querySnapshot) {
+                            //If no events are active
+                            if(querySnapshot.empty) {
+                                //Alert user to activate an event.
+                                console.log("Please Activate an event before Creating a product.");
+                            }
+                            //at least one auction event is active
+                            else {
 
-              db.firestore().collection('AuctionEvent')
-              .where('isActive', '==', true)
-                  .get()
-                  .then(function(querySnapshot) {
-                      //If no events are active
-                      if(querySnapshot.empty) {
-                          //Alert user to activate an event.
-                          console.log("Please Activate an event before Creating a product.");
-                      }
-                      //at least one auction event is active
-                      else {
+                                //one event is active
+                                if(querySnapshot.size) {
+                                    console.log("one doc found " + querySnapshot.docs[0].id);
 
-                          //one event is active
-                          if(querySnapshot.size) {
-                              console.log("one doc found " + querySnapshot.docs[0].id);
-
-                              //Create event based on the currently active event.
-                                let creationSuccess = createAuctionProduct(querySnapshot.docs[0].id, values);
-                                console.log(creationSuccess + "*** in pages")
-                               } else {
-                                  //query snapshot will appear as undefined due to object parameters
-                          }
-                      }
-                  })
-                  Router.push('/productconfirm');
-
+                                    //Create event based on the currently active event.
+                                        let creationSuccess = createAuctionProduct(querySnapshot.docs[0].id, values);
+                                        console.log(creationSuccess + "*** in pages");
+                                        Router.push('/productconfirm');
+                                    } else {
+                                        //query snapshot will appear as undefined due to object parameters
+                                }
+                            }
+                        })
+                }
             }}
         >
 
@@ -80,13 +86,13 @@ const CreateProductForm = () => {
                         <Form.Label htmlFor="productName">Product Name<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="productName" {...formik.getFieldProps('productName')} />
                         {formik.touched.productName && formik.errors.productName ? (
-                            <div>{formik.errors.productName}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.productName}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="productImageURL">Image URL<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="productImageURL" {...formik.getFieldProps('productImageURL')} />
                         {formik.touched.productImageURL && formik.errors.productImageURL ? (
-                            <div>{formik.errors.productImageURL}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.productImageURL}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -94,7 +100,7 @@ const CreateProductForm = () => {
                         <Form.Label htmlFor="productDescription">Product Description<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="productDescription" as="textarea" rows="2" {...formik.getFieldProps('productDescription')} />
                         {formik.touched.productDescription && formik.errors.productDescription ? (
-                            <div>{formik.errors.productDescription}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.productDescription}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -102,13 +108,13 @@ const CreateProductForm = () => {
                         <Form.Label htmlFor="minBid">Min Bid<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="minBid" {...formik.getFieldProps('minBid')} />
                         {formik.touched.minBid && formik.errors.minBid ? (
-                            <div>{formik.errors.minBid}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.minBid}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="maxBid">Max Bid<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="maxBid" {...formik.getFieldProps('maxBid')} />
                         {formik.touched.maxBid && formik.errors.maxBid ? (
-                            <div>{formik.errors.maxBid}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.maxBid}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>

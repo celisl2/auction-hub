@@ -31,37 +31,43 @@ const EditProductForm = (props) => {
         }}
         validationSchema={
             Yup.object({
-                productName: Yup.string().notRequired(),
+                productName: Yup.string().required('Please enter product name'),
                 productDescription: Yup.string().notRequired(),
-                productImageURL: Yup.string().notRequired(),
-                minBid: Yup.number().notRequired(),
-                maxBid: Yup.number().required('Please enter max bid'),
+                productImageURL: Yup.string().required('Please enter the product\'s image URL'),
+                minBid: Yup.number().typeError('Min bid must be a number').positive('Number must be positive').integer('Minimum bid must be an integer').required('Please enter minimum bid'),
+                maxBid: Yup.number().typeError('Max bid must be a number').positive('Number must be positive').integer('Minimum bid must be an integer').required('Please enter max bid'),
                 productPickUpInfo: Yup.string().notRequired()
             })}
 
 
         onSubmit={(values, { setSubmitting }) => {
             //props.data.auction
-            let ref = firebase.firestore()
-            .collection('AuctionEvent/' + props.data.auction + '/AuctionProduct/').doc(props.data.data.id);
+            if(values.minBid >= values.maxBid) {
+                setAdminMessage('Max bid must be greater than min bid. Please try again.');
+                setColor('danger')
+            }
+            else {
+                let ref = firebase.firestore()
+                .collection('AuctionEvent/' + props.data.auction + '/AuctionProduct/').doc(props.data.data.id);
 
-            return ref.update({
-                productName: values.productName,
-                productDescription: values.productDescription,
-                productImageURL: values.productImageURL,
-                minBid: values.minBid,
-                maxBid: values.maxBid,
-                productPickUpInfo: values.productPickUpInfo
-            
-            }).then(() => {
-                setAdminMessage('Product successfully updated');
-                setColor('success');
-            }).catch(function(error) {
-                // The document probably doesn't exist.
-                setAdminMessage('Could not update product. Please try again');
-                setColor('danger');
-                console.error("Error updating document: ", error);
-            });
+                return ref.update({
+                    productName: values.productName,
+                    productDescription: values.productDescription,
+                    productImageURL: values.productImageURL,
+                    minBid: values.minBid,
+                    maxBid: values.maxBid,
+                    productPickUpInfo: values.productPickUpInfo
+                
+                }).then(() => {
+                    setAdminMessage('Product successfully updated');
+                    setColor('success');
+                }).catch(function(error) {
+                    // The document probably doesn't exist.
+                    setAdminMessage('Could not update product. Please try again');
+                    setColor('danger');
+                    console.error("Error updating document: ", error);
+                });
+            }
             
         }}
     >
@@ -74,13 +80,13 @@ const EditProductForm = (props) => {
                         <Form.Label htmlFor="productName">Product Name</Form.Label>
                         <Form.Control name="productName" {...formik.getFieldProps('productName')} />
                         {formik.touched.productName && formik.errors.productName ? (
-                            <div>{formik.errors.productName}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.productName}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="productImageURL">Image URL</Form.Label>
                         <Form.Control name="productImageURL" {...formik.getFieldProps('productImageURL')} />
                         {formik.touched.productImageURL && formik.errors.productImageURL ? (
-                            <div>{formik.errors.productImageURL}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.productImageURL}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -88,7 +94,7 @@ const EditProductForm = (props) => {
                         <Form.Label htmlFor="productDescription">Product Description</Form.Label>
                         <Form.Control name="productDescription" as="textarea" rows="2" {...formik.getFieldProps('productDescription')} />
                         {formik.touched.productDescription && formik.errors.productDescription ? (
-                            <div>{formik.errors.productDescription}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.productDescription}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -96,13 +102,13 @@ const EditProductForm = (props) => {
                         <Form.Label htmlFor="minBid">Min Bid</Form.Label>
                         <Form.Control name="minBid" {...formik.getFieldProps('minBid')} />
                         {formik.touched.minBid && formik.errors.minBid ? (
-                            <div>{formik.errors.minBid}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.minBid}</Alert>) : null}
                     </Col>
                     <Col>
                         <Form.Label htmlFor="maxBid">Max Bid</Form.Label>
                         <Form.Control name="maxBid" {...formik.getFieldProps('maxBid')} />
                         {formik.touched.maxBid && formik.errors.maxBid ? (
-                            <div>{formik.errors.maxBid}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.maxBid}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
@@ -110,7 +116,7 @@ const EditProductForm = (props) => {
                         <Form.Label htmlFor="productPickUpInfo">Product Pick Up Information <span>{getCode(40)}optional{getCode(41)}</span></Form.Label>
                         <Form.Control name="productPickUpInfo" {...formik.getFieldProps('productPickUpInfo')} />
                         {formik.touched.productPickUpInfo && formik.errors.productPickUpInfo ? (
-                            <div>{formik.errors.productPickUpInfo}</div>) : null}
+                            <Alert variant='danger'>{formik.errors.productPickUpInfo}</Alert>) : null}
                     </Col>
                 </Row>
             </Form.Group>

@@ -1,7 +1,7 @@
 import AdminNav from '../components/AdminNav';
 import { Formik} from 'formik';
 import * as Yup from 'yup';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -20,10 +20,11 @@ import Acordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
 import Accordion from 'react-bootstrap/Accordion';
 import {deActivateEvent, activateEvent} from '../lib/activeEvent';
+import daysArr from '../utils/daySelect';
+import months from '../utils/monthSelect';
+import Alert from 'react-bootstrap/Alert';
 
 let db = loadDB();
-
-
 
 const popover = (
     <Popover id="popover-basic">
@@ -41,7 +42,11 @@ const InfoPopOver = () => (
 );
 
 const EditForm = (props) => {
+    const [userMessage, setUserMessage] = useState(null);
+
     return(
+        <div>
+        {userMessage ? <Alert variant='danger'>{userMessage}</Alert> : ''}
         <Formik
             initialValues={{
                 title: props.data.title,
@@ -72,58 +77,71 @@ const EditForm = (props) => {
             validationSchema={
                 Yup.object({
                     title: Yup.string()
-                        .notRequired(),
+                        .required('Please enter auction title'),
                     startDate: Yup.object().shape({
-                        day: Yup.number().typeError('Day must be a number between 1 and 31').min(1).max(31).notRequired(),
-                        month: Yup.number().typeError('Month must be a number between 1 and 12').min(1).max(12).notRequired(),
-                        year: Yup.number().typeError('Year must be a number greater than or equal to the current year').min(new Date().getFullYear()).notRequired(),
+                        day: Yup.string().required("Please select a day"),
+                        month: Yup.string().required("Please select a month"),
+                        year: Yup.number().typeError('Year must be a number greater than or equal to the current year').min(new Date().getFullYear()).required("Please enter a valid year")
                     }),
                     endDate: Yup.object().shape({
-                        day: Yup.number().typeError('Day must be a number between 1 and 31').min(1).max(31).notRequired(),
-                        month: Yup.number().typeError('Month must be a number between 1 and 12').min(1).max(12).notRequired(),
-                        year: Yup.number().typeError('Year must be a number greater than or equal to the current year').min(new Date().getFullYear()).notRequired(),
+                        day: Yup.string().required("Please select a day"),
+                        month: Yup.string().required("Please select a month"),
+                        year: Yup.number().typeError('Year must be a number greater than or equal to the current year').min(new Date().getFullYear()).required("Please enter a valid year")
                     }),
                     startTime: Yup.string()
-                        .notRequired(),
+                        .required('Please enter auction start time'),
                     endTime: Yup.string()
-                        .notRequired(),
+                        .required('Please enter time when auction event will end'),
                     description: Yup.string()
-                        .notRequired(),
+                        .required('Please enter auction description'),
                     imageURL: Yup.string()
                         .required('enter url'),
                     location: Yup.object().shape({
-                        addressLine1: Yup.string().notRequired(),
+                        addressLine1: Yup.string().required('enter address'),
                         addressLine2: Yup.string().notRequired(),
-                        city: Yup.string().notRequired(),
-                        state: Yup.string().notRequired(),
-                        zip: Yup.string().min(5, 'enter valid zip code number')
-                            .notRequired()
+                        city: Yup.string().required('enter city'),
+                        state: Yup.string().required('enter state'),
+                        zip: Yup.string().required('enter zip code').min(5, 'enter valid zip code number')
                     }),
-                    paymentLimitTime: Yup.string().notRequired(),
-                    pickUpInformation: Yup.string().notRequired()
+                    paymentLimitTime: Yup.string().required('Enter payment waiting period in hours'),
+                    pickUpInformation: Yup.string().required('Enter pickup information for all products in auction. This information can be overriden in the create products page.')
 
                 })}
             onSubmit={ async (values, { setSubmitting }) => {
-                setSubmitting(true);
-                try {
-                        const response = await fetch('api/createAuctionQuery', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({values})
-                        });
-
-                        if(response.ok) {
-                            console.log('response ok');
-                            const {token} = await response.json();
-                            console.log('token from front end being called. Here is info from back end -- ' + token);
-                            }
-
-                        else {
-                            console.log( response + "response not ok");
+                //setSubmitting(true);
+                let start = new Date(values.startDate.month + ' ' + values.startDate.day + ' ' + values.startDate.year + ' ' + values.startTime + ' EST');
+                let end = new Date(values.endDate.month + ' ' + values.endDate.day + ' ' + values.endDate.year  + ' ' + values.endTime + ' EST');
+                
+                
+                    if(end.getTime() < start.getTime()) {
+                        setUserMessage('End date must be greater than start date. Try again.');
+                    }
+                    else {
+                        if(end.getTime() == start.getTime()) {
+                            setUserMessage('End date must be greater than start date and not the same as start time. Try again.');
                         }
-                    } catch(error) {
-                        console.error('Your code sucks');
-                        throw new Error(error);
+                        else {
+                            try {
+                                const response = await fetch('api/createAuctionQuery', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({values})
+                                });
+
+                                if(response.ok) {
+                                    console.log('response ok');
+                                    Router.push('/auctionconfirm');
+                                }
+                                else {
+                                    console.log( response + "response not ok");
+                                    setUserMessage('Something went wrong. Try again.');
+                                }
+                            } catch(error) {
+                                console.error('Your code sucks');
+                                setUserMessage('Something went wrong. Try again in 1 minute.');
+                                throw new Error(error);
+                            }
+                        }
                     }
             }}
         >
@@ -132,123 +150,136 @@ const EditForm = (props) => {
             <Form.Group>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="title">Title</Form.Label>
+                        <Form.Label htmlFor="title">Title<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="title" {...formik.getFieldProps('title')} />
                         {formik.touched.title && formik.errors.title ? (
-                            <div>{formik.errors.title}</div>) : null}
+                            <Alert variant="danger">{formik.errors.title}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="imageURL">Image URL</Form.Label>
+                        <Form.Label htmlFor="imageURL">Image URL<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="imageURL" {...formik.getFieldProps('imageURL')} />
                         {formik.touched.imageURL && formik.errors.imageURL ? (
-                        <div>{formik.errors.imageURL}</div>) : null}
+                        <Alert variant="danger">{formik.errors.imageURL}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="description">Description</Form.Label>
+                        <Form.Label htmlFor="description">Description<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="description" as="textarea" rows="3" {...formik.getFieldProps('description')} />
                             {formik.touched.description && formik.errors.description ? (
-                                <div>{formik.errors.description}</div>) : null}
+                                <Alert variant="danger">{formik.errors.description}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="startDate">Start Date</Form.Label>
+                        <Form.Label htmlFor="startDate">Start Date<span className="req">{'*'}</span></Form.Label>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="startDate.day">Day</Form.Label>
-                        <Form.Control name="startDate.day" {...formik.getFieldProps('startDate.day')} />
+                        <Form.Label htmlFor="startDate.day">Day<span className="req">{'*'}</span></Form.Label>
+                        <Form.Control as="select" name="startDate.day" {...formik.getFieldProps('startDate.day')}>
+                            {daysArr.map((num) =>
+                                <option key={num.label.toString()} value={num.label.toString()}>{num.value}</option>
+                            )}
+                        </Form.Control>
                         {formik.touched.startDate && formik.errors.startDate ? (
-                            <div>{formik.errors.startDate.day}</div>) : null}
+                            <Alert variant="danger">{formik.errors.startDate.day}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="startDate.month">Month</Form.Label>
-                        <Form.Control name="startDate.month" {...formik.getFieldProps('startDate.month')} />
+                        <Form.Label htmlFor="startDate.month">Month<span className="req">{'*'}</span></Form.Label>
+                        <Form.Control as="select" name="startDate.month" {...formik.getFieldProps('startDate.month')}>
+                            {months.map((val) =>
+                                <option key={val.label.toString()} value={val.label.toString()}>{val.value}</option>
+                            )}
+                        </Form.Control>
                         {formik.touched.startDate && formik.errors.startDate ? (
-                            <div>{formik.errors.startDate.month}</div>) : null}
+                            <Alert variant="danger">{formik.errors.startDate.month}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="startDate.year">Year</Form.Label>
+                        <Form.Label htmlFor="startDate.year">Year<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="startDate.year" {...formik.getFieldProps('startDate.year')} />
                         {formik.touched.startDate && formik.errors.startDate ? (
-                            <div>{formik.errors.startDate.year}</div>) : null}
+                            <Alert variant="danger">{formik.errors.startDate.year}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="startDate">End Date</Form.Label>
+                        <Alert variant="info" className="space">
+                            Please enter an end date or end time to be greater than the start date and start time.
+                        </Alert>
+                        <Form.Label htmlFor="startDate">End Date<span className="req">{'*'}</span></Form.Label>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="endDate.day">Day</Form.Label>
-                        <Form.Control name="endDate.day" {...formik.getFieldProps('endDate.day')} />
+                        <Form.Label htmlFor="endDate.day">Day<span className="req">{'*'}</span></Form.Label>
+                        <Form.Control as="select" name="endDate.day" {...formik.getFieldProps('endDate.day')} >
+                            {daysArr.map((num) =>
+                                <option key={num.label.toString()} value={num.label.toString()}>{num.value}</option>
+                            )}
+                        </Form.Control>
                         {formik.touched.endDate && formik.errors.endDate ? (
-                            <div>{formik.errors.endDate.day}</div>) : null}
+                            <Alert variant="danger">{formik.errors.endDate.day}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="endDate.month">Month</Form.Label>
-                        <Form.Control name="endDate.month" {...formik.getFieldProps('endDate.month')} />
+                        <Form.Label htmlFor="endDate.month">Month<span className="req">{'*'}</span></Form.Label>
+                        <Form.Control as="select" name="endDate.month" {...formik.getFieldProps('endDate.month')}>
+                            {months.map((val) =>
+                                <option key={val.label.toString()} value={val.label.toString()}>{val.value}</option>
+                            )}
+                        </Form.Control>
                         {formik.touched.endDate && formik.errors.startDate ? (
-                            <div>{formik.errors.endDate.month}</div>) : null}
+                            <Alert variant="danger">{formik.errors.endDate.month}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="endDate.year">Year</Form.Label>
+                        <Form.Label htmlFor="endDate.year">Year<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="endDate.year" {...formik.getFieldProps('endDate.year')} />
                         {formik.touched.endDate && formik.errors.endDate ? (
-                            <div>{formik.errors.endDate.year}</div>) : null}
+                            <Alert variant="danger">{formik.errors.endDate.year}</Alert>) : null}
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="startTime">Start Time</Form.Label>
+                        <Form.Label htmlFor="startTime">Start Time<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="startTime" {...formik.getFieldProps('startTime')} type="time"/>
                         {formik.touched.startTime && formik.errors.startTime ? (
-                        <div>{formik.errors.startTime}</div>) : null}
+                        <Alert variant="danger">{formik.errors.startTime}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="endTime">End Time</Form.Label>
+                        <Form.Label htmlFor="endTime">End Time<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="endTime" {...formik.getFieldProps('endTime')} type="time"/>
                         {formik.touched.endTime && formik.errors.endTime ? (
-                        <div>{formik.errors.endTime}</div>) : null}
+                        <Alert variant="danger">{formik.errors.endTime}</Alert>) : null}
                     </Col>
                 </Row>
 
 
-                <Form.Label htmlFor="location.addressLine1">Address</Form.Label>
+                <Form.Label htmlFor="location.addressLine1">Address<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.addressLine1" {...formik.getFieldProps('location.addressLine1')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.addressLine1}</div>) : null}
+                        <Alert variant="danger">{formik.errors.location.addressLine1}</Alert>) : null}
 
                 <Form.Label htmlFor="location.addressLine2">Appartment{getCode(44)} suite{getCode(44)} etc{getCode(46)}</Form.Label>
                 <Form.Control name="location.addressLine2" {...formik.getFieldProps('location.addressLine2')} />
-                {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.addressLine2}</div>) : null}
+               
 
-                <Form.Label htmlFor="location.city">City</Form.Label>
+                <Form.Label htmlFor="location.city">City<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.city" {...formik.getFieldProps('location.city')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.city}</div>) : null}
+                        <Alert variant="danger">{formik.errors.location.city}</Alert>) : null}
 
-                <Form.Label htmlFor="location.state">State</Form.Label>
+                <Form.Label htmlFor="location.state">State<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.state" {...formik.getFieldProps('location.state')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.state}</div>) : null}
-                <Form.Label htmlFor="location.zip">Zip Code</Form.Label>
+                        <Alert variant="danger">{formik.errors.location.state}</Alert>) : null}
+                <Form.Label htmlFor="location.zip">Zip Code<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.zip" {...formik.getFieldProps('location.zip')} />
                 {formik.touched.location && formik.errors.location ? (
-                        <div>{formik.errors.location.zip}</div>) : null}
+                        <Alert variant="danger">{formik.errors.location.zip}</Alert>) : null}
                 <Row>
                     <Col>
-                        <Form.Label htmlFor="paymentLimitTime">Payment Time Limit</Form.Label>
-                        {/**
-                        <Form.Control name="paymentLimitTime" {...formik.getFieldProps('paymentLimitTime')} />
-                        {formik.touched.paymentLimitTime && formik.errors.paymentLimitTime ? (
-                        <div>{formik.errors.paymentLimitTime}</div>) : null}
-                         */}
+                        <Form.Label htmlFor="paymentLimitTime">Payment Time Limit<span className="req">{'*'}</span></Form.Label>
                         <InfoPopOver />
                         <Form.Control as="select" name="paymentLimitTime" {...formik.getFieldProps('paymentLimitTime')}>
                             <option></option>
@@ -257,13 +288,13 @@ const EditForm = (props) => {
                             <option value="72">72 Hours</option>
                         </Form.Control>
                         {formik.touched.paymentLimitTime && formik.errors.paymentLimitTime ? (
-                        <div>{formik.errors.paymentLimitTime}</div>) : null}
+                        <Alert variant="danger">{formik.errors.paymentLimitTime}</Alert>) : null}
                     </Col>
                     <Col>
-                        <Form.Label htmlFor="pickUpInformation">Pick Up Information</Form.Label>
+                        <Form.Label htmlFor="pickUpInformation">Pick Up Information<span className="req">{'*'}</span></Form.Label>
                         <Form.Control name="pickUpInformation" {...formik.getFieldProps('pickUpInformation')} />
                         {formik.touched.pickUpInformation && formik.errors.pickUpInformation ? (
-                        <div>{formik.errors.pickUpInformation}</div>) : null}
+                        <Alert variant="danger">{formik.errors.pickUpInformation}</Alert>) : null}
                     </Col>
                 </Row>
             </Form.Group>
@@ -271,7 +302,7 @@ const EditForm = (props) => {
 
             </Form>
             )}
-        </Formik>
+        </Formik></div>
     );
 }
 
@@ -282,7 +313,7 @@ const Auction = (props) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    console.log(props)
+    //console.log(props)
     return(
         <div>
             <Row className="space">
@@ -347,16 +378,18 @@ const ActiveAuctionButton = (props) => {
         .onSnapshot( (snapshot) => {
             if(snapshot.get('isActive')) {
                 setActiveID(props.data);
-                setAdminMessage('Auction event active');
             }
 
         });
         return () => { unsubscribe() };
-    }, [db] );
+    }, [db, adminMessage] );
 
     const showActiveMessage = (id) => {
         if(id == props.data) {
-            return <p>{adminMessage}</p>
+            if(adminMessage)
+                return <Alert className='space' variant='info'>{adminMessage}</Alert>
+            else
+                return
         }
     };
 
@@ -383,6 +416,7 @@ const ActiveAuctionButton = (props) => {
                             } else {
                                 //unset old event and set new event as active
                                 deActivateEvent(querySnapshot.docs[0].id);
+                                //setAdminMessage(null);
                                 activateEvent(props.data);
                             }
                         }
@@ -411,6 +445,7 @@ const ActiveAuctionButton = (props) => {
 
 const RTCurrentAuction = () => {
     const [auctionEventData, setAuctionEventData] = useState([]);
+    const [activeEvent, setActiveEvent] = useState(null);
 
     useEffect( () => {
         console.log("Attempt Update");
@@ -422,24 +457,27 @@ const RTCurrentAuction = () => {
                     let arrAuctionData = [];
                     snapshot.forEach( (doc) => {
                         arrAuctionData.push({id: doc.id, ...doc.data()});
+                        if(doc.get('isActive')) {
+                            setActiveEvent(doc.id);
+                        }
                     });
                     setAuctionEventData(arrAuctionData);
+                    
 
                 }
             });
             return () => { unsubscribe() };
-    }, [db] );
+    }, [db, activeEvent] );
 
     if (auctionEventData && auctionEventData.length) {
         return (
             <div>
                 {auctionEventData.map(function (event) {
-                    { /*console.log("Event " + event.id + " => " + JSON.stringify(event, null, 4)) console.log("has data prop");*/}
                     return (
                         <ListGroup as="ul" key={event.id}>
-                            {console.log(event.data)}
                             <ListGroup.Item>
                                 <h3>Auction: {event.values['title']}</h3>
+                                {event.id == activeEvent ? <Alert variant='info'>Active Auction Event</Alert> : ''}
                                 <Acordion defaultActiveKey="0">
                                     <Card>
                                         <Card.Header>

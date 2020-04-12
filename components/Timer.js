@@ -31,7 +31,7 @@ function CountdownTimer(props) {
         }, 1000);
     });
 
-    let timeFormat = 'DD/MM/YYYY @ h:mm A'
+    let timeFormat = 'MM/DD/YYYY @ h:mm A'
     let time = moment(new Date(startTime)).format(timeFormat);
     
     if(new Date(startTime) !== new Date()) {

@@ -37,8 +37,11 @@ const InfoPopOver = () => (
 );
 
 const CreateAuctionForm = () => {
+    const [userMessage, setUserMessage] = useState(null);
 
     return(
+        <div>
+        {userMessage ? <Alert variant='danger'>{userMessage}</Alert> : ''}
         <Formik
             initialValues={{
                 title: '',
@@ -100,29 +103,41 @@ const CreateAuctionForm = () => {
 
                 })}
             onSubmit={ async (values, { setSubmitting }) => {
-                setSubmitting(true);
-                try {
-                        const response = await fetch('api/createAuctionQuery', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({values})
-                        });
-
-                        if(response.ok) {
-                            console.log('response ok');
-                            const {token} = await response.json();
-                            console.log('token from front end being called. Here is info from back end -- ' + token);
-                            }
-
-                        else {
-                            console.log( response + "response not ok");
-                        }
-                    } catch(error) {
-                        console.error('Your code sucks');
-                        throw new Error(error);
+                //setSubmitting(true);
+                let start = new Date(values.startDate.month + ' ' + values.startDate.day + ' ' + values.startDate.year + ' ' + values.startTime + ' EST');
+                let end = new Date(values.endDate.month + ' ' + values.endDate.day + ' ' + values.endDate.year  + ' ' + values.endTime + ' EST');
+                
+                
+                    if(end.getTime() < start.getTime()) {
+                        setUserMessage('End date must be greater than start date. Try again.');
                     }
-                    Router.push('/auctionconfirm');
+                    else {
+                        if(end.getTime() == start.getTime()) {
+                            setUserMessage('End date must be greater than start date and not the same as start time. Try again.');
+                        }
+                        else {
+                            try {
+                                const response = await fetch('api/createAuctionQuery', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({values})
+                                });
 
+                                if(response.ok) {
+                                    console.log('response ok');
+                                    Router.push('/auctionconfirm');
+                                }
+                                else {
+                                    console.log( response + "response not ok");
+                                    setUserMessage('Something went wrong. Try again.');
+                                }
+                            } catch(error) {
+                                console.error('Your code sucks');
+                                setUserMessage('Something went wrong. Try again in 1 minute.');
+                                throw new Error(error);
+                            }
+                        }
+                    }
             }}
         >
             {formik => (
@@ -282,7 +297,7 @@ const CreateAuctionForm = () => {
 
             </Form>
             )}
-        </Formik>
+        </Formik></div>
     );
 };
 
