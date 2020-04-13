@@ -1,11 +1,11 @@
-// /////////////////////////////////////////////////////////
-//    
+/* /////////////////////////////////////////////////////////
+//
 //    Filename:   createAuctiontQuery.js
 //    Programmer: Robert Ashley
 //    Created:    24 Feb 2020
-//    Updated:    
+//    Updated:
 //
-// /////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////// */
 
 
 
@@ -34,9 +34,13 @@ function createAuctionEvent (EventData) {
 
 }
 */
+
+//Pricess POST Data
 export default (req, res) => {
     if(req.method === 'POST') {
         ///console.log(req.body)
+
+        //access EventData
         let EventData = req.body;
         loadDB()
         .firestore()
@@ -45,11 +49,15 @@ export default (req, res) => {
         .then( (results) => {
             //console.log("DEBUG:: Auction event creation successful: Auction ID " + results.id);
             //alert("DEBUG:: Auction event creation successful: Auction ID " + results.id)
+
+            //Tiemout code for response
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json({token: true});
             //return results;
         })
+
+        //catch error if auction event could not be created.
         .catch( (error) => {
             //alert("DEBUG:: Auction event creation unsuccessful\nError: " + error.code + " : " + error.message);
             console.error("Auction event creation unsuccessful\nError: " + error.code + " : " + error.message)

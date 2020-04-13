@@ -1,10 +1,10 @@
-/*
+/* /////////////////////////////////////////////////////////
 
 File Name: admin_registration.js
 Purpose: Creates the form for registering an Admin account
 Document Created By: Team 1
 
-*/
+///////////////////////////////////////////////////////// */ 
 
 import ImageHeader from '../components/ImageHeader';
 import {getCode} from '../utils/helperFunctions';

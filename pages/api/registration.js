@@ -1,3 +1,11 @@
+/* /////////////////////////////////////////////////////////
+//
+// File Name: registration.js
+// Purpose: Process the form data from the registration page.
+// Document Created By: Laura Celis, Andy Estes, Nolan Worthy
+//
+///////////////////////////////////////////////////////// */
+
 import {loadDB} from '../../lib/db';
 let firebase = loadDB();
 import "firebase/auth";
@@ -12,9 +20,8 @@ export default (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
         let token = null;
-        //do something
 
-        //create account to firebase
+  //firebase command to create a user with credentials and process data.
   firebase.auth().createUserWithEmailAndPassword(email, password)
   .then(cred => {
     cred.user.getIdToken().then(idToken => {
@@ -25,6 +32,7 @@ export default (req, res) => {
         isAdmin: req.body.isAdmin
       });
 
+//Build the token data.
       if(idToken) {
         Cookies.set('ssid', Date.now());
       }
@@ -32,23 +40,28 @@ export default (req, res) => {
   });
 })
 
+//Error catching
 .catch((error)=> {
   console.log(error.code);
   console.log(error.message);
 });
 
-
+//Firebase command that checks if a user exists. If they do, then it was
+//sucessfuly created. Sends the console a notification. User notifications
+//Are handled in the registration page.
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 user.sendEmailVerification();
                 console.log("Sent Email Verification.");
             }
 
+//If email did not send.
             else {
               console.log("Email Not sent.");
             }
         });
 
+//Timeout for response time.
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ token: "user added"}));

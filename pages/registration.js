@@ -1,10 +1,10 @@
-/*
+/* /////////////////////////////////////////////////////////
 
 File Name: registration.js
 Purpose: Builds the form for registering any user.
 Document Created By: Team 1
 
-*/
+///////////////////////////////////////////////////////// */
 
 import ImageHeader from '../components/ImageHeader';
 import {getCode} from '../utils/helperFunctions';

@@ -1,22 +1,23 @@
-// /////////////////////////////////////////////////////////
-//    
+/* /////////////////////////////////////////////////////////
+//
 //    Filename:   getAuctionProducts.js
 //    Programmer: Robert Ashley
 //    Created:    17 Feb 2020
-//    Updated:    
+//    Updated:    4 April 2020
 //
-// /////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////// */
 
 import loadDB from '../../lib/db';
 import React, { useState, useEffect } from 'react';
 
+//Get the auction products using states
 function useAuctionProducts() {
     const [auctionProducts, setAuctionProducts] = useState([])
 
     console.log("Start of useAuctionProduct.");
 
     useEffect( () => {
-        
+
         loadDB()
             .firestore()
             .collection('AuctionEvent/vOwsw3o6VFijgeOEDKXM/AuctionProduct')
@@ -35,7 +36,7 @@ function useAuctionProducts() {
     return auctionProducts;
 }
 
-
+//Displays the list of products from the active auction database.
 const auctionProductList = () => {
     const prods = useAuctionProducts()
 
@@ -43,10 +44,10 @@ const auctionProductList = () => {
        <div>
             <h1>Products</h1>
             <ul>
-                {prods.map( (prod) => 
+                {prods.map( (prod) =>
                     <li key={prod.id}>
                         <h3>{prod.name}</h3>
-                        <img data-src={prod.image} alt="ImageGoesHere" /> 
+                        <img data-src={prod.image} alt="ImageGoesHere" />
                         <br/> ImageURL: {prod.image}
                         <br/><b>Description:</b> {prod.description}
                         <br/><b>MinBid:</b> ${prod.bid} <br/><b>Buyout</b>: ${prod.buyoutPrice}

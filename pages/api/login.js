@@ -1,3 +1,12 @@
+/* /////////////////////////////////////////////////////////
+//
+//    Filename:   login.js
+//    Programmer: Nolan Wlorthy
+//    Created:    17 Feb 2020
+//    Updated:    4 April 2020
+//
+///////////////////////////////////////////////////////// */
+
 import {loadDB} from '../../lib/db';
 let firebase = loadDB();
 import "firebase/auth";
@@ -13,6 +22,8 @@ export default (req, res) => {
                 Cookies.set('ssid', Date.now());
                 console.log('logged in fine from firebase')
             })
+
+            //catch errors when logging in.
             .catch((error) => {
                 let errorCode = error.code;
                     if(errorCode == 'invalid-email') {
@@ -29,9 +40,10 @@ export default (req, res) => {
             });
 
 
-    
+            //If the user signed in sucessfully
             console.log('I GUESS SIGNED IN FINE LOL ' + Cookies.get('ssid'));
 
+            //Timeout code for response
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.end();
