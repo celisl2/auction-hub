@@ -1,3 +1,9 @@
+/*
+File Name: reports.js
+Purpose: Displays data for auction events
+Document Created By: Team 1
+*/
+
 import AdminNav from '../components/AdminNav';
 import Footer from '../components/Footer';
 import {getCode} from '../utils/helperFunctions';
@@ -8,11 +14,12 @@ const Table = () => {
 
     return (
         <div>
-            
+
         </div>
     )
 }
 
+//Navigation and Page design.
 const ReportsPage = () => {
     return (
         <div className="report-body">
@@ -22,7 +29,7 @@ const ReportsPage = () => {
             <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
         </div>
     )
-    
+
 }
 
 export default ReportsPage;

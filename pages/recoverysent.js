@@ -1,3 +1,11 @@
+/*
+
+File Name: recoverysent.js
+Purpose: Confirms to the user that a recovery email was sent.
+Document Created By: Team 1
+
+*/
+
 import Navigation from '../components/Navigation';
 import CurrentAuction from '../components/CurrentAuction';
 import HomeProducts from '../components/HomeProducts';
@@ -14,8 +22,10 @@ import ImageHeader from '../components/ImageHeader';
 import Container from 'react-bootstrap/Container';
 import Footer from '../components/Footer';
 
-//This class renders a react component based on if the user is logged in or not
-//Here's the tutorial i found this from https://medium.com/@650egor/react-30-day-challenge-day-3-firebase-user-authentication-879e484e5934
+
+//Renders the page setup.
+//The <h3> header informs the user that an email was sent.
+
 let Recovery = () =>
 <div className="login-body">
     <Head>

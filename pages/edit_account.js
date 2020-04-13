@@ -1,3 +1,11 @@
+/*
+
+File Name: edit_account.js
+Purpose: A work in progress for editing account information for a user.
+Document Created By: Team 1
+
+*/
+
 import ImageHeader from '../components/ImageHeader';
 import {getCode} from '../utils/helperFunctions';
 import Container from 'react-bootstrap/Container';
@@ -13,47 +21,42 @@ let firebase = loadDB();
 
 const DataContext = React.createContext([]);
 
+/*
+Function: EditUserForm
+Purpose: Creates the form for a user to edit their information.
+*/
 const EditUserForm = (props) => {
 console.log(props);
     return (
         props.data ?
         <>
         <Formik
+
+        //Build the form.
             initialValues={{
                 firstName: props.data.currentFirstName,
                 lastName: props.data.currentLastName,
                 phone: props.data.currentEmail
             }}
+
+            //Builds the validation for entering information.
             validationSchema={
                 Yup.object({
                     firstName: Yup.string().required('Required'),
                     lastName: Yup.string().required('Required'),
                     phone: Yup.string().required('Required')
                 })}
+
+                //Submit the data to process.
                 onSubmit={ async (values, {setSubmitting}) => {
                     console.log("submitted");
                     const fName = values.firstName;
                     const lName = values.lastName;
                     const phone = values.phone;
 
+
+                    //Attempt to process firebase command.
                     try {
-                        // const response = await fetch('api/registration', {
-                        //     method: 'POST',
-                        //     headers: { 'Content-Type': 'application/json' },
-                        //     body: JSON.stringify({ email: email, password: pssw, firstName: fName, lastName: lName, phone: phone, isAdmin: "false" })
-                        // });
-                        //
-                        // if(response.ok) {
-                        //     console.log('response ok');
-                        //     const {token} = await response.json();
-                        //     console.log('token from front end being called. Here is info from back end -- ' + token);
-                        //         console.log('Email verification has been sent.');
-                        //         Router.push('/login');
-                        //         }
-                        //
-                        // else {
-                        //     console.log( response + "response not ok");
-                        //
                         firebase.auth().onAuthStateChanged((user) => {
                             firebase.firestore()
                                 .collection("/Users")
@@ -70,7 +73,7 @@ console.log(props);
                                 });
                         });
 
-
+                    //If an error occurs throw it in the console.
                     } catch(error) {
                         console.error('Your code sucks');
                         throw new Error(error);
@@ -117,61 +120,15 @@ console.log(props);
     );
 };
 
+
+//Render the form using the function
 const EditAccount = () => {
-/*
-    const [currentData, setCurrentData] = useState(
-        () => {
-            var data = {};
-            firebase.auth().onAuthStateChanged((user) => {
-                 firebase.firestore()
-                     .collection("/Users")
-                     .doc(user.uid)
-                     .get()
-                     .then((querySnapshot) => {
-                         data = {
-                             currentFirstName: querySnapshot.data().firstName,
-                             currentLastName: querySnapshot.data().lastName,
-                             currentPhone: querySnapshot.data().phone
-                         };
 
-                         console.log(currentData.currentFirstName);
-                     });
-             });
-             return data;
-             console.log(currentData.currentFirstName);
-        }
-    );
-*/
-/*
-    setCurrentData({
-        currentFirstName: "initial",
-        currentLastName: "val",
-        currentPhone: "here"
-    });
-*/
-/*
-    useEffect( () => {
-        firebase.auth().onAuthStateChanged((user) => {
-             firebase.firestore()
-                 .collection("/Users")
-                 .doc(user.uid)
-                 .get()
-                 .then((querySnapshot) => {
-                     setCurrentData({
-                         currentFirstName: querySnapshot.data().firstName,
-                         currentLastName: querySnapshot.data().lastName,
-                         currentPhone: querySnapshot.data().phone
-                     });
-
-                     console.log(currentData.currentFirstName);
-                 });
-         });
-         console.log(currentData.currentFirstName);
-    }, [firebase] );
-*/
     const [currentUserData, setCurrentUserData] = useContext(DataContext);
 
     var data = [];
+
+    //Check if user is signed in then access their information from the database.
     firebase.auth().onAuthStateChanged((user) => {
          firebase.firestore()
              .collection("/Users")
@@ -191,6 +148,7 @@ const EditAccount = () => {
      return data;
      console.log(currentUserData.currentFirstName);
 
+//Render the webpage..
      return (
          <DataContext.Provider value={[currentUserData, setCurrentUserData]}>
             <div className="edit-account-body">

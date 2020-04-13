@@ -13,20 +13,26 @@ import * as Yup from 'yup';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import {ChevronDown, MoreHorizontal} from 'react-feather';
-
 import {loadDB} from '../lib/db';
 let firebase = loadDB();
 import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
 import Footer from '../components/Footer';
 
+
+/*
+Function: VerifyForm
+Purpose: Creates the form for a user to enter an unverified email.
+*/
+
 const VerifyForm = () => {
     return (
         <Formik
             initialValues={{
                 email: '',
-                password: ''
             }}
+
+            //Builds the validation for entering an email address.
             validationSchema={
                 Yup.object({
                     email: Yup.string()
@@ -34,20 +40,27 @@ const VerifyForm = () => {
                         .email('Invalid Email'),
                 })}
 
+                //Submit the data to process.
                 onSubmit={ async (values, {setSubmitting}) => {
                 setSubmitting(true)
 
+                //Checks if user exists and is verified.
                     try {
                     firebase.auth().onAuthStateChanged(function(user) {
                         user.sendEmailVerification();
+
+                        //push user to home page if they are verified.
                         if (user.emailVerified) {
                           console.log('Email is verified');
                           return Router.push('/index');
                         }
+
+                        //Sends verification info to the console. Need to route to confirm page.
                         console.log('Sent email verification');
                         Router.push('/login');
                         });
 
+                    //Catches errors
                     } catch(error) {
                         console.error('An unknown error has occurred.');
                         throw new Error(error);
@@ -61,8 +74,6 @@ const VerifyForm = () => {
                     <Form.Control name="email" {...formik.getFieldProps('email')} />
                         {formik.touched.email && formik.errors.email ? (
                             <div>{formik.errors.email}</div>) : null}
-                        {formik.touched.password && formik.errors.password ? (
-                            <div>{formik.errors.password}</div>) : null}
                     <button className="btn space smallScreen customer-button" type="submit">Submit</button>
                 </Form.Group>
 
@@ -72,6 +83,8 @@ const VerifyForm = () => {
     );
 };
 
+
+//Render the Page layout.
 let Recovery = () =>
     <div className="login-body">
         <Head>

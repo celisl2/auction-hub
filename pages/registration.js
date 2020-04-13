@@ -1,3 +1,9 @@
+/*
+File Name: registration.js
+Purpose: Builds the form for registering any user.
+Document Created By: Team 1
+*/
+
 import ImageHeader from '../components/ImageHeader';
 import {getCode} from '../utils/helperFunctions';
 import Container from 'react-bootstrap/Container';
@@ -7,6 +13,11 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Router from 'next/router';
 import Alert from 'react-bootstrap/Alert';
+
+/*
+Function: CustomerRegistration
+Purpose: Creates the registration form using formik.
+*/
 
 const CustomerRegistration = () => {
     return (
@@ -19,6 +30,8 @@ const CustomerRegistration = () => {
                 password: '',
                 passwordConfirm: '',
             }}
+
+            //Builds the validation for entering an email address.
             validationSchema={
                 Yup.object({
                     firstName: Yup.string().required('Required'),
@@ -30,6 +43,8 @@ const CustomerRegistration = () => {
                     passwordConfirm: Yup.string().required('Required')
                         .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
+
+                //Submit the data to process.
                 onSubmit={ async (values, {setSubmitting}) => {
                     const email = values.email;
                     const pssw = values.password;
@@ -37,6 +52,7 @@ const CustomerRegistration = () => {
                     const lName = values.lastName;
                     const phone = values.phone;
 
+                    //Attempt to send data to API to process
                     try {
                         const response = await fetch('api/registration', {
                             method: 'POST',
@@ -44,6 +60,8 @@ const CustomerRegistration = () => {
                             body: JSON.stringify({ email: email, password: pssw, firstName: fName, lastName: lName, phone: phone, isAdmin: "false" })
                         });
 
+                        // If sucessful, route user to confirm
+                        // and send the data to the console.
                         if(response.ok) {
                             console.log('response ok');
                             const {token} = await response.json();
@@ -52,9 +70,12 @@ const CustomerRegistration = () => {
                                 Router.push('/confirmregister');
                                 }
 
+                        //If the response failed.
                         else {
                             console.log( response + "response not ok");
                         }
+
+                        //If an unknown error has occurred.
                     } catch(error) {
                         console.error('Your code sucks');
                         throw new Error(error);
@@ -87,7 +108,7 @@ const CustomerRegistration = () => {
 
                     <Form.Label htmlFor="password">Password</Form.Label>
                     {/*<Form.Control name="password" {...formik.getFieldProps('password')} />*/}
-                    <Form.Control 
+                    <Form.Control
                         name="password" {...formik.getFieldProps('password')}
                         type="password"
                     />
@@ -115,6 +136,7 @@ const CustomerRegistration = () => {
     );
 };
 
+//Builds the Website rendering.
 const Registration = () =>
     <div className="registration-body">
         <ImageHeader />

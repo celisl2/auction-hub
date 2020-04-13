@@ -1,3 +1,9 @@
+/*
+File Name: recovery.js
+Purpose: Displays the information needed to sent a password recovery.
+Document Created By: Team 1
+*/
+
 import {getCode} from '../utils/helperFunctions';
 import ImageHeader from '../components/ImageHeader';
 import Container from 'react-bootstrap/Container';
@@ -12,13 +18,20 @@ import Head from 'next/head';
 import Router from 'next/router';
 import Link from 'next/link'
 
-const LogInForm = () => {
+
+/*
+Function: RecoveryForm
+Purpose: Builds the form for a user to input an email address.
+*/
+
+const RecoveryForm = () => {
     return (
         <Formik
             initialValues={{
                 email: '',
-                password: ''
             }}
+
+            //Builds the validation for entering an email address.
             validationSchema={
                 Yup.object({
                     email: Yup.string()
@@ -26,17 +39,22 @@ const LogInForm = () => {
                         .email('Invalid Email'),
                 })}
 
+                //Submit the data to process.
                 onSubmit={ async (values, {setSubmitting}) => {
                 setSubmitting(true)
 
                     const email = values.email
 
                     try {
+                      //Attempt Firebase command
                         firebase.auth().sendPasswordResetEmail(email)
                             .then(() => {
+                              //Send to console and route user to confirmation.
                                 console.log('Sent recovery password to email')
                                 Router.push('/recoverysent');
                             })
+
+                            //Handle Errors
                             .catch((error) => {
                                 let errorCode = error.code;
                                     if(errorCode == 'invalid-email') {
@@ -49,7 +67,7 @@ const LogInForm = () => {
                                         console.log(error);
                                     }
                             });
-
+                    //Throw error if above handling does not work.
                     } catch(error) {
                         console.error('An unknown error has occurred.');
                         throw new Error(error);
@@ -62,8 +80,6 @@ const LogInForm = () => {
                 <input name="email" {...formik.getFieldProps('email')} />
                     {formik.touched.email && formik.errors.email ? (
                         <div>{formik.errors.email}</div>) : null}
-                    {formik.touched.password && formik.errors.password ? (
-                        <div>{formik.errors.password}</div>) : null}
                         <div className="text-center space"></div>
                         <button className="btn customer-button" type="submit">Submit</button>
             </form>
@@ -72,6 +88,7 @@ const LogInForm = () => {
     );
 };
 
+//Renders the page
 let Recovery = () =>
 <div className="login-body">
     <Head>
@@ -83,12 +100,12 @@ let Recovery = () =>
             <h3 className="text-center mx-auto login-header">Recover Password</h3>
         <div className="mx-auto login-form">
         <h5>Enter your email address below to send a recovery email to your specified address.</h5>
-            <LogInForm />
+            <RecoveryForm />
         </div>
         <div className="login-register-recovery">
             <p className="login-special">Not registered yet{getCode(63)}</p>
             <div className='line'></div>
-            {/** need on click for the buttons below */}
+            {/* On click can be added as needed.*/}
             <Link href="/registration">
                 <a className="card">Register</a>
             </Link>
