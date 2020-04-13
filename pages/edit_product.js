@@ -17,6 +17,7 @@ import ProductsList from '../components/ProductsList';
 
 let db = loadDB();
 
+//Handles how the states are set for handling editing auctions.
 let EditProducts = () => {
     const [auctionID, setAuctionId] = useState(null);
     const [show, setShow] = useState(true);
@@ -25,6 +26,7 @@ let EditProducts = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+//Pulls the active auction information.
     useEffect( () => {
         const unsubscribe = db
             .firestore()
@@ -36,6 +38,7 @@ let EditProducts = () => {
             return () => { unsubscribe() };
     }, [db] );
 
+//Checks admin account.
     useEffect( () => {
         db.auth().onAuthStateChanged((user) => {
             const unsubscribe = db
@@ -49,6 +52,8 @@ let EditProducts = () => {
         });
     }, [db] );
 
+
+//Renders page if user is an admin.
     if(currentUserIsAdmin == "true") {
         return (
             <div className="edit-auction-body">

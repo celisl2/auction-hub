@@ -1,3 +1,9 @@
+/*
+File Name: edit_auction.js
+Purpose: Displays all current auctions and allows them to be edited.
+Document Created By: Team 1
+*/
+
 import AdminNav from '../components/AdminNav';
 import { Formik} from 'formik';
 import * as Yup from 'yup';
@@ -26,6 +32,8 @@ import Alert from 'react-bootstrap/Alert';
 
 let db = loadDB();
 
+
+//Handles the data displayed for popover events.
 const popover = (
     <Popover id="popover-basic">
     <Popover.Title as="h3">Pick Up Time Limit</Popover.Title>
@@ -35,11 +43,19 @@ const popover = (
     </Popover>
 );
 
+
+//formatting for the popover events.
 const InfoPopOver = () => (
     <OverlayTrigger trigger="click" placement="right" overlay={popover}>
         <HelpCircle size="20" color="white" className="icon-format"/>
     </OverlayTrigger>
 );
+
+
+/*
+Function: EditForm
+Purpose: Creates the form for an admin to edit auction information.
+*/
 
 const EditForm = (props) => {
     const [userMessage, setUserMessage] = useState(null);
@@ -48,6 +64,7 @@ const EditForm = (props) => {
         <div>
         {userMessage ? <Alert variant='danger'>{userMessage}</Alert> : ''}
         <Formik
+        //Initial values are set to current information from database.
             initialValues={{
                 title: props.data.title,
                 startDate: {
@@ -74,6 +91,8 @@ const EditForm = (props) => {
                 paymentLimitTime: props.data.paymentLimitTime,
                 pickUpInformation: props.data.pickUpInformation
             }}
+
+            //Builds the validation for entering information.
             validationSchema={
                 Yup.object({
                     title: Yup.string()
@@ -107,12 +126,15 @@ const EditForm = (props) => {
                     pickUpInformation: Yup.string().required('Enter pickup information for all products in auction. This information can be overriden in the create products page.')
 
                 })}
+
+            //Submit the data to process.
             onSubmit={ async (values, { setSubmitting }) => {
                 //setSubmitting(true);
                 let start = new Date(values.startDate.month + ' ' + values.startDate.day + ' ' + values.startDate.year + ' ' + values.startTime + ' EST');
                 let end = new Date(values.endDate.month + ' ' + values.endDate.day + ' ' + values.endDate.year  + ' ' + values.endTime + ' EST');
-                
-                
+
+                  //Ensures product times do not overlap. If they do
+                  //Inform the user that they need to adjust start/end times.
                     if(end.getTime() < start.getTime()) {
                         setUserMessage('End date must be greater than start date. Try again.');
                     }
@@ -120,6 +142,8 @@ const EditForm = (props) => {
                         if(end.getTime() == start.getTime()) {
                             setUserMessage('End date must be greater than start date and not the same as start time. Try again.');
                         }
+
+                        //Attempt to send data to API to process
                         else {
                             try {
                                 const response = await fetch('api/createAuctionQuery', {
@@ -128,14 +152,19 @@ const EditForm = (props) => {
                                     body: JSON.stringify({values})
                                 });
 
+                                //If sucessful, push them to confirmation page
                                 if(response.ok) {
                                     console.log('response ok');
                                     Router.push('/auctionconfirm');
                                 }
+
+                                //If response was not okay or a user error occrred.
                                 else {
                                     console.log( response + "response not ok");
                                     setUserMessage('Something went wrong. Try again.');
                                 }
+
+                                //Handle unknown or unspeciifed errors.
                             } catch(error) {
                                 console.error('Your code sucks');
                                 setUserMessage('Something went wrong. Try again in 1 minute.');
@@ -143,6 +172,9 @@ const EditForm = (props) => {
                             }
                         }
                     }
+
+//The following code below is the design of the form. Due to fori, comments
+//cannot be displayed below.
             }}
         >
             {formik => (
@@ -262,7 +294,7 @@ const EditForm = (props) => {
 
                 <Form.Label htmlFor="location.addressLine2">Appartment{getCode(44)} suite{getCode(44)} etc{getCode(46)}</Form.Label>
                 <Form.Control name="location.addressLine2" {...formik.getFieldProps('location.addressLine2')} />
-               
+
 
                 <Form.Label htmlFor="location.city">City<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.city" {...formik.getFieldProps('location.city')} />
@@ -306,6 +338,8 @@ const EditForm = (props) => {
     );
 }
 
+
+//Sets use states for page.
 const Auction = (props) => {
 
     const [show, setShow] = useState(false);
@@ -314,6 +348,8 @@ const Auction = (props) => {
     const handleShow = () => setShow(true);
 
     //console.log(props)
+
+    //Render and build the page layout.
     return(
         <div>
             <Row className="space">
@@ -462,7 +498,7 @@ const RTCurrentAuction = () => {
                         }
                     });
                     setAuctionEventData(arrAuctionData);
-                    
+
 
                 }
             });

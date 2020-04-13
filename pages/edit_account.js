@@ -25,6 +25,7 @@ const DataContext = React.createContext([]);
 Function: EditUserForm
 Purpose: Creates the form for a user to edit their information.
 */
+
 const EditUserForm = (props) => {
 console.log(props);
     return (
@@ -63,6 +64,7 @@ console.log(props);
                                 .doc(user.uid)
                                 .get()
                                 .then((querySnapshot) => {
+                                  //edit account information.
                                     editUser(user.uid, {
                                         email: querySnapshot.data().email,
                                         firstName: fName,

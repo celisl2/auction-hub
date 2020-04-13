@@ -1,3 +1,11 @@
+/*
+
+File Name: create_auction.js
+Purpose: Builds the form for registering any user.
+Document Created By: Team 1
+
+*/
+
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Container from 'react-bootstrap/Container';
@@ -21,6 +29,8 @@ import Required from '../components/Required';
 import { loadDB } from '../lib/db';
 let firebase = loadDB();
 
+
+//Handles the data displayed for popover events.
 const popover = (
     <Popover id="popover-basic">
     <Popover.Title as="h3">Pick Up Time Limit</Popover.Title>
@@ -30,15 +40,22 @@ const popover = (
     </Popover>
 );
 
+//formatting for the popover events.
 const InfoPopOver = () => (
     <OverlayTrigger trigger="click" placement="right" overlay={popover}>
         <HelpCircle size="20" color="white" className="icon-format"/>
     </OverlayTrigger>
 );
 
+/*
+Function: EditForm
+Purpose: Creates the form for an admin to edit auction information.
+*/
+
 const CreateAuctionForm = () => {
     const [userMessage, setUserMessage] = useState(null);
 
+//Initial values are empty.
     return(
         <div>
         {userMessage ? <Alert variant='danger'>{userMessage}</Alert> : ''}
@@ -69,6 +86,8 @@ const CreateAuctionForm = () => {
                 paymentLimitTime: '',
                 pickUpInformation: ''
             }}
+
+            //Builds the validation for entering an email address.
             validationSchema={
                 Yup.object({
                     title: Yup.string()
@@ -102,12 +121,16 @@ const CreateAuctionForm = () => {
                     pickUpInformation: Yup.string().required('Enter pickup information for all products in auction. This information can be overriden in the create products page.')
 
                 })}
+
+            //Submit the data to process.
             onSubmit={ async (values, { setSubmitting }) => {
                 //setSubmitting(true);
+
+                //set start and end dates for item.
                 let start = new Date(values.startDate.month + ' ' + values.startDate.day + ' ' + values.startDate.year + ' ' + values.startTime + ' EST');
                 let end = new Date(values.endDate.month + ' ' + values.endDate.day + ' ' + values.endDate.year  + ' ' + values.endTime + ' EST');
-                
-                
+
+                    //check if the start and end times are valid.
                     if(end.getTime() < start.getTime()) {
                         setUserMessage('End date must be greater than start date. Try again.');
                     }
@@ -115,6 +138,8 @@ const CreateAuctionForm = () => {
                         if(end.getTime() == start.getTime()) {
                             setUserMessage('End date must be greater than start date and not the same as start time. Try again.');
                         }
+
+                        //If times are valid then process the data using the API.
                         else {
                             try {
                                 const response = await fetch('api/createAuctionQuery', {
@@ -123,14 +148,19 @@ const CreateAuctionForm = () => {
                                     body: JSON.stringify({values})
                                 });
 
+                                //If valid, push user to confirmation page.
                                 if(response.ok) {
                                     console.log('response ok');
                                     Router.push('/auctionconfirm');
                                 }
+
+                                //handle errors
                                 else {
                                     console.log( response + "response not ok");
                                     setUserMessage('Something went wrong. Try again.');
                                 }
+
+                                //handle unknown errors.
                             } catch(error) {
                                 console.error('Your code sucks');
                                 setUserMessage('Something went wrong. Try again in 1 minute.');
@@ -257,7 +287,7 @@ const CreateAuctionForm = () => {
 
                 <Form.Label htmlFor="location.addressLine2">Appartment{getCode(44)} suite{getCode(44)} etc{getCode(46)}</Form.Label>
                 <Form.Control name="location.addressLine2" {...formik.getFieldProps('location.addressLine2')} />
-               
+
 
                 <Form.Label htmlFor="location.city">City<span className="req">{'*'}</span></Form.Label>
                 <Form.Control name="location.city" {...formik.getFieldProps('location.city')} />
@@ -301,6 +331,7 @@ const CreateAuctionForm = () => {
     );
 };
 
+//Creates the use stateand checks if the usser is an admin.
 let CreateAuction = () => {
     const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState([]);
     useEffect( () => {
@@ -316,6 +347,7 @@ let CreateAuction = () => {
         });
     }, [firebase] );
 
+    //Render the Page if user is an admin.
     if(currentUserIsAdmin == "true") {
         return (
             <div className="auction-creation-body">
@@ -332,6 +364,8 @@ let CreateAuction = () => {
                 <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
             </div>
         );
+
+    //Do not render page if the the user is not an admin.
     } else if(currentUserIsAdmin == "false") {
         return (
             <HomeForbidden />

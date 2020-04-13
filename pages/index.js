@@ -1,7 +1,9 @@
 /*
+
 File Name: index.js
 Purpose: Home Page for the Application and prevents users who are not logged in.
 Document Created By: Team 1
+
 */
 
 import HomeAuth from '../components/HomeAuth';
@@ -31,16 +33,21 @@ class Home extends React.Component {
 
 //Performs a check to determine whether or not a user is verified
         firebase.auth().onAuthStateChanged((user) => {
+          //If user is verified and logged in do nothing.
             if(user) {
                 if (user.emailVerified) {
                     console.log('Email is verified');
                     //User stays on index page
                 }
+
+                //Route user to verify if their email is unverified.
                 else {
                     console.log('Email is not verified');
                     //Redirected to verify page if not verified
                     Router.push('/verify');
                 }
+
+                //Else user is routed to the login.js page.
 
                 if(this._isMounted){
                     this.setState({ user });
@@ -56,11 +63,14 @@ class Home extends React.Component {
                     .doc(user.uid)
                     .get()
                     .then((querySnapshot) => {
+                      //If admin then display admin homepage
                         if(querySnapshot.data().isAdmin == "true") {
                             this.setState({
                                 role: "admin"
                             });
                         }
+
+                        //Else display regular user homepage.
                         else {
                             this.setState({
                                 role: "user"
@@ -72,6 +82,7 @@ class Home extends React.Component {
                 if(this._isMounted)
                     this.setState(null);
 
+                //Set a timer for redirecting a user.
                 setTimeout(() => {
                     Router.push('/login');
                 }, 4000);
@@ -83,6 +94,7 @@ class Home extends React.Component {
         this._isMounted = false;
     }
 
+//Build the page
     render() {
         //we check for state since every time state is changed the render function will be called again
         if(this.state.user === 'loading') {
@@ -92,6 +104,7 @@ class Home extends React.Component {
             </Container>
             );
         }
+        //If a user is not logged in.
         else if(this.state.user === null) {
             return  (
                 <Container>
@@ -99,11 +112,15 @@ class Home extends React.Component {
                 </Container>
             );
         }
+
+        //If a user is an admin.
         else if (this.state.role == "admin") {
             return  (
                 <AdminHome />
             );
         }
+
+        //If a user is an normal user.
         else if (this.state.role == "user"){
             return  (
                 <HomeAuth />

@@ -1,7 +1,9 @@
 /*
+
 File Name: recovery.js
 Purpose: Displays the information needed to sent a password recovery.
 Document Created By: Team 1
+
 */
 
 import {getCode} from '../utils/helperFunctions';

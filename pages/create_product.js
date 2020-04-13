@@ -1,3 +1,11 @@
+/*
+
+File Name: create_product.js
+Purpose: Builds the form for creating a product.
+Document Created By: Team 1
+
+*/
+
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Button from 'react-bootstrap/Button';

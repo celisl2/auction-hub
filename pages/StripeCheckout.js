@@ -1,11 +1,19 @@
 /*
+
 File Name: StripeCheckout.js
 Purpose: A work-in-progress of the checkout system for the auction.
 Document Created By: Team 1
+
 */
 
 import React from 'react'
 import StripeCheckout from 'react-stripe-checkout';
+
+
+/*
+Function: TakeMoney
+Purpose: Processes the information. Will need to be live in order to take funds.
+*/
 
 export default class TakeMoney extends React.Component {
   onToken = (token) => {
@@ -20,8 +28,7 @@ export default class TakeMoney extends React.Component {
     });
   }
 
-  // Render content
-
+  // Renders content based on Stripe commands and featires.
   render() {
     return (
       // ...

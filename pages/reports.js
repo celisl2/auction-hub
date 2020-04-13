@@ -1,7 +1,9 @@
 /*
+
 File Name: reports.js
 Purpose: Displays data for auction events
 Document Created By: Team 1
+
 */
 
 import AdminNav from '../components/AdminNav';

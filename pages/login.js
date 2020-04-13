@@ -1,7 +1,9 @@
 /*
-File Name: logins.js
+
+File Name: login.js
 Purpose: Creates a Log In form for users and admins to log in with.
 Document Created By: Team 1
+
 */
 
 import {getCode} from '../utils/helperFunctions';
@@ -20,13 +22,22 @@ import Form from 'react-bootstrap/Form';
 import Footer from '../components/Footer';
 import Alert from 'react-bootstrap/Alert';
 
+
+/*
+Function: LognForm
+Purpose: Creates the login form using formik.
+*/
 const LogInForm = () => {
     return (
         <Formik
+
+        //Initial Null entries
             initialValues={{
                 email: '',
                 password: ''
             }}
+
+            //Builds the validation for entering information.
             validationSchema={
                 Yup.object({
                     email: Yup.string()
@@ -36,18 +47,23 @@ const LogInForm = () => {
                         .required('Please enter password')
                 })}
 
+                //Submit the data to process.
                 onSubmit={ async (values, {setSubmitting}) => {
                 setSubmitting(true)
 
                     const email = values.email
                     const pssw = values.password
 
+                    //Attempt Firebase command
                     try {
                         firebase.auth().signInWithEmailAndPassword(email, pssw)
                             .then(() => {
+                              //If sucessful route user to index page.
                                 console.log('logged in fine from firebase')
                                 Router.push('/index');
                             })
+
+                            //Handle Errors
                             .catch((error) => {
                                 let errorCode = error.code;
                                     if(errorCode == 'invalid-email') {
@@ -63,6 +79,7 @@ const LogInForm = () => {
                                     }
                             });
 
+                    //Catch for an unspecified error.
                     } catch(error) {
                         console.error('yout code sucks');
                         throw new Error(error);
@@ -89,6 +106,8 @@ const LogInForm = () => {
     );
 };
 
+
+//Builds and Renders the page.
 let Login = () =>
     <div className="login-body">
         <Head>

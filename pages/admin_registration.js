@@ -1,3 +1,11 @@
+/*
+
+File Name: admin_registration.js
+Purpose: Creates the form for registering an Admin account
+Document Created By: Team 1
+
+*/
+
 import ImageHeader from '../components/ImageHeader';
 import {getCode} from '../utils/helperFunctions';
 import Container from 'react-bootstrap/Container';
@@ -8,9 +16,15 @@ import * as Yup from 'yup';
 import Router from 'next/router';
 import Cookies from 'js-cookie';
 
+/*
+Function: AdminRegistration
+Purpose: Creates the form for admin registration using formik.
+*/
+
 const AdminRegistrationForm = (props) => {
     return (
         <Formik
+        //Initial Values are null.
             initialValues={{
                 firstName: '',
                 lastName: '',
@@ -18,6 +32,8 @@ const AdminRegistrationForm = (props) => {
                 password: '',
                 passwordConfirm: '',
             }}
+
+            //Builds the validation for entering data.
             validationSchema={
                 Yup.object({
                     firstName: Yup.string()
@@ -34,6 +50,8 @@ const AdminRegistrationForm = (props) => {
                     .required('Required')
                     .oneOf([Yup.ref('password')], 'Passwords do not match')
                 })}
+
+                //Submit the data to process.
                 onSubmit={ async (values, {setSubmitting}) => {
                     setSubmitting(true)
                     const email = values.email;
@@ -41,6 +59,9 @@ const AdminRegistrationForm = (props) => {
                     const fName = values.firstName;
                     const lName = values.lastName;
 
+                    //Attempt to send data to API to process
+                    //Note that the cookie created determines admin access.
+                    //This allows for the API to process both user types.
                     try {
                         const response = await fetch('api/registration', {
                             method: 'POST',
@@ -48,6 +69,7 @@ const AdminRegistrationForm = (props) => {
                             body: JSON.stringify({ email: email, password: pssw, firstName: fName, lastName: lName, isAdmin: "true" })
                         });
 
+                        // If sucessful, route user to confirm
                         if(response.ok) {
                             //redirect user to login page
                             /*
@@ -59,10 +81,14 @@ const AdminRegistrationForm = (props) => {
                             Router.push('/confirmregister');
 
                         }
+
+                        //If the response failed.
                         else {
                             //display errors here
                             console.log("response not ok");
                         }
+
+                        //If an unknown error has occurred.
                     } catch(error) {
                         console.error('yout code sucks');
                         throw new Error(error);
@@ -88,8 +114,8 @@ const AdminRegistrationForm = (props) => {
                         <div>{formik.errors.email}</div>) : null}
                     <Form.Label htmlFor="password">Password</Form.Label>
                     {/*<Form.Control name="password" {...formik.getFieldProps('password')} />*/}
-                    <Form.Control 
-                        id="password" 
+                    <Form.Control
+                        id="password"
                         name="password" {...formik.getFieldProps('password')}
                         type="password"
                     />
@@ -114,6 +140,7 @@ const AdminRegistrationForm = (props) => {
     );
 };
 
+//Render the page and its contents.
 const AdminRegistration = () =>
     <div className="admin-registration-body">
         <ImageHeader />

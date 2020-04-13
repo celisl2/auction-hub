@@ -1,7 +1,9 @@
 /*
+
 File Name: verify.js
 Purpose: Sent to the user when they are not verified.
 Document Created By: Team 1
+
 */
 
 import "firebase/auth";
