@@ -479,6 +479,18 @@ const ActiveAuctionButton = (props) => {
     )
 }
 
+const DeleteAuctionButton = (props) => {
+    const [activeID, setActiveID] = useState(null);
+
+    return (
+        <Button variant="warning" active onClick={() => {
+            
+        }}>
+
+        </Button>
+    )
+}
+
 const RTCurrentAuction = () => {
     const [auctionEventData, setAuctionEventData] = useState([]);
     const [activeEvent, setActiveEvent] = useState(null);
