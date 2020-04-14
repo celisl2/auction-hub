@@ -9,7 +9,6 @@
 import {loadDB} from '../../lib/db';
 let firebase = loadDB();
 import "firebase/auth";
-import Cookies from 'js-cookie';
 import createUser from './createUser';
 
 export default (req, res) => {
@@ -22,41 +21,33 @@ export default (req, res) => {
         let token = null;
 
   //firebase command to create a user with credentials and process data.
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-  .then(cred => {
-    cred.user.getIdToken().then(idToken => {
-        createUser(cred.user.uid, {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        isAdmin: req.body.isAdmin,
-        phone: req.body.phone
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+      .then(cred => {
+        cred.user.getIdToken().then(idToken => {
+            createUser(cred.user.uid, {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            isAdmin: req.body.isAdmin,
+            phone: req.body.phone
+          });
+
+        });
+      })
+      .catch((error)=> {
+        console.log(error.code);
+        console.log(error.message);
       });
 
-//Build the token data.
-      if(idToken) {
-        Cookies.set('ssid', Date.now());
-      }
-
-  });
-})
-
-//Error catching
-.catch((error)=> {
-  console.log(error.code);
-  console.log(error.message);
-});
-
-//Firebase command that checks if a user exists. If they do, then it was
-//sucessfuly created. Sends the console a notification. User notifications
-//Are handled in the registration page.
+        //Firebase command that checks if a user exists. If they do, then it was
+        //sucessfuly created. Sends the console a notification. User notifications
+        //Are handled in the registration page.
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 user.sendEmailVerification();
                 console.log("Sent Email Verification.");
             }
-
-//If email did not send.
+            //If email did not send.
             else {
               console.log("Email Not sent.");
             }
@@ -67,7 +58,8 @@ export default (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ token: "user added"}));
 
-    } else {
+    }
+    else {
         console.log(res);
         console.log('in else at api/login');
     }
