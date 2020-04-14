@@ -1,5 +1,11 @@
-// Updated 9 April 2020 by RTA -- Fixed user.
+/* /////////////////////////////////////////////////////////
 
+// File Name: EditProductForm.js
+// Purpose: Designs the component displays in the edit_auction page.
+// Document Created By: Team 1
+// Updated 14 April 2020 by RTA -- Comments added.
+//
+///////////////////////////////////////////////////////// */
 
 import React, {useState, useContext, useEffect} from 'react';
 import Button from 'react-bootstrap/Button';
@@ -12,6 +18,7 @@ import {loadDB} from '../lib/db';
 
 let db = loadDB();
 
+//Build the BidForm to allow bids.
 const BidForm = (props) => {
     const [bidData, setBidData] = useContext(DataContext);
     const [userMessage, setUserMessage] = useState(null);
@@ -22,6 +29,7 @@ const BidForm = (props) => {
     let minBid = bidData.props.productData.minBid;
     let maxBid = bidData.props.productData.maxBid;
 
+//Pull database info and confirm auction is active.
     const [highBidData, setHighBidData] = useState(() => {
         db
         .firestore()
@@ -33,13 +41,14 @@ const BidForm = (props) => {
                 let highBidDataInitial = snapshot.docs[0].data().amount;
                 return highBidDataInitial;
             }
-            
+
             else {
                 return null;
             }
         });
     });
 
+//Check if a person has bidded on the product.
     const [lowerLimit, setLowerLimit] = useState(() => {
             if(highBidData)
                 return highBidData;
@@ -47,6 +56,7 @@ const BidForm = (props) => {
                 return minBid;
         })
     useEffect(() => {
+      //access database
         const unsubscribe = db
         .firestore()
         .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory')
@@ -67,9 +77,12 @@ const BidForm = (props) => {
         <div>
             {userMessage ? <Alert variant={alertColor}>{userMessage}</Alert> : ""}
         <Formik
+                //Set initial values to null
                 initialValues={{
                     userBid: ''
                 }}
+
+                //Using validiation schema
                 validationSchema={
                     Yup.object({
                         userBid: Yup.number().integer('Bid must be a whole number')
@@ -77,18 +90,23 @@ const BidForm = (props) => {
                             .required('Please select bid amount'),
                     })
                 }
+
+                //Handle submitted data
                 onSubmit={ (values, {setSubmitting}) => {
-                    
+
                     try {
                         let bidAmount = values.userBid;
                         let user = db.auth().currentUser.uid;
                         if (!!user) {
+
+                          //Check if Bid amount is valid.
                             if(bidAmount <= maxBid) {
                                 //user is allowed to place bid
                                 if(bidAmount >= lowerLimit) {
                                     //user is placing buyout bid
                                     if(bidAmount == maxBid) {
-                                    
+
+                                          //Access Database
                                             db.firestore()
                                             .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory')
                                             .add({
@@ -96,22 +114,27 @@ const BidForm = (props) => {
                                                 timestamp: db.firestore.FieldValue.serverTimestamp(),
                                                 bidderID: user,
                                                 productWinner: user,
+
+                                                //Bid was successful
                                             }).then(docRef => {
                                                 setAlertColor('success');
                                                 setUserMessage('You have placed the highest bid. You will recieve an email with instructions on how to pay and recieve your product.');
                                                 console.log('bid placed for ' + docRef.id);
                                             })
+
+                                            //An error or occured
                                             .catch( (err) => {
                                                 console.error("A problem occurred trying to place a buyout on product " + productId + ": " + err);
                                             })
-        
+
+                                            //Ensures the highest bid exists.
                                             db.firestore().collection('AuctionEvent/' + auctionId + '/AuctionProduct').doc(productId).update({
                                                 highestBidPlaced: true
                                             })
                                        //}
                                     } //user is placing bid less than maxBid
                                     else {
-                                            
+
                                             db.firestore()
                                             .collection('/AuctionEvent/' + auctionId + '/AuctionProduct/' + productId + '/BidHistory').add({
                                                 amount: Number(bidAmount),
@@ -125,19 +148,22 @@ const BidForm = (props) => {
                                             })
                                             .catch( (err) => {
                                                 console.error("A problem occurred trying to place a bid on product " + productId + ": " + err);
-                                            })  
+                                            })
                                         //}
-        
+
                                     }
                                     setSubmitting(true);
-                                } 
+                                }
+                                //Bid amount is greater than minimum bid error.
                                 else {
                                     console.log(bidAmount);
                                     setAlertColor('danger');
                                     setUserMessage('Bid must be greater or equal to $' + minBid);
                                     setSubmitting(false);
                                 }
-                            } 
+                            }
+
+                            //Bid amount is less than minimum bid error.
                             else {
                                 console.log(bidAmount);
                                 setAlertColor('danger');
@@ -145,15 +171,17 @@ const BidForm = (props) => {
                                 setSubmitting(false);
                             }
                         }
+                        //If a user is not logged in
                         else {
                             throw ("User is not logged-in for bidding!");
                         }
                     }
+                    //If the error is unspecified.
                     catch (err) {
                         console.error("DEBUG: Caught Error: " + err);
                     }
-                    
-                    
+
+
                 }}
             >
             { formik => (
@@ -176,8 +204,12 @@ const BidForm = (props) => {
     )
 }
 
+
+//Aaccess the database and pull necessary data for component.
 const Bid = (props) => {
     const [bidData, setBidData] = useContext(DataContext);
+
+    //Access Database.
     const [highBidData, setHighBidData] = useState(() => {
         db
         .firestore()
@@ -194,7 +226,7 @@ const Bid = (props) => {
             }
         });
     });
-    
+
     let minBid = bidData.props.productData.minBid;
     let prodID = bidData.props.productData.id;
     let aucID = bidData.props.auctionEventID;
@@ -215,6 +247,8 @@ const Bid = (props) => {
         return () => { unsubscribe() };
     }, [db]);
 
+
+//Render component.
     return (
         <div>
             <h4>Current Bid Price{highBidData ? ': $' + highBidData : ': $' + minBid}</h4>

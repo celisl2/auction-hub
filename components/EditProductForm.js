@@ -1,3 +1,11 @@
+/* /////////////////////////////////////////////////////////
+
+File Name: EditProductForm.js
+Purpose: Designs the component displays in the edit_auction page.
+Document Created By: Team 1
+
+///////////////////////////////////////////////////////// */
+
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Form from 'react-bootstrap/Form';
@@ -11,6 +19,7 @@ import {useState} from 'react';
 
 let firebase = loadDB();
 
+//Sets state
 const EditProductForm = (props) => {
     //console.log(props)
     const [adminMessage, setAdminMessage] = useState(null);
@@ -18,9 +27,11 @@ const EditProductForm = (props) => {
 
     return (
         <div>
-         
+
         {adminMessage ? <Alert variant={color}>{adminMessage}</Alert> : ''}
         <Formik
+
+        //Set initial values to current values of the database item.
         initialValues={{
             productName: props.data.data.productName,
             productDescription: props.data.data.productDescription,
@@ -29,6 +40,8 @@ const EditProductForm = (props) => {
             maxBid: props.data.data.maxBid,
             productPickUpInfo: props.data.data.productPickUpInfo
         }}
+
+        //Validates data
         validationSchema={
             Yup.object({
                 productName: Yup.string().required('Please enter product name'),
@@ -39,17 +52,24 @@ const EditProductForm = (props) => {
                 productPickUpInfo: Yup.string().notRequired()
             })}
 
-
+            //Handle item upon submission
         onSubmit={(values, { setSubmitting }) => {
             //props.data.auction
+
+            //Check if bids are alid inputs.
             if(values.minBid >= values.maxBid) {
                 setAdminMessage('Max bid must be greater than min bid. Please try again.');
                 setColor('danger')
             }
+
+            //Otherwise run this portion
             else {
+
+              //Access database
                 let ref = firebase.firestore()
                 .collection('AuctionEvent/' + props.data.auction + '/AuctionProduct/').doc(props.data.data.id);
 
+                //Update with new values
                 return ref.update({
                     productName: values.productName,
                     productDescription: values.productDescription,
@@ -57,7 +77,8 @@ const EditProductForm = (props) => {
                     minBid: values.minBid,
                     maxBid: values.maxBid,
                     productPickUpInfo: values.productPickUpInfo
-                
+
+                    //Tell user i was sucessful.
                 }).then(() => {
                     setAdminMessage('Product successfully updated');
                     setColor('success');
@@ -68,7 +89,7 @@ const EditProductForm = (props) => {
                     console.error("Error updating document: ", error);
                 });
             }
-            
+
         }}
     >
 
