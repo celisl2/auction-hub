@@ -65,7 +65,10 @@ const ProductsList = (props) => {
                 {productsList.map((product, i) => (
                         props.user == 'admin' ? <AdminProducts props={{auctionEventID: auctionID, productData: product}} key={i}/>:
                         <HomeProducts props={{auctionEventID: auctionID, productData: product}} key={i}/>
-+
+                ))}
+                </Container>
+            </div>
+
         );
     }
     else {
