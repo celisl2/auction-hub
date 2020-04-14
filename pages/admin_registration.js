@@ -10,11 +10,15 @@ import ImageHeader from '../components/ImageHeader';
 import {getCode} from '../utils/helperFunctions';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import Footer from '../components/Footer';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Router from 'next/router';
-import Cookies from 'js-cookie';
+import {useState, useEffect} from 'react';
+import {loadDB} from './../lib/db';
+
+let db = loadDB();
 
 /*
 Function: AdminRegistration
@@ -53,7 +57,7 @@ const AdminRegistrationForm = (props) => {
 
                 //Submit the data to process.
                 onSubmit={ async (values, {setSubmitting}) => {
-                    setSubmitting(true)
+                    //setSubmitting(true)
                     const email = values.email;
                     const pssw = values.password;
                     const fName = values.firstName;
@@ -76,10 +80,7 @@ const AdminRegistrationForm = (props) => {
                             const {token} = await response.json();
                             console.log('token from front end being called. Here is info from back end -- ' + token);
                             */
-                            if(Cookies.get('ssid') !== undefined) {
-                            }
                             Router.push('/confirmregister');
-
                         }
 
                         //If the response failed.
@@ -93,8 +94,6 @@ const AdminRegistrationForm = (props) => {
                         console.error('yout code sucks');
                         throw new Error(error);
                     }
-
-
             }}
         >
         {formik => (
@@ -141,14 +140,75 @@ const AdminRegistrationForm = (props) => {
 };
 
 //Render the page and its contents.
-const AdminRegistration = () =>
-    <div className="admin-registration-body">
-        <ImageHeader />
-        <Container>
-            <h2 className="text-center mx-auto text-header">Administrator Registration</h2>
-            <AdminRegistrationForm />
-        </Container>
-        <Footer/>
-        <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-    </div>;
+const AdminRegistration = () => {
+    const [showPage, setShowPage] = useState(false);
+    const [code, setCode] = useState(null);
+
+    useEffect(() => {
+        const unsubscribe = db
+        .firestore()
+        .collection('AdminResources').doc('RegistrationCode')
+        .onSnapshot( (snapshot) => {
+            if(snapshot.get('accessCode')) {
+                setCode(snapshot.get('accessCode'));
+            }
+        });
+        return () => { unsubscribe() };
+    })
+
+    if(!showPage) {
+        return (
+            <div className="admin-registration-body">
+                <ImageHeader />
+                <Container>
+                <h2 className="text-center mx-auto text-header">Please enter access code to view this page</h2>
+                <Formik
+                    initialValues={{
+                        code: '',
+                    }}
+                    //Builds the validation for entering data.
+                    validationSchema={
+                        Yup.object({
+                            code: Yup.string()
+                                .required('Please contact administrator to access this page.'),
+                        })}
+                    //Submit the data to process.
+                    onSubmit={(values, {setSubmitting}) => {
+                        console.log(values);
+                        //important part for this to work is to set the showPage to true when user actually puts in the right code
+                        //also using another state to display when the user doesnt enter the correct code (check bid component to see how this works)
+                    }}
+                >
+                {formik => (
+            <Form onSubmit={formik.handleSubmit}>
+                <Form.Group>
+                    <Form.Label htmlFor="code">Access Code</Form.Label>
+                    <Form.Control name="code" {...formik.getFieldProps('code')} />
+                    {formik.touched.code && formik.errors.code ? (
+                        <Alert variant='danger'>{formik.errors.code}</Alert>) : null}
+                    <button className="btn space customer-button" type="submit">Register</button>
+                </Form.Group>
+            </Form>
+        )}
+                    
+                </Formik>
+                </Container>
+            </div>
+        )
+    }
+    else {
+
+        return (
+            <div className="admin-registration-body">
+                <ImageHeader />
+                <Container>
+                    <h2 className="text-center mx-auto text-header">Administrator Registration</h2>
+                    <AdminRegistrationForm />
+                </Container>
+                <Footer/>
+                <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
+            </div>
+        )
+    }
+}
 export default AdminRegistration;

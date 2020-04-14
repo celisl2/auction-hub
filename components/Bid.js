@@ -22,13 +22,6 @@ const BidForm = (props) => {
     let minBid = bidData.props.productData.minBid;
     let maxBid = bidData.props.productData.maxBid;
 
-    const [lowerLimit, setLowerLimit] = useState(() => {
-        if(highBidData)
-            return highBidData;
-        else
-            return minBid;
-    })
-
     const [highBidData, setHighBidData] = useState(() => {
         db
         .firestore()
@@ -47,6 +40,12 @@ const BidForm = (props) => {
         });
     });
 
+    const [lowerLimit, setLowerLimit] = useState(() => {
+            if(highBidData)
+                return highBidData;
+            else
+                return minBid;
+        })
     useEffect(() => {
         const unsubscribe = db
         .firestore()
@@ -63,7 +62,7 @@ const BidForm = (props) => {
 
         return () => { unsubscribe() };
     }, [db]);
-
+    console.log(lowerLimit);
     return (
         <div>
             {userMessage ? <Alert variant={alertColor}>{userMessage}</Alert> : ""}
@@ -73,7 +72,8 @@ const BidForm = (props) => {
                 }}
                 validationSchema={
                     Yup.object({
-                        userBid: Yup.number()
+                        userBid: Yup.number().integer('Bid must be a whole number')
+                            .positive('Bid must be a positive number ')
                             .required('Please select bid amount'),
                     })
                 }

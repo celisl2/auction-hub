@@ -440,6 +440,14 @@ a.brand {
 .centerAxis {
     margin-top: 5%;
 }
+.access {
+    display: flex;
+    justify-content: space-around;
+    align-items: baseline;
+}
+.access h4, .access p{ 
+    display: inline;
+}
 
 @media (min-width: 768px) {
     .login-form {

@@ -8,12 +8,14 @@ import AdminNav from '../components/AdminNav';
 import {ArrowRight} from 'react-feather';
 import {getCode} from '../utils/helperFunctions';
 import Footer from '../components/Footer';
+import Code from '../components/Code';
 
 const AdminHome = () =>
     <div className="admin-home-body">
         <AdminNav />
         <Container>
         <h2 className="text-center mx-auto space text-header">Administrator Home</h2>
+            <Code />
             <CardDeck className="card-format">
             <Link href="/create_auction">
                 <Card bg="dark" text="white" className="next-link">

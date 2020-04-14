@@ -14,6 +14,7 @@ import React, { useState, useEffect } from 'react';
 import Footer from '../components/Footer';
 import {loadDB} from '../lib/db';
 import ProductsList from '../components/ProductsList';
+import HomeForbidden from '../components/HomeForbidden';
 
 let db = loadDB();
 

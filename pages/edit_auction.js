@@ -3,7 +3,7 @@ File Name: edit_auction.js
 Purpose: Displays all current auctions and allows them to be edited.
 Document Created By: Team 1
 */
-
+import HomeForbidden from '../components/HomeForbidden';
 import AdminNav from '../components/AdminNav';
 import { Formik} from 'formik';
 import * as Yup from 'yup';
