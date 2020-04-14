@@ -29,7 +29,8 @@ export default (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        isAdmin: req.body.isAdmin
+        isAdmin: req.body.isAdmin,
+        phone: req.body.phone
       });
 
 //Build the token data.
