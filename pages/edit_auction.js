@@ -30,6 +30,9 @@ import daysArr from '../utils/daySelect';
 import months from '../utils/monthSelect';
 import Alert from 'react-bootstrap/Alert';
 
+import Router from 'next/router';   // RTA - update 14 April 2020
+
+
 let db = loadDB();
 
 
@@ -479,7 +482,7 @@ const ActiveAuctionButton = (props) => {
     )
 }
 
-const RTCurrentAuction = () => {
+const CurrentAuction = () => {
     const [auctionEventData, setAuctionEventData] = useState([]);
     const [activeEvent, setActiveEvent] = useState(null);
 
@@ -567,7 +570,7 @@ let EditAuction = () => {
                 <AdminNav />
                 <Container fluid>
                     <h2 className="text-center mx-auto space text-header">Auction Events</h2>
-                    <RTCurrentAuction />
+                    <CurrentAuction />
                 </Container>
                 <Footer/>
                 <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
