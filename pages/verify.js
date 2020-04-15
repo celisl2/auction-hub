@@ -54,7 +54,7 @@ const VerifyForm = () => {
                         //push user to home page if they are verified.
                         if (user.emailVerified) {
                           console.log('Email is verified');
-                          return Router.push('/index');
+                          return Router.push('/verifyconfirm');
                         }
 
                         //Sends verification info to the console. Need to route to confirm page.
