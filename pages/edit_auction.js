@@ -62,7 +62,6 @@ Purpose: Creates the form for an admin to edit auction information.
 
 const EditForm = (props) => {
     const [userMessage, setUserMessage] = useState(null);
-
     return(
         <div>
         {userMessage ? <Alert variant='danger'>{userMessage}</Alert> : ''}
@@ -92,7 +91,9 @@ const EditForm = (props) => {
                     zip: props.data.location.zip
                 },
                 paymentLimitTime: props.data.paymentLimitTime,
-                pickUpInformation: props.data.pickUpInformation
+                pickUpInformation: props.data.pickUpInformation,
+
+                auctionID: props.aucID,    // RTA: Provide auction event id to update operation
             }}
 
             //Builds the validation for entering information.
@@ -149,24 +150,27 @@ const EditForm = (props) => {
                         //Attempt to send data to API to process
                         else {
                             try {
-                                const response = await fetch('api/createAuctionQuery', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({values})
-                                });
-
-                                //If sucessful, push them to confirmation page
-                                if(response.ok) {
-                                    console.log('response ok');
-                                    Router.push('/auctionconfirm');
-                                }
-
-                                //If response was not okay or a user error occrred.
-                                else {
-                                    console.log( response + "response not ok");
-                                    setUserMessage('Something went wrong. Try again.');
-                                }
-
+                                // RTA: quick and dirty fix. Convert to api call?
+                                
+                                // Precompile the data for saving
+                                let eventData = {values: values};
+                                let aucID = values.auctionID;
+                                delete eventData.values.auctionID;
+                                
+                                // Attempt to update DB record
+                                loadDB()
+                                .firestore()
+                                .doc("/AuctionEvent/" + aucID)
+                                .set(eventData)
+                                .then( (results) => {
+                                    console.log("Update success");
+                                    Router.push('/auctionconfirm')
+                                    //Router.push('/auctioneditconfirm') // To do: different page.
+                                })
+                                .catch( (err) => {
+                                    console.error("Update error: " + err);
+                                })
+                                
                                 //Handle unknown or unspeciifed errors.
                             } catch(error) {
                                 console.error('Your code sucks');
@@ -344,7 +348,6 @@ const EditForm = (props) => {
 
 //Sets use states for page.
 const Auction = (props) => {
-
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -366,7 +369,8 @@ const Auction = (props) => {
                             <Modal.Title>Edit Auction Event</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <EditForm data={props.data}/>
+                            {/* <EditForm data={props.data}/> */} {/*RTA: push along auction event document id to db operation*/} }
+                            <EditForm data={props.data} aucID={props.aucID}/>
                         </Modal.Body>
                     </Modal>
                 </Col>
@@ -540,7 +544,8 @@ const CurrentAuction = () => {
                                         </Card.Header>
                                         <Accordion.Collapse eventKey={event.id}>
                                             <Card.Body>
-                                                <Auction data={event.values}/>
+                                                {/* RTA: push auction id forward to db call */}
+                                                <Auction data={event.values} aucID={event.id}/>
                                             </Card.Body>
                                         </Accordion.Collapse>
                                     </Card>
