@@ -59,7 +59,7 @@ const VerifyForm = () => {
 
                         //Sends verification info to the console. Need to route to confirm page.
                         console.log('Sent email verification');
-                        Router.push('/login');
+                        Router.push('/verifyconfirm');
                         });
 
                     //Catches errors
