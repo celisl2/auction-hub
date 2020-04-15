@@ -369,7 +369,7 @@ const Auction = (props) => {
                             <Modal.Title>Edit Auction Event</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            {/* <EditForm data={props.data}/> */} {/*RTA: push along auction event document id to db operation*/} }
+                            {/* <EditForm data={props.data}/> */} {/*RTA: push along auction event document id to db operation*/}
                             <EditForm data={props.data} aucID={props.aucID}/>
                         </Modal.Body>
                     </Modal>
@@ -544,7 +544,7 @@ const CurrentAuction = () => {
                                         </Card.Header>
                                         <Accordion.Collapse eventKey={event.id}>
                                             <Card.Body>
-                                                {/* RTA: push auction id forward to db call */}
+                                                
                                                 <Auction data={event.values} aucID={event.id}/>
                                             </Card.Body>
                                         </Accordion.Collapse>
