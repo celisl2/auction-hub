@@ -43,7 +43,7 @@ export default (req, res) => {
         //sucessfuly created. Sends the console a notification. User notifications
         //Are handled in the registration page.
         firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
+            if (!user.emailVerified) {
                 user.sendEmailVerification();
                 console.log("Sent Email Verification.");
             }
