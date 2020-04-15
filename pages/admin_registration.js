@@ -4,7 +4,7 @@ File Name: admin_registration.js
 Purpose: Creates the form for registering an Admin account
 Document Created By: Team 1
 
-///////////////////////////////////////////////////////// */ 
+///////////////////////////////////////////////////////// */
 
 import ImageHeader from '../components/ImageHeader';
 import {getCode} from '../utils/helperFunctions';
@@ -33,6 +33,7 @@ const AdminRegistrationForm = (props) => {
                 firstName: '',
                 lastName: '',
                 email: '',
+                phone: '',
                 password: '',
                 passwordConfirm: '',
             }}
@@ -47,6 +48,7 @@ const AdminRegistrationForm = (props) => {
                 email: Yup.string()
                     .email('Invalid email address')
                     .required('Required'),
+                phone: Yup.string().required('Required'),
                 password: Yup.string()
                     .min(6, "Password should be at least 6 characters")
                     .required('Required'),
@@ -62,6 +64,7 @@ const AdminRegistrationForm = (props) => {
                     const pssw = values.password;
                     const fName = values.firstName;
                     const lName = values.lastName;
+                    const phone = values.phone;
 
                     //Attempt to send data to API to process
                     //Note that the cookie created determines admin access.
@@ -70,7 +73,7 @@ const AdminRegistrationForm = (props) => {
                         const response = await fetch('api/registration', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ email: email, password: pssw, firstName: fName, lastName: lName, isAdmin: "true" })
+                            body: JSON.stringify({ email: email, password: pssw, firstName: fName, lastName: lName, phone: phone, isAdmin: "true" })
                         });
 
                         // If sucessful, route user to confirm
@@ -111,6 +114,10 @@ const AdminRegistrationForm = (props) => {
                     <Form.Control name="email" {...formik.getFieldProps('email')} />
                     {formik.touched.email && formik.errors.email ? (
                         <div>{formik.errors.email}</div>) : null}
+                    <Form.Label htmlFor="phone">Phone</Form.Label>
+                    <Form.Control name="phone" {...formik.getFieldProps('phone')} />
+                    {formik.touched.phone && formik.errors.phone ? (
+                        <div>{formik.errors.phone}</div>) : null}
                     <Form.Label htmlFor="password">Password</Form.Label>
                     {/*<Form.Control name="password" {...formik.getFieldProps('password')} />*/}
                     <Form.Control
@@ -142,7 +149,7 @@ const AdminRegistrationForm = (props) => {
 //Render the page and its contents.
 const AdminRegistration = () => {
     const [showPage, setShowPage] = useState(false);
-    const [code, setCode] = useState(null);
+    const [dbCode, setDBCode] = useState(null);
 
     useEffect(() => {
         const unsubscribe = db
@@ -150,7 +157,7 @@ const AdminRegistration = () => {
         .collection('AdminResources').doc('RegistrationCode')
         .onSnapshot( (snapshot) => {
             if(snapshot.get('accessCode')) {
-                setCode(snapshot.get('accessCode'));
+                setDBCode(snapshot.get('accessCode'));
             }
         });
         return () => { unsubscribe() };
@@ -174,7 +181,10 @@ const AdminRegistration = () => {
                         })}
                     //Submit the data to process.
                     onSubmit={(values, {setSubmitting}) => {
-                        console.log(values);
+                        //console.log(values);
+                        if(dbCode == values.code) {
+                            setShowPage(true);
+                        }
                         //important part for this to work is to set the showPage to true when user actually puts in the right code
                         //also using another state to display when the user doesnt enter the correct code (check bid component to see how this works)
                     }}
@@ -190,7 +200,7 @@ const AdminRegistration = () => {
                 </Form.Group>
             </Form>
         )}
-                    
+
                 </Formik>
                 </Container>
             </div>

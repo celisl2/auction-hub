@@ -15,7 +15,6 @@ const AdminHome = () =>
         <AdminNav />
         <Container>
         <h2 className="text-center mx-auto space text-header">Administrator Home</h2>
-            <Code />
             <CardDeck className="card-format">
             <Link href="/create_auction">
                 <Card bg="dark" text="white" className="next-link">
@@ -92,6 +91,7 @@ const AdminHome = () =>
                     </Card>
                 </Link>
             </CardDeck>
+            <Code />
         </Container>
         <Footer />
         <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>

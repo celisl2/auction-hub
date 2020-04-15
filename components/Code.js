@@ -11,7 +11,7 @@ import {loadDB} from './../lib/db';
 let db = loadDB();
 
 export default () => {
-    const [code, setCode] = useState(null);
+    const [dbCode, setDBCode] = useState(null);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -22,7 +22,7 @@ export default () => {
         .collection('AdminResources').doc('RegistrationCode')
         .onSnapshot( (snapshot) => {
             if(snapshot.get('accessCode')) {
-                setCode(snapshot.get('accessCode'));
+                setDBCode(snapshot.get('accessCode'));
             }
         });
         return () => { unsubscribe() };
@@ -30,12 +30,12 @@ export default () => {
 
     return (
         <div>
-           
+
             <Alert variant='info'>
                 <div className="access">
                     <Alert.Heading>
                         <h4>Access Code for Administrator Registration:</h4>
-                        <p>{' ' + code}</p>
+                        <p>{' ' + dbCode}</p>
                     </Alert.Heading>
                 </div>
                 <hr />
@@ -51,7 +51,7 @@ export default () => {
                 <Modal.Body>
                     <Formik
                         initialValues={{
-                            code: code,
+                            code: dbCode,
                         }}
                         //Builds the validation for entering data.
                         validationSchema={
@@ -62,9 +62,26 @@ export default () => {
                         //Submit the data to process.
                         onSubmit={(values, {setSubmitting}) => {
                             console.log(values.code);
+                            db
+                                .firestore()
+                                .collection("AdminResources")
+                                .doc("RegistrationCode")
+                                .set({accessCode: values.code});
+                                //commented out error code, copied from api/registration.js
+                                /*
+                                .then( (results) => {
+                                    alert("DEBUG:: User creation successful: Admin Reg Code " + results.id);
+                                    return results;
+                                })
+                                .catch( (error) => {
+                                    alert(userID + "DEBUG:: User creation unsuccessful\n" + error.code + " : " + error.message);
+                                    return error;
+                                })
+                                */
                             //important part for this to work is to set the new code as values.code
                         }}
                     >
+
                     {formik => (
                     <Form onSubmit={formik.handleSubmit}>
                         <Form.Group>
@@ -72,21 +89,22 @@ export default () => {
                             <Form.Control name="code" {...formik.getFieldProps('code')} />
                             {formik.touched.code && formik.errors.code ? (
                                 <Alert variant='danger'>{formik.errors.code}</Alert>) : null}
-                                <Button className='space' variant="primary" onClick={handleClose}>Save Changes</Button>
+                                //this is the button we want to use: <Button className='space' variant="primary" onClick={handleClose}>Save Changes</Button>
+                                <button className="space" type="submit">Save Changes</button>
                         </Form.Group>
                     </Form>
                     )}
-                        
+
                     </Formik>
                 </Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Close
                 </Button>
-                
+
                 </Modal.Footer>
             </Modal>
-            
+
         </div>
     )
 }
