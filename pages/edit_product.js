@@ -15,6 +15,7 @@ import Footer from '../components/Footer';
 import {loadDB} from '../lib/db';
 import ProductsList from '../components/ProductsList';
 import HomeForbidden from '../components/HomeForbidden';
+import Alert from 'react-bootstrap/Alert';
 
 let db = loadDB();
 
@@ -23,7 +24,7 @@ let EditProducts = () => {
     const [auctionID, setAuctionId] = useState(null);
     const [show, setShow] = useState(true);
     const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState([]);
-
+    const [isEmpty, setIsEmpty] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -34,10 +35,26 @@ let EditProducts = () => {
             .collection('AuctionEvent')
             .where('isActive', '==', true)
             .onSnapshot( (snapshot) => {
-                setAuctionId(snapshot.docs[0].id);
+                if(snapshot.size) {
+                    setAuctionId(snapshot.docs[0].id);
+                    db
+                    .firestore()
+                    .collection('AuctionEvent').doc(snapshot.docs[0].id)
+                    .collection('AuctionProduct').get()
+                    .then((doc) => {
+                        console.log(doc.size)
+                        if (doc.size == 0) {
+                            setIsEmpty(true);
+                            console.log('here')
+                        }
+                    }).catch(function(error) {
+                        console.log("Error getting document:", error);
+                    });
+                }
             });
+
             return () => { unsubscribe() };
-    }, [db] );
+    }, [db, auctionID, isEmpty] );
 
 //Checks admin account.
     useEffect( () => {
@@ -51,10 +68,13 @@ let EditProducts = () => {
                     setCurrentUserIsAdmin(querySnapshot.data().isAdmin);
                 });
         });
-    }, [db] );
+    }, [db, auctionID, isEmpty] );
 
 
 //Renders page if user is an admin.
+
+//true if snapshot came back empty
+
     if(currentUserIsAdmin == "true") {
         return (
             <div className="edit-auction-body">
@@ -62,6 +82,8 @@ let EditProducts = () => {
                 <Container>
                     <h2 className="text-center mx-auto space text-header">Edit Auction Products</h2>
                 </Container>
+                {!isEmpty ?
+                <>
                 <Row>
                     <Col><h3 className="flag-title">Products for Active Auction</h3></Col>
                     <Col md={3}>
@@ -78,7 +100,7 @@ let EditProducts = () => {
                             <p></p>
                         </>
                     )}
-
+                </> : <Container><Alert variant='warning'>The current active auction does not have any products. Please create products before you can edit them</Alert></Container>}
                 <Footer/>
                 <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
             </div>

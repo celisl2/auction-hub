@@ -29,13 +29,12 @@ const EditProductModal = (props) => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    //console.log(props)
     return (
         <div>
             <Button onClick={handleShow}>Edit</Button>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit -product name here-</Modal.Title>
+                    <Modal.Title>{props.data.productName}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <EditProductForm data={props}/>

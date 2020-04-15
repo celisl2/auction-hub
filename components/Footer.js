@@ -11,7 +11,7 @@ export default () =>
         <div className='footer-right'>
             <p>Useful Links</p>
             <Link href="/index"><a>Home</a></Link>
-            <Link href="/register"><a>Register</a></Link>
-            <a href="www.allthingspossible.org">All Things Possible</a>
+            <Link href="/registration"><a>Register</a></Link>
+            <a href="//allthingspossible.org">All Things Possible</a>
         </div>
     </footer>;

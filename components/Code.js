@@ -13,6 +13,8 @@ let db = loadDB();
 export default () => {
     const [dbCode, setDBCode] = useState(null);
     const [show, setShow] = useState(false);
+    const [message, setMessage] = useState(null);
+    const [color, setColor] = useState(null);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -61,36 +63,33 @@ export default () => {
                             })}
                         //Submit the data to process.
                         onSubmit={(values, {setSubmitting}) => {
-                            console.log(values.code);
                             db
                                 .firestore()
                                 .collection("AdminResources")
                                 .doc("RegistrationCode")
-                                .set({accessCode: values.code});
-                                //commented out error code, copied from api/registration.js
-                                /*
+                                .set({accessCode: values.code})
                                 .then( (results) => {
-                                    alert("DEBUG:: User creation successful: Admin Reg Code " + results.id);
-                                    return results;
+                                    setMessage('Access code successfully changed.');
+                                    setColor('success');
                                 })
                                 .catch( (error) => {
-                                    alert(userID + "DEBUG:: User creation unsuccessful\n" + error.code + " : " + error.message);
-                                    return error;
+                                    setMessage('Something went wrong. Please try again later');
+                                    setColor('danger');
+                                    console.error(error);
                                 })
-                                */
                             //important part for this to work is to set the new code as values.code
                         }}
                     >
 
                     {formik => (
                     <Form onSubmit={formik.handleSubmit}>
+                        {message ? <Alert variant={color}>{message}</Alert> : ''}
                         <Form.Group>
                             <Form.Label htmlFor="code">Access Code</Form.Label>
                             <Form.Control name="code" {...formik.getFieldProps('code')} />
                             {formik.touched.code && formik.errors.code ? (
                                 <Alert variant='danger'>{formik.errors.code}</Alert>) : null}
-                                //this is the button we want to use: <Button className='space' variant="primary" onClick={handleClose}>Save Changes</Button>
-                                <button className="space" type="submit">Save Changes</button>
+                                <Button className='space' variant="primary" type="submit">Save Changes</Button>
                         </Form.Group>
                     </Form>
                     )}

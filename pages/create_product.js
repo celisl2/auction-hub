@@ -53,7 +53,7 @@ const CreateProductForm = () => {
 
 
             onSubmit={(values, { setSubmitting }) => {
-                if(values.minBid >= values.maxBid) {
+                if(Number(values.minBid) >= Number(values.maxBid)) {
                     setUserMessage('Max bid must be greater than min bid. Please try again.');
                 }
                 else {
@@ -64,18 +64,15 @@ const CreateProductForm = () => {
                             //If no events are active
                             if(querySnapshot.empty) {
                                 //Alert user to activate an event.
-                                console.log("Please Activate an event before Creating a product.");
+                                setUserMessage('Please activate an event before creating a product.');
                             }
                             //at least one auction event is active
                             else {
-
                                 //one event is active
                                 if(querySnapshot.size) {
                                     console.log("one doc found " + querySnapshot.docs[0].id);
-
                                     //Create event based on the currently active event.
                                         let creationSuccess = createAuctionProduct(querySnapshot.docs[0].id, values);
-                                        console.log(creationSuccess + "*** in pages");
                                         Router.push('/productconfirm');
                                     } else {
                                         //query snapshot will appear as undefined due to object parameters
@@ -139,8 +136,6 @@ const CreateProductForm = () => {
     );
 }
 
-//TODO: create another button for adding another product
-
 const CreateProduct = () => {
     const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState([]);
     useEffect( () => {
@@ -163,6 +158,7 @@ const CreateProduct = () => {
                 <AdminNav />
                 <Container>
                     <h2 className="text-center mx-auto space text-header">Create Auction Product</h2>
+                    <Alert variant='info'>Any product created will be automatically added to the current active event.</Alert>
                     <Required />
                     <CreateProductForm />
                 </Container>

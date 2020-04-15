@@ -23,7 +23,7 @@ const AdminHome = () =>
             <div className="center-btn">
                 <Button className="customer-button" variant="dark"><Link href="/"><a className="makeWhite">Go back to dashboard</a></Link></Button>
             </div>
-
+                <Button className="customer-button makeBlock center-btn" variant="dark"><Link href="/create_product"><a className="makeWhite">Create More Products</a></Link></Button>
         </div>
 
         </Container>

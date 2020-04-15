@@ -27,11 +27,11 @@ const HomeAuth = () => {
     return (
         <div className="home-body">
             <Navigation />
-            <h3 className="flag-title">Current Auction</h3>
+            <h3 className="flag-title" id="currentAuction">Current Auction</h3>
             <Container>
             <CurrentAuction />
             </Container>
-            <h3 className="flag-title">Auction Products</h3>
+            <h3 className="flag-title" id="products">Auction Products</h3>
 
                 {auctionID ? <ProductsList props={auctionID}/> : <p>loading</p>}
 
