@@ -33,9 +33,11 @@ let EditProducts = () => {
             .firestore()
             .collection('AuctionEvent')
             .where('isActive', '==', true)
-            .onSnapshot( (snapshot) => {
-                setAuctionId(snapshot.docs[0].id);
-            });
+
+              .onSnapshot( (snapshot) => {
+                  setAuctionId(snapshot.docs[0].id);
+              });
+
             return () => { unsubscribe() };
     }, [db] );
 
@@ -55,6 +57,9 @@ let EditProducts = () => {
 
 
 //Renders page if user is an admin.
+
+//true if snapshot came back empty
+
     if(currentUserIsAdmin == "true") {
         return (
             <div className="edit-auction-body">
