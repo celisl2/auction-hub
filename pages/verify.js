@@ -54,12 +54,12 @@ const VerifyForm = () => {
                         //push user to home page if they are verified.
                         if (user.emailVerified) {
                           console.log('Email is verified');
-                          return Router.push('/verifyconfirm');
+                          return Router.push('/index');
                         }
 
                         //Sends verification info to the console. Need to route to confirm page.
                         console.log('Sent email verification');
-                        Router.push('/login');
+                        Router.push('/verifyconfirm');
                         });
 
                     //Catches errors

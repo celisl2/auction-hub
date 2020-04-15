@@ -34,7 +34,7 @@ let Recovery = () =>
 
         <ImageHeader />
         <Container>
-            <h3 className="text-center mx-auto login-header">Recover Password</h3>
+            <h3 className="text-center mx-auto login-header">Email Verification</h3>
         <div className="mx-auto login-form">
         <h5>A recovery email has been sent to the entered address. If your email
         matches a registered account, you will be sent a verification link.</h5>
