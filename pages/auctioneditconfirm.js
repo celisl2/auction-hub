@@ -25,7 +25,7 @@ const AdminHome = () =>
                 <Button className="customer-button" variant="dark"><Link href="/edit_auction"><a className="makeWhite">Return to edit auctions</a></Link></Button>
                 <Button className="customer-button" variant="dark"><Link href="/"><a className="makeWhite">Go back to dashboard</a></Link></Button>
             </div>
-
+                
         </div>
 
         </Container>

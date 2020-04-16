@@ -156,7 +156,7 @@ const EditForm = (props) => {
                                 let eventData = {values: values};
                                 let aucID = values.auctionID;
                                 delete eventData.values.auctionID;
-                                
+                                /*
                                 // Attempt to update DB record
                                 loadDB()
                                 .firestore()
@@ -170,7 +170,22 @@ const EditForm = (props) => {
                                 .catch( (err) => {
                                     console.error("Update error: " + err);
                                 })
-                                
+                                */
+                                let ref = loadDB()
+                                .firestore()
+                                .doc("/AuctionEvent/" + aucID);
+                                return ref.update({
+                                    values: values
+                                }).then(function() {
+                                    console.log("Document successfully updated!");
+                                    Router.push('/auctioneditconfirm');
+                                })
+                                .catch(function(error) {
+                                // The document probably doesn't exist.
+                                    console.error("Error updating document: ", error);
+                                });
+
+
                                 //Handle unknown or unspeciifed errors.
                             } catch(error) {
                                 console.error('Your code sucks');
