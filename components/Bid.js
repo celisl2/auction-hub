@@ -126,18 +126,31 @@ const BidForm = (props) => {
                                                 setAlertColor('success');
                                                 setUserMessage('You have placed the highest bid. You will recieve an email with instructions on how to pay and recieve your product.');
                                                 console.log('bid placed for ' + docRef.id);
-                                                db.firestore()
-                                                .collection('Reports')
-                                                .add({
-                                                    auctionEventID: auctionId,
-                                                    productID: productId,
-                                                    productName: productName,
-                                                    productPrice: Number(bidAmount),
-                                                    userID: user,
-                                                    paymentStatus: 'Email sent',
-                                                    productPickedUp: false
-                                                }).then(() => console.log("Document successfully written!"))
-                                                .catch((err) => console.error("Error writing document: ", err))
+
+                                                db.firestore().collection('Users').doc(user)
+                                                .get().then((userDoc) => {
+                                                    
+                                                    let name = userDoc.data().firstName + ' ' + userDoc.data().lastName;
+                                                    let emailAdd = userDoc.data().email;
+                                                    let phoneNum = userDoc.data().phone;
+
+                                                    db.firestore()
+                                                    .collection('Reports')
+                                                    .add({
+                                                        auctionEventID: auctionId,
+                                                        productID: productId,
+                                                        productName: productName,
+                                                        productPrice: Number(bidAmount),
+                                                        userID: user,
+                                                        paymentStatus: 'Email sent',
+                                                        productPickedUp: false,
+                                                        user: name,
+                                                        userEmail: emailAdd,
+                                                        phoneNumber: phoneNum
+                                                    }).then(() => console.log("Document successfully written!"))
+                                                    .catch((err) => console.error("Error writing document: ", err))
+                                                })
+                                                
                                             })
 
                                             //An error or occured

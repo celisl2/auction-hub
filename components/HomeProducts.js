@@ -17,13 +17,27 @@ import Bid from './Bid';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import DataContext from '../lib/bidDataContext';
+import {loadDB} from './../lib/db';
 
+let db = loadDB();
 
 const HomeProducts = (props) => {
-
+    //console.log(props)
     let aucID = props.props['auctionEventID'];
     let prodData = props.props['productData'];
-
+    const [auctionTime, setAuctionTime] = useState(() => {
+        const unsubscribe = db
+        .firestore()
+        .collection('AuctionEvent')
+        .where('isActive', '==', true)
+        .onSnapshot( (snapshot) => {
+            console.log('here' + snapshot)
+            return {
+                date:snapshot.docs[0].data().values.startDate,
+                time:snapshot.docs[0].data().values.startTime
+            }
+        });
+    })
     const [show,
         setShow] = useState(false);
     const [bidData, setBidData] = useState([]);
@@ -40,6 +54,7 @@ const HomeProducts = (props) => {
     if (aucID && aucID !== "" && prodData && prodData !== {}) {
         //console.log(JSON.stringify(prodData, null, 4));
         //console.log(prodData.highestBidPlaced);
+        console.log(auctionTime)
         return (
             <div className="productCell">
 

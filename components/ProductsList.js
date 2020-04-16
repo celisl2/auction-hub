@@ -17,7 +17,7 @@ let db = loadDB();
 
 //Displaying the product list.
 const ProductsList = (props) => {
-    //console.log(JSON.stringify(props));
+    console.log(JSON.stringify(props.time));
     let auctionID = props.props;
     const [productsList, setProductsList] = useState([]);
 

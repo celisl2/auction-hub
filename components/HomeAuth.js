@@ -18,7 +18,6 @@ const HomeAuth = () => {
             .collection('AuctionEvent')
             .where('isActive', '==', true)
             .onSnapshot( (snapshot) => {
-                //console.log(snapshot)
                 setAuctionId(snapshot.docs[0].id);
             });
             return () => { unsubscribe() };
