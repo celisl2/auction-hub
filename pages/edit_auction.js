@@ -378,6 +378,7 @@ const Auction = (props) => {
                     <h3><span className="bold-text makeGold">Title{getCode(58)}</span> {props.data.title}</h3>
                 </Col>
                 <Col sm={3}>
+                    <DeleteAuctionModal data={props.data} aucID={props.aucID}/>
                     <Button onClick={handleShow}>Edit Auction</Button>
                     <Modal show={show} onHide={handleClose}>
                         <Modal.Header closeButton>
@@ -501,16 +502,60 @@ const ActiveAuctionButton = (props) => {
     )
 }
 
-const DeleteAuctionButton = (props) => {
-    const [activeID, setActiveID] = useState(null);
+const DeleteAuctionModal = (props) => {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    let aucID = props.aucID;
+    let aucName = props.data.title;
 
     return (
-        <Button variant="warning" active onClick={() => {
-            
-        }}>
+        <div>
+            <Button variant="secondary" active onClick={handleShow}>Delete</Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete {aucName}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to delete {aucName}? This will also delete ALL of this event's products. You cannot undo this action.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" active onClick={() => {
+                        // get snapshot of all product documents within event collection
+                        db.firestore()
+                            .collection(`AuctionEvent/${aucID}/AuctionProduct`)
+                            .get().then(function(querySnapshot) {
+                                // delete all products in current event
+                                querySnapshot.forEach(function(documentSnapshot) {
+                                    documentSnapshot.ref.delete().then(function() {
+                                        //console.log("Product successfully deleted!");
+                                    }).catch(function(error) {
+                                        console.error("Error removing document: ", error);
+                                    });
+                            });
+                        });
 
-        </Button>
-    )
+                        // delete event collection
+                        db.firestore()
+                            .collection('AuctionEvent').doc(aucID)
+                            .delete().then(function() {
+                                //console.log("Event successfully deleted!");
+                            }).catch(function(error) {
+                                console.error("Error removing document: ", error);
+                            });
+
+                        handleClose();
+                    }}>
+                    Delete
+                    </Button>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
+    );
 }
 
 const CurrentAuction = () => {

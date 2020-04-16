@@ -15,6 +15,7 @@ import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
 import generateReportsForAuction from '../pages/api/createReportForAuction';
 import {loadDB} from '../lib/db';
+import HomeForbidden from '../components/HomeForbidden';
 let db = loadDB();
 
 const ReportsTable = ({columns, data, userData}) => {
@@ -27,7 +28,7 @@ const ReportsTable = ({columns, data, userData}) => {
             tableData.push({
                 productName: item.productName
             })
-            
+
         })
         return tableData;
     }
@@ -136,7 +137,7 @@ const MyTable = () => {
                     )
                 }
             ]
-            
+
         },
         {
             Header: 'Product Collected',
@@ -150,7 +151,7 @@ const MyTable = () => {
                 let usr = [];
                 querySnapshot.forEach((doc) => {
                     //get user info
-                    
+
                     db.firestore().collection('Users').doc(doc.data().userID)
                         .get().then((userDoc) => {
                             usr.push(userDoc.data());
@@ -160,7 +161,7 @@ const MyTable = () => {
                             arrReport.push(doc.data())
 
                 })
-                
+
                 setData(arrReport);
                 setUserData(usr);
             })
@@ -175,18 +176,39 @@ const MyTable = () => {
 
 //Navigation and Page design.
 const ReportsPage = () => {
-    return (
-        <div className="report-body">
-            <AdminNav />
-            <Container>
-            <h2 className="text-center mx-auto space text-header">Reports</h2>
-            </Container>
-            <MyTable />
-            <Footer />
-            <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
-        </div>
-    )
+    const [currentUserIsAdmin, setCurrentUserIsAdmin] = useState([]);
+    useEffect( () => {
+        db.auth().onAuthStateChanged((user) => {
+            const unsubscribe = db
+                .firestore()
+                .collection("/Users")
+                .doc(user.uid)
+                .get()
+                .then((querySnapshot) => {
+                    setCurrentUserIsAdmin(querySnapshot.data().isAdmin);
+               });
+        });
+    }, [db] );
 
+    if(currentUserIsAdmin == "true") {
+        return (
+            <div className="report-body">
+                <AdminNav />
+                <Container>
+                <h2 className="text-center mx-auto space text-header">Reports</h2>
+                </Container>
+                <MyTable />
+                <Footer />
+                <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
+            </div>
+        );
+    } else if (currentUserIsAdmin == "false") {
+        return (
+            <HomeForbidden />
+        );
+    } else {
+        return null;
+    }
 }
 
 export default ReportsPage;
