@@ -76,14 +76,17 @@ const MyTable = () => {
     const [data, setData] = useState([]);
     const [userData, setUserData] = useState([]);
     const [activeId, setActiveId] = useState(() => {
+        let myId = '';
         db.firestore().collection('AuctionEvent')
             .where('isActive', '==', true)
             .get().then((doc) => {
                 if(doc.size) {
                     console.log(doc.docs[0].id)
+                    myId = doc.docs[0].id;;
                     return doc.docs[0].id;
                 }
             })
+            return myId
     })
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -152,9 +155,10 @@ const MyTable = () => {
                         .get().then((userDoc) => {
                             usr.push(userDoc.data());
                         })
-                        if(activeId == doc.data().auctionEventID) {
+
+                            console.log('here')
                             arrReport.push(doc.data())
-                        }
+
                 })
                 
                 setData(arrReport);
@@ -176,8 +180,8 @@ const ReportsPage = () => {
             <AdminNav />
             <Container>
             <h2 className="text-center mx-auto space text-header">Reports</h2>
-                <MyTable />
             </Container>
+            <MyTable />
             <Footer />
             <p className='copyright'>{getCode(169) + ' ' + new Date().getFullYear()} All Things Possible Medical Fundraising</p>
         </div>
