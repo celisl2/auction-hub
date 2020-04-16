@@ -20,8 +20,51 @@ import Button from 'react-bootstrap/Button';
 import DataContext from '../lib/bidDataContext';
 import EditProductForm from './EditProductForm';
 import {getCode} from '../utils/helperFunctions';
+import {loadDB} from './../lib/db';
 
+let db = loadDB();
 
+const DeleteProductModal = (props) => {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    let aucID = props.auction;
+    let prodID = props.data.id;
+    let prodName = props.data.productName;
+
+    return (
+        <div>
+            <Button variant="secondary" active onClick={handleShow}>Delete</Button>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete {prodName}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Are you sure you want to delete {prodName}? You cannot undo this action.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" active onClick={() => {
+                        db.firestore()
+                            .collection('AuctionEvent').doc(aucID)
+                            .collection('AuctionProduct').doc(prodID)
+                            .delete().then(function() {
+                                //console.log("Document successfully deleted!");
+                            }).catch(function(error) {
+                                console.error("Error removing document: ", error);
+                            });
+                        handleClose();
+                    }}>
+                    Delete
+                    </Button>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
+    );
+}
 
 const EditProductModal = (props) => {
     //when you call the dynamic created pages change this useState below to true
@@ -90,6 +133,9 @@ export default(props) => {
                 <Row>
                     <Col>
                         <EditProductModal data={prodData} auction={aucID}/>
+                    </Col>
+                    <Col>
+                        <DeleteProductModal data={prodData} auction={aucID}/>
                     </Col>
                 </Row>
             </div>

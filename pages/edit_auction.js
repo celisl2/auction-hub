@@ -151,7 +151,7 @@ const EditForm = (props) => {
                         else {
                             try {
                                 // RTA: quick and dirty fix. Convert to api call?
-                                
+
                                 // Precompile the data for saving
                                 let eventData = {values: values};
                                 let aucID = values.auctionID;
@@ -559,7 +559,7 @@ const CurrentAuction = () => {
                                         </Card.Header>
                                         <Accordion.Collapse eventKey={event.id}>
                                             <Card.Body>
-                                                
+
                                                 <Auction data={event.values} aucID={event.id}/>
                                             </Card.Body>
                                         </Accordion.Collapse>
