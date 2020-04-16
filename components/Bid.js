@@ -15,6 +15,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import DataContext from '../lib/bidDataContext';
 import {loadDB} from '../lib/db';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 let db = loadDB();
 
@@ -28,6 +29,8 @@ const BidForm = (props) => {
     let auctionId = bidData.props.auctionEventID;
     let minBid = bidData.props.productData.minBid;
     let maxBid = bidData.props.productData.maxBid;
+    let productName = bidData.props.productData.productName;
+    let pickUpInfo = bidData.props.productData.productPickUpInfo;
 
 //Pull database info and confirm auction is active.
     const [highBidData, setHighBidData] = useState(() => {
@@ -76,17 +79,20 @@ const BidForm = (props) => {
     return (
         <div>
             {userMessage ? <Alert variant={alertColor}>{userMessage}</Alert> : ""}
+            {console.log(lowerLimit)}
         <Formik
                 //Set initial values to null
                 initialValues={{
                     userBid: ''
                 }}
-
+                
                 //Using validiation schema
                 validationSchema={
                     Yup.object({
                         userBid: Yup.number().integer('Bid must be a whole number')
                             .positive('Bid must be a positive number ')
+                            .min(Number(lowerLimit) + Number(5), "Bid must be at least $5 greater than the current bid price of $" + lowerLimit)
+                            .max(Number(maxBid), 'Bid must be less than or equal to $' + maxBid)
                             .required('Please select bid amount'),
                     })
                 }
@@ -100,9 +106,9 @@ const BidForm = (props) => {
                         if (!!user) {
 
                           //Check if Bid amount is valid.
-                            if(bidAmount <= maxBid) {
+                            if(Number(bidAmount) <= Number(maxBid)) {
                                 //user is allowed to place bid
-                                if(bidAmount >= lowerLimit) {
+                                if(Number(bidAmount) >= Number(lowerLimit)) {
                                     //user is placing buyout bid
                                     if(bidAmount == maxBid) {
 
@@ -120,6 +126,18 @@ const BidForm = (props) => {
                                                 setAlertColor('success');
                                                 setUserMessage('You have placed the highest bid. You will recieve an email with instructions on how to pay and recieve your product.');
                                                 console.log('bid placed for ' + docRef.id);
+                                                db.firestore()
+                                                .collection('Reports')
+                                                .add({
+                                                    auctionEventID: auctionId,
+                                                    productID: productId,
+                                                    productName: productName,
+                                                    productPrice: Number(bidAmount),
+                                                    userID: user,
+                                                    paymentStatus: 'Email sent',
+                                                    productPickedUp: false
+                                                }).then(() => console.log("Document successfully written!"))
+                                                .catch((err) => console.error("Error writing document: ", err))
                                             })
 
                                             //An error or occured
@@ -186,16 +204,16 @@ const BidForm = (props) => {
             >
             { formik => (
                 <Form onSubmit={formik.handleSubmit}>
-                <Form.Label htmlFor="userBid">Select Bid Amount</Form.Label>
-                <Form.Control as="select" name="userBid" {...formik.getFieldProps('userBid')}>
-                        <option>Click to select</option>
-                        <option value={Number(lowerLimit) + Number(5)}>{`(+5) Total Bid: $${ Number(lowerLimit) + Number(5)}`}</option>
-                        <option value={Number(lowerLimit) + Number(10)}>{`(+10) Total Bid: $${ Number(lowerLimit) + Number(10)}`}</option>
-                        <option value={Number(lowerLimit) + Number(15)}>{`(+15) Total Bid: $${ Number(lowerLimit) + Number(15)}`}</option>
-                        <option value={Number(lowerLimit) + Number(20)}>{`(+20) Total Bid: $${ Number(lowerLimit) + Number(20)}`}</option>
-                    </Form.Control>
+                <Form.Label htmlFor="userBid">Bid Amount</Form.Label>
+                <InputGroup>
+                    <InputGroup.Prepend>
+                        <InputGroup.Text id="basic-addon1">Your Bid: $</InputGroup.Text>
+                    </InputGroup.Prepend>
+                
+                <Form.Control name="userBid" aria-describedby="basic-addon1" {...formik.getFieldProps('userBid')}/>
+                </InputGroup>
                     {formik.touched.userBid && formik.errors.userBid ? (
-                    <div>{formik.errors.userBid}</div>) : null}
+                    <Alert variant='danger'>{formik.errors.userBid}</Alert>) : null}
                     <Button className="space" variant="outline-success" type="submit">Place Bid</Button>
                 </Form>
             )}
