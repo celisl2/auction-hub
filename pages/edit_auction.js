@@ -512,7 +512,7 @@ const DeleteAuctionModal = (props) => {
 
     return (
         <div>
-            <Button variant="secondary" active onClick={handleShow}>Delete</Button>
+            <Button variant="secondary" className="space" active onClick={handleShow}>Delete</Button>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Delete {aucName}</Modal.Title>
